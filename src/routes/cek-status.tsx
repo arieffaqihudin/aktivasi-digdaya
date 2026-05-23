@@ -1,12 +1,6 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { PublicHeader, PublicFooter } from "@/components/PublicHeader";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import { getState } from "@/lib/store";
-import { toast } from "sonner";
-import { Search } from "lucide-react";
+import { CekStatusForm } from "@/components/public/PublicForms";
 
 export const Route = createFileRoute("/cek-status")({
   head: () => ({
@@ -19,48 +13,21 @@ export const Route = createFileRoute("/cek-status")({
 });
 
 function CekStatus() {
-  const [tiket, setTiket] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const t = tiket.trim().toUpperCase();
-    if (!t) return;
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 300));
-    const found = getState().registrations.find((r) => r.ticketId.toUpperCase() === t);
-    setLoading(false);
-    if (!found) { toast.error("Nomor tiket tidak ditemukan."); return; }
-    navigate({ to: "/status/$ticketId", params: { ticketId: found.ticketId } });
-  };
-
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <PublicHeader />
-      <main className="flex-1 py-12">
-        <div className="mx-auto max-w-md px-4 sm:px-6">
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Cek Status Pendaftaran</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Masukkan nomor tiket pendaftaran untuk melihat status terkini.
-          </p>
-          <form onSubmit={submit} className="mt-6 rounded-xl border border-border bg-card p-5">
-            <Label htmlFor="tiket" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Nomor Tiket</Label>
-            <Input id="tiket" value={tiket} onChange={(e) => setTiket(e.target.value)} placeholder="AKT-2026-000123" className="mt-1.5 font-mono" autoFocus />
-            <p className="mt-2 text-xs text-muted-foreground">Contoh format: AKT-2026-000101</p>
-            <Button type="submit" className="mt-4 w-full" disabled={loading}>
-              <Search className="mr-2 h-4 w-4" /> {loading ? "Memeriksa…" : "Cek Status"}
-            </Button>
-          </form>
-
-          <div className="mt-5 rounded-md border border-border bg-secondary/40 p-4 text-xs text-muted-foreground">
-            <p className="mb-2 font-medium text-foreground">Contoh tiket untuk demo:</p>
-            <ul className="space-y-1 font-mono">
-              <li>AKT-2026-000121 — Pending (Jalur A)</li>
-              <li>AKT-2026-000101 — Disetujui (Jalur A)</li>
-              <li>AKT-2026-000123 — Ditolak (Jalur A)</li>
-              <li>AKT-2026-000127 — Pending (Jalur B)</li>
-            </ul>
+      <main className="flex-1 px-4 py-10 sm:py-14">
+        <div className="mx-auto w-full max-w-[560px]">
+          <div className="text-center">
+            <h1 className="text-[22px] font-bold tracking-tight text-foreground sm:text-[24px]">
+              Cek Status Pendaftaran
+            </h1>
+            <p className="mt-2 text-[13px] text-muted-foreground">
+              Masukkan nomor tiket untuk melihat status pendaftaran.
+            </p>
+          </div>
+          <div className="mt-7 rounded-xl border border-border bg-card p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:p-7">
+            <CekStatusForm />
           </div>
         </div>
       </main>
