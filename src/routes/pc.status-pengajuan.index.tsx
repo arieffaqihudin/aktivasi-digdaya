@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useStore } from "@/lib/store";
 
-export const Route = createFileRoute("/pc/status-pengajuan")({
+export const Route = createFileRoute("/pc/status-pengajuan/")({
   component: StatusPengajuan,
 });
 
