@@ -32,6 +32,7 @@ import { Route as ReviewInboxRouteImport } from './routes/review.inbox'
 import { Route as ReviewAuditLogRouteImport } from './routes/review.audit-log'
 import { Route as PwNotificationsRouteImport } from './routes/pw.notifications'
 import { Route as PwDaftarkanRouteImport } from './routes/pw.daftarkan'
+import { Route as PcNotificationsRouteImport } from './routes/pc.notifications'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
 import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$accessCode'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -170,6 +171,11 @@ const PwDaftarkanRoute = PwDaftarkanRouteImport.update({
   id: '/daftarkan',
   path: '/daftarkan',
   getParentRoute: () => PwRoute,
+} as any)
+const PcNotificationsRoute = PcNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => PcRoute,
 } as any)
 const PcDaftarkanRoute = PcDaftarkanRouteImport.update({
   id: '/daftarkan',
@@ -313,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
+  '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
   '/pw/notifications': typeof PwNotificationsRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
@@ -356,6 +363,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
+  '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
   '/pw/notifications': typeof PwNotificationsRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
@@ -405,6 +413,7 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
+  '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
   '/pw/notifications': typeof PwNotificationsRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
@@ -455,6 +464,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
+    | '/pc/notifications'
     | '/pw/daftarkan'
     | '/pw/notifications'
     | '/review/audit-log'
@@ -498,6 +508,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
+    | '/pc/notifications'
     | '/pw/daftarkan'
     | '/pw/notifications'
     | '/review/audit-log'
@@ -546,6 +557,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
+    | '/pc/notifications'
     | '/pw/daftarkan'
     | '/pw/notifications'
     | '/review/audit-log'
@@ -755,6 +767,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/pw/daftarkan'
       preLoaderRoute: typeof PwDaftarkanRouteImport
       parentRoute: typeof PwRoute
+    }
+    '/pc/notifications': {
+      id: '/pc/notifications'
+      path: '/notifications'
+      fullPath: '/pc/notifications'
+      preLoaderRoute: typeof PcNotificationsRouteImport
+      parentRoute: typeof PcRoute
     }
     '/pc/daftarkan': {
       id: '/pc/daftarkan'
@@ -1019,6 +1038,7 @@ const PcStatusPengajuanTicketIdRouteWithChildren =
 
 interface PcRouteChildren {
   PcDaftarkanRoute: typeof PcDaftarkanRoute
+  PcNotificationsRoute: typeof PcNotificationsRoute
   PcIndexRoute: typeof PcIndexRoute
   PcStatusPengajuanTicketIdRoute: typeof PcStatusPengajuanTicketIdRouteWithChildren
   PcStatusPengajuanIndexRoute: typeof PcStatusPengajuanIndexRoute
@@ -1026,6 +1046,7 @@ interface PcRouteChildren {
 
 const PcRouteChildren: PcRouteChildren = {
   PcDaftarkanRoute: PcDaftarkanRoute,
+  PcNotificationsRoute: PcNotificationsRoute,
   PcIndexRoute: PcIndexRoute,
   PcStatusPengajuanTicketIdRoute: PcStatusPengajuanTicketIdRouteWithChildren,
   PcStatusPengajuanIndexRoute: PcStatusPengajuanIndexRoute,
