@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Copy, Plus, Ban, Search, Eye, Info as InfoIcon, Clock } from "lucide-react";
+import { Copy, Plus, Ban, Search, Eye, Info as InfoIcon, Clock, Download } from "lucide-react";
 import { formatDate } from "@/utils/status";
 
 export const Route = createFileRoute("/ops/activation/access-codes")({
