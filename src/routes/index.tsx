@@ -40,11 +40,11 @@ function Home() {
       <main className="relative z-10 flex flex-1 items-center px-4 py-6 sm:py-10 lg:py-14">
         <div className="mx-auto w-full max-w-[1080px]">
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 lg:items-center">
-            <div className="order-1 lg:order-2">
-              <RightColumn />
-            </div>
-            <div className="order-2 lg:order-1">
+            <div>
               <LeftColumn />
+            </div>
+            <div>
+              <RightColumn />
             </div>
           </div>
         </div>
@@ -177,7 +177,16 @@ function BenefitItem({
 
 function RightColumn() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-5">
+      {/* Hero Illustration */}
+      <div className="mx-auto w-full max-w-[520px] rounded-3xl border border-[#DDEBE3] bg-white p-4 shadow-[0_8px_30px_rgba(0,132,61,0.08)] sm:p-6">
+        <img
+          src="https://digdaya.nu.id/kader/images/illustration-digdaya-kader-large2.png"
+          alt="Ilustrasi Kader Digdaya NU"
+          className="mx-auto h-auto w-full max-w-[500px] object-contain max-h-[260px] sm:max-h-[340px] md:max-h-[380px] lg:max-h-[420px]"
+        />
+      </div>
+
       <div className="rounded-3xl border border-[#DDEBE3] bg-white p-5 shadow-[0_8px_30px_rgba(0,132,61,0.08)] sm:p-7">
         <div className="mb-6">
           <h2 className="text-[16px] font-bold text-[#0F2A1A]">
@@ -221,7 +230,7 @@ function RightColumn() {
         />
       </div>
 
-      <div className="mt-5 text-center">
+      <div className="text-center">
         <Link
           to="/cek-status"
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-semibold text-[#00843D] transition-colors hover:bg-[#EAF8F0] hover:text-[#005C2E]"
