@@ -72,7 +72,7 @@ export function PublicFooter() {
 
       <div className="relative mx-auto max-w-[1080px] px-4 sm:px-6">
         {/* Main footer grid */}
-        <div className="grid grid-cols-1 gap-5 pt-8 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-6 sm:pt-10 lg:grid-cols-[1.15fr_1fr_1fr_1.1fr] lg:gap-8 lg:pt-11">
+        <div className="grid grid-cols-1 gap-4 pt-7 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-6 sm:pt-10 lg:grid-cols-[1.15fr_1fr_1fr_1.1fr] lg:gap-8 lg:pt-11">
           {/* Col 1 — Branding */}
           <div className="flex flex-col">
             <div className="inline-flex w-fit items-center gap-2.5">
