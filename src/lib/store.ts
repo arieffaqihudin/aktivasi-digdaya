@@ -479,13 +479,14 @@ export const actions = {
           ? { ...r, status: "Approved" as Status, reviewedAt: new Date().toISOString(), reviewedBy: user?.email ?? "reviewer@digdaya.nu.id", rejectReason: undefined }
           : r,
       ),
-      accessCodes: reg.accessCode
+      accessCodes: shouldMarkCodeUsed
         ? s.accessCodes.map((c) =>
             c.code === reg.accessCode
               ? { ...c, status: "Used" as AccessCodeStatus, usedAt: new Date().toISOString(), ticketId }
               : c,
           )
         : s.accessCodes,
+
       orgStatus: setOrgProduction
         ? { ...s.orgStatus, [setOrgProduction]: "Production" }
         : s.orgStatus,
