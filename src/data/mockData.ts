@@ -9,7 +9,57 @@ export type TipeOrg =
   | "Lembaga PC"
   | "Ranting";
 
-export type Status = "Pending" | "Approved" | "Rejected";
+export type Status = "Pending" | "Approved" | "PerluPerbaikan" | "RejectedFinal";
+
+export type RejectionCategory =
+  | "SURAT_SALAH"
+  | "SURAT_TIDAK_TERBACA"
+  | "SURAT_TIDAK_SESUAI_NAMA"
+  | "DATA_ADMIN"
+  | "NIK_HP_EMAIL"
+  | "KEWENANGAN"
+  | "LAINNYA";
+
+export const REJECTION_CATEGORY_LABEL: Record<RejectionCategory, string> = {
+  SURAT_SALAH: "Surat tugas salah",
+  SURAT_TIDAK_TERBACA: "Surat tugas tidak terbaca",
+  SURAT_TIDAK_SESUAI_NAMA: "Surat tugas tidak sesuai nama organisasi",
+  DATA_ADMIN: "Data administrator tidak sesuai",
+  NIK_HP_EMAIL: "NIK / nomor HP / email perlu diperbaiki",
+  KEWENANGAN: "Kewenangan pendaftar tidak sesuai",
+  LAINNYA: "Lainnya",
+};
+
+/** Kategori yang mewajibkan upload surat tugas baru saat revisi. */
+export const SURAT_TUGAS_CATEGORIES: RejectionCategory[] = [
+  "SURAT_SALAH",
+  "SURAT_TIDAK_TERBACA",
+  "SURAT_TIDAK_SESUAI_NAMA",
+];
+
+export interface RevisionRequestEntry {
+  at: string;
+  reviewer: string;
+  decision: "PerluPerbaikan" | "RejectedFinal";
+  category: RejectionCategory;
+  note: string;
+}
+
+export interface ResubmitEntry {
+  at: string;
+  by: string;
+  changedFields: string[];
+  previous: {
+    namaAdmin: string;
+    jabatan: string;
+    nik: string;
+    hp: string;
+    email: string;
+    sumberSuratTugas: SumberSuratTugas;
+    suratTugasFile?: string;
+    dokumenSistem?: DokumenSistem;
+  };
+}
 
 /** Legacy "jalur": A = publik via kode akses, B = internal dashboard. */
 export type Jalur = "A" | "B";
