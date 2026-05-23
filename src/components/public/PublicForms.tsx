@@ -180,8 +180,8 @@ export function AktivasiForm() {
         <div className="mt-6">
           <p className="text-[13px] text-muted-foreground">Periksa kembali data sebelum mengirim.</p>
           <dl className="mt-4 grid gap-2 sm:grid-cols-2">
-            <Info label="Nama PC" value={verified.pcName} />
-            <Info label="Wilayah PW" value={verified.pw} />
+            <Info label={`Nama ${verified.tingkat}`} value={verified.orgName} />
+            <Info label="Wilayah" value={verified.pw} />
             <Info label="Administrator" value={namaAdmin} />
             <Info label="Jabatan" value={jabatan} />
             <Info label="NIK" value={maskNik(nik)} />
