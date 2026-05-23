@@ -7,13 +7,40 @@ export type DemoTarget = {
 };
 
 export const pcDemoTargets: DemoTarget[] = [
+  // MWC di bawah PCNU Kraksaan (14)
   { id: "mwc-banyuanyar", name: "MWCNU Banyuanyar", type: "MWC" },
   { id: "mwc-tiris-barat", name: "MWCNU Tiris Barat", type: "MWC" },
   { id: "mwc-tiris-timur", name: "MWCNU Tiris Timur", type: "MWC" },
   { id: "mwc-krucil", name: "MWCNU Krucil", type: "MWC" },
-  { id: "lpc-lazisnu", name: "LAZISNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "mwc-gading", name: "MWCNU Gading", type: "MWC" },
+  { id: "mwc-besuk", name: "MWCNU Besuk", type: "MWC" },
+  { id: "mwc-pakuniran", name: "MWCNU Pakuniran", type: "MWC" },
+  { id: "mwc-kotaanyar", name: "MWCNU Kotaanyar", type: "MWC" },
+  { id: "mwc-paiton", name: "MWCNU Paiton", type: "MWC" },
+  { id: "mwc-kraksaan", name: "MWCNU Kraksaan", type: "MWC" },
+  { id: "mwc-krejengan", name: "MWCNU Krejengan", type: "MWC" },
+  { id: "mwc-pajarakan", name: "MWCNU Pajarakan", type: "MWC" },
+  { id: "mwc-maron", name: "MWCNU Maron", type: "MWC" },
+  { id: "mwc-gending", name: "MWCNU Gending", type: "MWC" },
+  // Lembaga PCNU Kraksaan (18)
+  { id: "lpc-ldnu", name: "LDNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lkknu", name: "LKKNU PCNU Kraksaan", type: "Lembaga PC" },
   { id: "lpc-rminu", name: "RMINU PCNU Kraksaan", type: "Lembaga PC" },
-  { id: "lpc-lpmaarif", name: "LP Ma'arif PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lazisnu", name: "LAZISNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lbmnu", name: "LBMNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lesbuminu", name: "LESBUMINU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lfnu", name: "LFNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lknu", name: "LKNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lpmaarif", name: "LP Ma'arif NU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lppnu", name: "LPPNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lptnu", name: "LPTNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-ltmnu", name: "LTMNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-ltnnu", name: "LTNNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lwpnu", name: "LWPNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lpnu", name: "LPNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lakpesdamnu", name: "LAKPESDAMNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lpbhnu", name: "LPBHNU PCNU Kraksaan", type: "Lembaga PC" },
+  { id: "lpc-lpbinu", name: "LPBI NU PCNU Kraksaan", type: "Lembaga PC" },
 ];
 
 export const pwDemoTargets: DemoTarget[] = [
