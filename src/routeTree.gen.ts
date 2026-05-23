@@ -34,6 +34,7 @@ import { Route as PwNotificationsRouteImport } from './routes/pw.notifications'
 import { Route as PwDaftarkanRouteImport } from './routes/pw.daftarkan'
 import { Route as PcNotificationsRouteImport } from './routes/pc.notifications'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
+import { Route as OpsRepositoryRouteImport } from './routes/ops.repository'
 import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$accessCode'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
@@ -45,6 +46,10 @@ import { Route as StatusTicketIdRevisiRouteImport } from './routes/status.$ticke
 import { Route as ReviewInboxTicketIdRouteImport } from './routes/review.inbox.$ticketId'
 import { Route as PwStatusPengajuanTicketIdRouteImport } from './routes/pw.status-pengajuan.$ticketId'
 import { Route as PcStatusPengajuanTicketIdRouteImport } from './routes/pc.status-pengajuan.$ticketId'
+import { Route as OpsPersuratanStamperRouteImport } from './routes/ops.persuratan.stamper'
+import { Route as OpsPersuratanPengajuanUbahEmailRouteImport } from './routes/ops.persuratan.pengajuan-ubah-email'
+import { Route as OpsPersuratanKopSuratRouteImport } from './routes/ops.persuratan.kop-surat'
+import { Route as OpsPersuratanCekOrderIdRouteImport } from './routes/ops.persuratan.cek-order-id'
 import { Route as OpsActivationSubmissionsRouteImport } from './routes/ops.activation.submissions'
 import { Route as OpsActivationSettingsRouteImport } from './routes/ops.activation.settings'
 import { Route as OpsActivationPeruriExportRouteImport } from './routes/ops.activation.peruri-export'
@@ -182,6 +187,11 @@ const PcDaftarkanRoute = PcDaftarkanRouteImport.update({
   path: '/daftarkan',
   getParentRoute: () => PcRoute,
 } as any)
+const OpsRepositoryRoute = OpsRepositoryRouteImport.update({
+  id: '/repository',
+  path: '/repository',
+  getParentRoute: () => OpsRoute,
+} as any)
 const AktivasiAccessCodeRoute = AktivasiAccessCodeRouteImport.update({
   id: '/$accessCode',
   path: '/$accessCode',
@@ -239,6 +249,27 @@ const PcStatusPengajuanTicketIdRoute =
     path: '/status-pengajuan/$ticketId',
     getParentRoute: () => PcRoute,
   } as any)
+const OpsPersuratanStamperRoute = OpsPersuratanStamperRouteImport.update({
+  id: '/persuratan/stamper',
+  path: '/persuratan/stamper',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsPersuratanPengajuanUbahEmailRoute =
+  OpsPersuratanPengajuanUbahEmailRouteImport.update({
+    id: '/persuratan/pengajuan-ubah-email',
+    path: '/persuratan/pengajuan-ubah-email',
+    getParentRoute: () => OpsRoute,
+  } as any)
+const OpsPersuratanKopSuratRoute = OpsPersuratanKopSuratRouteImport.update({
+  id: '/persuratan/kop-surat',
+  path: '/persuratan/kop-surat',
+  getParentRoute: () => OpsRoute,
+} as any)
+const OpsPersuratanCekOrderIdRoute = OpsPersuratanCekOrderIdRouteImport.update({
+  id: '/persuratan/cek-order-id',
+  path: '/persuratan/cek-order-id',
+  getParentRoute: () => OpsRoute,
+} as any)
 const OpsActivationSubmissionsRoute =
   OpsActivationSubmissionsRouteImport.update({
     id: '/activation/submissions',
@@ -318,6 +349,7 @@ export interface FileRoutesByFullPath {
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
+  '/ops/repository': typeof OpsRepositoryRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
@@ -340,6 +372,10 @@ export interface FileRoutesByFullPath {
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
   '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
+  '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
+  '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
+  '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
+  '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
@@ -362,6 +398,7 @@ export interface FileRoutesByTo {
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
+  '/ops/repository': typeof OpsRepositoryRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
@@ -384,6 +421,10 @@ export interface FileRoutesByTo {
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
   '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
+  '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
+  '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
+  '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
+  '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
@@ -412,6 +453,7 @@ export interface FileRoutesById {
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
+  '/ops/repository': typeof OpsRepositoryRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
@@ -434,6 +476,10 @@ export interface FileRoutesById {
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
   '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
+  '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
+  '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
+  '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
+  '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
@@ -463,6 +509,7 @@ export interface FileRouteTypes {
     | '/admin/audit-log'
     | '/admin/settings'
     | '/aktivasi/$accessCode'
+    | '/ops/repository'
     | '/pc/daftarkan'
     | '/pc/notifications'
     | '/pw/daftarkan'
@@ -485,6 +532,10 @@ export interface FileRouteTypes {
     | '/ops/activation/peruri-export'
     | '/ops/activation/settings'
     | '/ops/activation/submissions'
+    | '/ops/persuratan/cek-order-id'
+    | '/ops/persuratan/kop-surat'
+    | '/ops/persuratan/pengajuan-ubah-email'
+    | '/ops/persuratan/stamper'
     | '/pc/status-pengajuan/$ticketId'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
@@ -507,6 +558,7 @@ export interface FileRouteTypes {
     | '/admin/audit-log'
     | '/admin/settings'
     | '/aktivasi/$accessCode'
+    | '/ops/repository'
     | '/pc/daftarkan'
     | '/pc/notifications'
     | '/pw/daftarkan'
@@ -529,6 +581,10 @@ export interface FileRouteTypes {
     | '/ops/activation/peruri-export'
     | '/ops/activation/settings'
     | '/ops/activation/submissions'
+    | '/ops/persuratan/cek-order-id'
+    | '/ops/persuratan/kop-surat'
+    | '/ops/persuratan/pengajuan-ubah-email'
+    | '/ops/persuratan/stamper'
     | '/pc/status-pengajuan/$ticketId'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
@@ -556,6 +612,7 @@ export interface FileRouteTypes {
     | '/admin/audit-log'
     | '/admin/settings'
     | '/aktivasi/$accessCode'
+    | '/ops/repository'
     | '/pc/daftarkan'
     | '/pc/notifications'
     | '/pw/daftarkan'
@@ -578,6 +635,10 @@ export interface FileRouteTypes {
     | '/ops/activation/peruri-export'
     | '/ops/activation/settings'
     | '/ops/activation/submissions'
+    | '/ops/persuratan/cek-order-id'
+    | '/ops/persuratan/kop-surat'
+    | '/ops/persuratan/pengajuan-ubah-email'
+    | '/ops/persuratan/stamper'
     | '/pc/status-pengajuan/$ticketId'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
@@ -782,6 +843,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PcDaftarkanRouteImport
       parentRoute: typeof PcRoute
     }
+    '/ops/repository': {
+      id: '/ops/repository'
+      path: '/repository'
+      fullPath: '/ops/repository'
+      preLoaderRoute: typeof OpsRepositoryRouteImport
+      parentRoute: typeof OpsRoute
+    }
     '/aktivasi/$accessCode': {
       id: '/aktivasi/$accessCode'
       path: '/$accessCode'
@@ -858,6 +926,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/pc/status-pengajuan/$ticketId'
       preLoaderRoute: typeof PcStatusPengajuanTicketIdRouteImport
       parentRoute: typeof PcRoute
+    }
+    '/ops/persuratan/stamper': {
+      id: '/ops/persuratan/stamper'
+      path: '/persuratan/stamper'
+      fullPath: '/ops/persuratan/stamper'
+      preLoaderRoute: typeof OpsPersuratanStamperRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/persuratan/pengajuan-ubah-email': {
+      id: '/ops/persuratan/pengajuan-ubah-email'
+      path: '/persuratan/pengajuan-ubah-email'
+      fullPath: '/ops/persuratan/pengajuan-ubah-email'
+      preLoaderRoute: typeof OpsPersuratanPengajuanUbahEmailRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/persuratan/kop-surat': {
+      id: '/ops/persuratan/kop-surat'
+      path: '/persuratan/kop-surat'
+      fullPath: '/ops/persuratan/kop-surat'
+      preLoaderRoute: typeof OpsPersuratanKopSuratRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/persuratan/cek-order-id': {
+      id: '/ops/persuratan/cek-order-id'
+      path: '/persuratan/cek-order-id'
+      fullPath: '/ops/persuratan/cek-order-id'
+      preLoaderRoute: typeof OpsPersuratanCekOrderIdRouteImport
+      parentRoute: typeof OpsRoute
     }
     '/ops/activation/submissions': {
       id: '/ops/activation/submissions'
@@ -999,6 +1095,7 @@ const OpsActivationSubmissionsRouteWithChildren =
   )
 
 interface OpsRouteChildren {
+  OpsRepositoryRoute: typeof OpsRepositoryRoute
   OpsIndexRoute: typeof OpsIndexRoute
   OpsActivationAccessCodesRoute: typeof OpsActivationAccessCodesRouteWithChildren
   OpsActivationAuditLogRoute: typeof OpsActivationAuditLogRoute
@@ -1006,10 +1103,15 @@ interface OpsRouteChildren {
   OpsActivationPeruriExportRoute: typeof OpsActivationPeruriExportRoute
   OpsActivationSettingsRoute: typeof OpsActivationSettingsRoute
   OpsActivationSubmissionsRoute: typeof OpsActivationSubmissionsRouteWithChildren
+  OpsPersuratanCekOrderIdRoute: typeof OpsPersuratanCekOrderIdRoute
+  OpsPersuratanKopSuratRoute: typeof OpsPersuratanKopSuratRoute
+  OpsPersuratanPengajuanUbahEmailRoute: typeof OpsPersuratanPengajuanUbahEmailRoute
+  OpsPersuratanStamperRoute: typeof OpsPersuratanStamperRoute
   OpsActivationIndexRoute: typeof OpsActivationIndexRoute
 }
 
 const OpsRouteChildren: OpsRouteChildren = {
+  OpsRepositoryRoute: OpsRepositoryRoute,
   OpsIndexRoute: OpsIndexRoute,
   OpsActivationAccessCodesRoute: OpsActivationAccessCodesRouteWithChildren,
   OpsActivationAuditLogRoute: OpsActivationAuditLogRoute,
@@ -1017,6 +1119,10 @@ const OpsRouteChildren: OpsRouteChildren = {
   OpsActivationPeruriExportRoute: OpsActivationPeruriExportRoute,
   OpsActivationSettingsRoute: OpsActivationSettingsRoute,
   OpsActivationSubmissionsRoute: OpsActivationSubmissionsRouteWithChildren,
+  OpsPersuratanCekOrderIdRoute: OpsPersuratanCekOrderIdRoute,
+  OpsPersuratanKopSuratRoute: OpsPersuratanKopSuratRoute,
+  OpsPersuratanPengajuanUbahEmailRoute: OpsPersuratanPengajuanUbahEmailRoute,
+  OpsPersuratanStamperRoute: OpsPersuratanStamperRoute,
   OpsActivationIndexRoute: OpsActivationIndexRoute,
 }
 
