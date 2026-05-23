@@ -154,7 +154,7 @@ function AccessCodes() {
                     </RowAction>
                   )}
                   {(c.status === "Disabled" || c.status === "Expired") && (
-                    <RowAction title="Regenerate" onClick={() => { actions.regenerateAccessCode(c.pcId); toast.success("Kode baru digenerate."); }}>
+                    <RowAction title="Regenerate" onClick={() => { actions.regenerateAccessCode(c.orgId); toast.success("Kode baru digenerate."); }}>
                       <RotateCcw className="h-4 w-4" />
                     </RowAction>
                   )}
