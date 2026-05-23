@@ -1,0 +1,117 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { OpsPageHeader, OpsPageBody, OpsCard } from "@/components/ops/OpsPageHeader";
+import { DataTable, THead, TH, TR, TD, RowAction, EmptyRow } from "@/components/dashboard/DataTable";
+import { useStore } from "@/lib/store";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/StatusBadge";
+import { SLABadge } from "@/components/SLABadge";
+import { SumberPengajuanBadge, SumberSuratBadge } from "@/components/SumberBadge";
+import { formatDate, slaBucket } from "@/utils/status";
+import { useState, useMemo } from "react";
+import { Eye, Search, Download } from "lucide-react";
+
+export const Route = createFileRoute("/ops/activation/submissions")({
+  component: Submissions,
+});
+
+function Submissions() {
+  const regs = useStore((s) => s.registrations);
+  const sla = useStore((s) => s.sla);
+  const [sumber, setSumber] = useState("all");
+  const [status, setStatus] = useState("all");
+  const [slaFilter, setSlaFilter] = useState("all");
+  const [pw, setPw] = useState("all");
+  const [q, setQ] = useState("");
+
+  const pws = Array.from(new Set(regs.map((r) => r.pw)));
+
+  const filtered = useMemo(() => regs
+    .filter((r) => sumber === "all" || r.sumberPengajuan === sumber)
+    .filter((r) => status === "all" || r.status === status)
+    .filter((r) => pw === "all" || r.pw === pw)
+    .filter((r) => slaFilter === "all" || slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === slaFilter)
+    .filter((r) => !q || r.ticketId.toLowerCase().includes(q.toLowerCase()) || r.namaOrg.toLowerCase().includes(q.toLowerCase()) || r.namaAdmin.toLowerCase().includes(q.toLowerCase()))
+    .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()),
+    [regs, sumber, status, pw, slaFilter, q, sla]
+  );
+
+  return (
+    <div>
+      <OpsPageHeader
+        title="Pengajuan Aktivasi"
+        subtitle="Semua pengajuan aktivasi dari portal publik dan dashboard PW/PC."
+        breadcrumb={[{ label: "Aktivasi Digdaya", to: "/ops/activation" }, { label: "Pengajuan Aktivasi" }]}
+      />
+      <OpsPageBody>
+        <OpsCard
+          title="Daftar Pengajuan"
+          description={`Total ${filtered.length} pengajuan ditemukan.`}
+          action={<Button size="sm" variant="outline"><Download className="mr-1.5 h-4 w-4" /> Export Data</Button>}
+        >
+          <div className="flex flex-wrap gap-2">
+            <div className="relative w-full sm:flex-1 sm:min-w-[240px]">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input placeholder="Cari nomor tiket / organisasi / administrator" value={q} onChange={(e) => setQ(e.target.value)} className="h-10 w-full pl-9" />
+            </div>
+            <SelectFilter value={sumber} onChange={setSumber} placeholder="Sumber" options={[["all","Semua Sumber"],["PUBLIC","Public Activation"],["PW_DASHBOARD","PW Dashboard"],["PC_DASHBOARD","PC Dashboard"]]} />
+            <SelectFilter value={status} onChange={setStatus} placeholder="Status" options={[["all","Semua Status"],["Pending","Pending Review"],["PerluPerbaikan","Perlu Perbaikan"],["Approved","Disetujui"],["RejectedFinal","Ditolak Final"]]} />
+            <SelectFilter value={slaFilter} onChange={setSlaFilter} placeholder="SLA" options={[["all","Semua SLA"],["Aman","Aman"],["Mendekati","Mendekati"],["Lewat","Lewat"]]} />
+            <SelectFilter value={pw} onChange={setPw} placeholder="Wilayah" options={[["all","Semua PW"], ...pws.map((p) => [p, p.replace("PWNU ","")] as [string,string])]} />
+          </div>
+        </OpsCard>
+
+        <DataTable className="mx-0">
+          <THead>
+            <tr>
+              <TH>Nomor Tiket</TH>
+              <TH>Sumber</TH>
+              <TH>Organisasi</TH>
+              <TH>Wilayah</TH>
+              <TH>Administrator</TH>
+              <TH>Surat Tugas</TH>
+              <TH>Status</TH>
+              <TH>SLA</TH>
+              <TH className="text-right pr-6">Aksi</TH>
+            </tr>
+          </THead>
+          <tbody>
+            {filtered.map((r) => (
+              <TR key={r.ticketId}>
+                <TD className="font-mono text-[12px] text-primary-dark">{r.ticketId}</TD>
+                <TD><SumberPengajuanBadge sumber={r.sumberPengajuan} /></TD>
+                <TD>
+                  <div className="text-[12.5px] font-medium">{r.tipeOrg} · {r.namaOrg}</div>
+                  <div className="text-[11px] text-muted-foreground">{formatDate(r.submittedAt)}</div>
+                </TD>
+                <TD className="text-[12px] text-muted-foreground">{r.pw.replace("PWNU ","")}</TD>
+                <TD className="text-[12px]">{r.namaAdmin}</TD>
+                <TD><SumberSuratBadge sumber={r.sumberSuratTugas} /></TD>
+                <TD><StatusBadge status={r.status} /></TD>
+                <TD><SLABadge bucket={slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays)} /></TD>
+                <TD className="text-right pr-6">
+                  <Link to="/ops/activation/submissions/$ticketId" params={{ ticketId: r.ticketId }}>
+                    <RowAction title="Lihat detail" tone="primary"><Eye className="h-4 w-4" /></RowAction>
+                  </Link>
+                </TD>
+              </TR>
+            ))}
+            {filtered.length === 0 && <EmptyRow colSpan={9}>Tidak ada pengajuan sesuai filter.</EmptyRow>}
+          </tbody>
+        </DataTable>
+      </OpsPageBody>
+    </div>
+  );
+}
+
+function SelectFilter({ value, onChange, options, placeholder }: { value: string; onChange: (v: string) => void; options: [string, string][]; placeholder?: string }) {
+  return (
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger className="h-10 w-full sm:w-[160px]"><SelectValue placeholder={placeholder} /></SelectTrigger>
+      <SelectContent>
+        {options.map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}
+      </SelectContent>
+    </Select>
+  );
+}
