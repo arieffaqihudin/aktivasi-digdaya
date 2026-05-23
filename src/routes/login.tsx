@@ -34,6 +34,7 @@ function LoginPage() {
     toast.success(`Selamat datang, ${user.name}.`);
     if (user.role === "Super Admin") navigate({ to: "/admin" });
     else if (user.role === "Reviewer") navigate({ to: "/review" });
+    else if (user.role === "PW") navigate({ to: "/pw" });
     else navigate({ to: "/pc" });
   };
 
@@ -117,6 +118,7 @@ function LoginPage() {
               {[
                 { e: "admin@digdaya.nu.id",    r: "Super Admin PBNU" },
                 { e: "reviewer@digdaya.nu.id", r: "Reviewer Tim Digdaya" },
+                { e: "pw@digdaya.nu.id",       r: "PW Aktif (PWNU DIY)" },
                 { e: "pc@digdaya.nu.id",       r: "PC Aktif (PCNU Sleman)" },
               ].map((u) => (
                 <button type="button" key={u.e} onClick={() => quickFill(u.e)} className="block w-full text-left hover:text-foreground">

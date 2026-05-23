@@ -35,6 +35,7 @@ export function AppLayout({
     else if (!allowedRoles.includes(user.role)) {
       if (user.role === "Super Admin") navigate({ to: "/admin" });
       else if (user.role === "Reviewer") navigate({ to: "/review" });
+      else if (user.role === "PW") navigate({ to: "/pw" });
       else navigate({ to: "/pc" });
     }
   }, [user, navigate, allowedRoles]);
@@ -43,7 +44,7 @@ export function AppLayout({
 
   if (!user) return null;
 
-  const displayOrg = orgName ?? (user.pcName ? user.pcName : "Pengurus Besar Nahdlatul Ulama");
+  const displayOrg = orgName ?? user.pcName ?? user.pwName ?? "Pengurus Besar Nahdlatul Ulama";
 
   // Group menu by section
   const grouped: { section?: string; items: MenuItem[] }[] = [];
@@ -158,7 +159,7 @@ export function AppLayout({
             <div className="hidden h-9 w-px bg-border sm:block" />
             <div className="hidden text-right sm:block">
               <p className="text-[13px] font-semibold text-foreground leading-tight">{user.name}</p>
-              <p className="text-[11px] text-muted-foreground">{user.role}{user.pcName ? ` · ${user.pcName.replace("PCNU ", "")}` : ""}</p>
+              <p className="text-[11px] text-muted-foreground">{user.role}{user.pcName ? ` · ${user.pcName.replace("PCNU ", "")}` : user.pwName ? ` · ${user.pwName.replace("PWNU ", "")}` : ""}</p>
             </div>
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-sm font-semibold text-primary-dark ring-1 ring-primary/15">
               {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("")}
