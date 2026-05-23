@@ -10,6 +10,9 @@ import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Upload, AlertCircle } from "lucide-react";
 
 export const Route = createFileRoute("/aktivasi/$accessCode")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    org: typeof search.org === "string" ? search.org : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Aktivasi Administrator — Portal Aktivasi Digdaya" },
@@ -21,8 +24,10 @@ export const Route = createFileRoute("/aktivasi/$accessCode")({
 
 function AktivasiPage() {
   const { accessCode } = Route.useParams();
+  const { org: selectedOrgId } = Route.useSearch();
   const navigate = useNavigate();
   const code = useStore((s) => s.accessCodes.find((c) => c.code.toUpperCase() === accessCode.toUpperCase()));
+
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [namaAdmin, setNamaAdmin] = useState("");
