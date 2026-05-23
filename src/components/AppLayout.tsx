@@ -1,9 +1,10 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogOut, Menu, Bell, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { LogOut, Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "./Logo";
 import { actions, useStore, type Role } from "@/lib/store";
+import { NotificationBell } from "./NotificationBell";
 
 export type MenuItem = {
   to: string;
