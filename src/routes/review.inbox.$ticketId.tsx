@@ -105,8 +105,8 @@ function ReviewDetail() {
                 <Button onClick={() => setApproveOpen(true)} className="bg-success text-success-foreground hover:bg-success/90">
                   <CheckCircle2 className="mr-1 h-4 w-4" /> Setujui Pendaftaran
                 </Button>
-                <Button variant="outline" onClick={() => setRejectOpen(true)} className="border-destructive/40 text-destructive hover:bg-destructive/5">
-                  <XCircle className="mr-1 h-4 w-4" /> Tolak Pendaftaran
+                <Button variant="outline" onClick={() => setRevisionOpen(true)} className="border-destructive/40 text-destructive hover:bg-destructive/5">
+                  <RefreshCw className="mr-1 h-4 w-4" /> Minta Perbaikan / Tolak
                 </Button>
               </div>
             </div>
