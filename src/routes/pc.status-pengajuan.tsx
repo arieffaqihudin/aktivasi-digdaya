@@ -103,13 +103,17 @@ function StatusPengajuan() {
               <TD className="max-w-xs text-[12px] text-muted-foreground">{r.rejectReason ?? "—"}</TD>
               <TD className="text-right pr-6">
                 <div className="flex justify-end gap-1">
-                  {r.status === "PerluPerbaikan" || r.status === "RejectedFinal" ? (
+                  <Link to="/status/$ticketId" params={{ ticketId: r.ticketId }}>
+                    <RowAction title="Lihat detail"><Eye className="h-4 w-4" /></RowAction>
+                  </Link>
+                  {r.status === "PerluPerbaikan" && (
+                    <Link to="/pc/status-pengajuan/$ticketId/revisi" params={{ ticketId: r.ticketId }}>
+                      <RowAction title="Perbaiki pengajuan" tone="primary"><RefreshCw className="h-4 w-4" /></RowAction>
+                    </Link>
+                  )}
+                  {r.status === "RejectedFinal" && (
                     <Link to="/pc/daftarkan">
                       <RowAction title="Ajukan ulang" tone="primary"><RotateCcw className="h-4 w-4" /></RowAction>
-                    </Link>
-                  ) : (
-                    <Link to="/status/$ticketId" params={{ ticketId: r.ticketId }}>
-                      <RowAction title="Lihat detail" tone="primary"><Eye className="h-4 w-4" /></RowAction>
                     </Link>
                   )}
                 </div>
