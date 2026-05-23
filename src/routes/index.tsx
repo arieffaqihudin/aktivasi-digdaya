@@ -40,11 +40,11 @@ function Home() {
       <main className="relative z-10 flex flex-1 items-center px-4 py-6 sm:py-10 lg:py-14">
         <div className="mx-auto w-full max-w-[1080px]">
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 lg:items-center">
-            <div className="order-1 lg:order-2">
-              <RightColumn />
-            </div>
-            <div className="order-2 lg:order-1">
+            <div>
               <LeftColumn />
+            </div>
+            <div>
+              <RightColumn />
             </div>
           </div>
         </div>
