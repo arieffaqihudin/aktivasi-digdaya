@@ -1,6 +1,6 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogOut, Menu, Bell, X } from "lucide-react";
+import { LogOut, Menu, Bell, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "./Logo";
 import { actions, useStore, type Role } from "@/lib/store";
@@ -10,21 +10,25 @@ export type MenuItem = {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   exact?: boolean;
+  section?: string;
 };
 
 export function AppLayout({
   menu,
   allowedRoles,
   scopeLabel,
+  orgName,
 }: {
   menu: MenuItem[];
   allowedRoles: Role[];
   scopeLabel: string;
+  orgName?: string;
 }) {
   const user = useStore((s) => s.user);
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     if (!user) navigate({ to: "/login" });
@@ -39,50 +43,79 @@ export function AppLayout({
 
   if (!user) return null;
 
+  const displayOrg = orgName ?? (user.pcName ? user.pcName : "Pengurus Besar Nahdlatul Ulama");
+
+  // Group menu by section
+  const grouped: { section?: string; items: MenuItem[] }[] = [];
+  for (const m of menu) {
+    const last = grouped[grouped.length - 1];
+    if (last && last.section === m.section) last.items.push(m);
+    else grouped.push({ section: m.section, items: [m] });
+  }
+
   const Sidebar = (
-    <aside className="flex h-full w-64 flex-col bg-sidebar text-sidebar-foreground">
-      <div className="flex h-16 items-center justify-between px-5 border-b border-sidebar-border">
-        <Logo variant="light" />
-        <button className="lg:hidden text-sidebar-foreground" onClick={() => setMobileOpen(false)}>
+    <aside
+      className={cn(
+        "flex h-full flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border transition-[width] duration-200",
+        collapsed ? "w-[72px]" : "w-[260px]",
+      )}
+    >
+      <div className={cn("flex h-[84px] items-center border-b border-sidebar-border", collapsed ? "justify-center px-2" : "justify-between px-5")}>
+        <Logo compact={collapsed} />
+        <button
+          className="lg:hidden text-sidebar-foreground/70 hover:text-sidebar-foreground"
+          onClick={() => setMobileOpen(false)}
+          aria-label="Tutup menu"
+        >
           <X className="h-5 w-5" />
         </button>
       </div>
-      <nav className="flex-1 overflow-y-auto py-4 px-3">
-        <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/50">
-          {scopeLabel}
-        </p>
-        <ul className="space-y-1">
-          {menu.map((m) => {
-            const active = m.exact ? path === m.to : (path === m.to || path.startsWith(m.to + "/"));
-            return (
-              <li key={m.to}>
-                <Link
-                  to={m.to}
-                  className={cn(
-                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition",
-                    active
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium"
-                      : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                  )}
-                >
-                  <m.icon className="h-4 w-4" />
-                  {m.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+      <nav className="scrollbar-thin flex-1 overflow-y-auto py-4 px-3">
+        {grouped.map((g, gi) => (
+          <div key={gi} className={cn(gi > 0 && "mt-5")}>
+            {!collapsed && g.section && (
+              <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/70">
+                {g.section}
+              </p>
+            )}
+            <ul className="space-y-0.5">
+              {g.items.map((m) => {
+                const active = m.exact ? path === m.to : (path === m.to || path.startsWith(m.to + "/"));
+                return (
+                  <li key={m.to}>
+                    <Link
+                      to={m.to}
+                      title={collapsed ? m.label : undefined}
+                      className={cn(
+                        "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                        collapsed && "justify-center px-2",
+                        active
+                          ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold"
+                          : "text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                      )}
+                    >
+                      {active && !collapsed && (
+                        <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r bg-primary" />
+                      )}
+                      <m.icon className={cn("h-[18px] w-[18px] shrink-0", active ? "text-primary" : "text-sidebar-foreground/55 group-hover:text-primary")} />
+                      {!collapsed && <span className="truncate">{m.label}</span>}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
       </nav>
-      <div className="border-t border-sidebar-border p-4">
-        <div className="mb-2 text-xs">
-          <p className="font-medium text-sidebar-foreground">{user.name}</p>
-          <p className="text-sidebar-foreground/60">{user.email}</p>
-        </div>
+      <div className="border-t border-sidebar-border p-3">
         <button
           onClick={() => { actions.logout(); navigate({ to: "/login" }); }}
-          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs text-sidebar-foreground/80 hover:bg-sidebar-accent"
+          className={cn(
+            "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+            collapsed && "justify-center",
+          )}
         >
-          <LogOut className="h-4 w-4" /> Keluar
+          <LogOut className="h-4 w-4" /> {!collapsed && "Keluar"}
         </button>
       </div>
     </aside>
@@ -90,7 +123,16 @@ export function AppLayout({
 
   return (
     <div className="flex h-screen bg-background">
-      <div className="hidden lg:block">{Sidebar}</div>
+      <div className="hidden lg:block relative">
+        {Sidebar}
+        <button
+          onClick={() => setCollapsed((v) => !v)}
+          aria-label="Toggle sidebar"
+          className="absolute -right-3 top-24 z-10 hidden h-6 w-6 items-center justify-center rounded-full border border-sidebar-border bg-card text-muted-foreground shadow-sm hover:text-primary lg:flex"
+        >
+          {collapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
+        </button>
+      </div>
       {mobileOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
           <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
@@ -98,27 +140,32 @@ export function AppLayout({
         </div>
       )}
       <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-border bg-card px-4 sm:px-6">
-          <div className="flex items-center gap-3">
-            <button className="lg:hidden" onClick={() => setMobileOpen(true)}>
+        <header className="flex h-[84px] shrink-0 items-center justify-between gap-4 border-b border-border bg-card px-4 sm:px-8">
+          <div className="flex items-center gap-3 min-w-0">
+            <button className="lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Buka menu">
               <Menu className="h-5 w-5" />
             </button>
-            <div className="text-sm font-medium text-foreground">{scopeLabel}</div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="rounded-md p-2 text-muted-foreground hover:bg-secondary hover:text-foreground">
-              <Bell className="h-4 w-4" />
-            </button>
-            <div className="hidden text-right text-xs sm:block">
-              <p className="font-medium text-foreground">{user.name}</p>
-              <p className="text-muted-foreground">{user.role}{user.pcName ? ` · ${user.pcName}` : ""}</p>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Portal Aktivasi Digdaya</p>
+              <h2 className="truncate text-[17px] font-semibold text-foreground leading-tight">{displayOrg}</h2>
             </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-              {user.name.charAt(0)}
+          </div>
+          <div className="flex items-center gap-4">
+            <button className="relative rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label="Notifikasi">
+              <Bell className="h-[18px] w-[18px]" />
+              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />
+            </button>
+            <div className="hidden h-9 w-px bg-border sm:block" />
+            <div className="hidden text-right sm:block">
+              <p className="text-[13px] font-semibold text-foreground leading-tight">{user.name}</p>
+              <p className="text-[11px] text-muted-foreground">{user.role}{user.pcName ? ` · ${user.pcName.replace("PCNU ", "")}` : ""}</p>
+            </div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-sm font-semibold text-primary-dark ring-1 ring-primary/15">
+              {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("")}
             </div>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto bg-background">
           <Outlet />
         </main>
       </div>
