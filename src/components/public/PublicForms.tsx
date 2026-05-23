@@ -126,9 +126,9 @@ export function AktivasiForm() {
             <div className="flex items-center gap-2 text-[12px] font-medium text-primary-dark">
               <CheckCircle2 className="h-4 w-4" /> Kode akses valid
             </div>
-            <p className="mt-2 text-[15px] font-semibold text-foreground">{verified.pcName}</p>
+            <p className="mt-2 text-[15px] font-semibold text-foreground">{verified.orgName}</p>
             <p className="text-[12px] text-muted-foreground">
-              {verified.pw} · berlaku s.d. {new Date(verified.expiredAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
+              Tingkat {verified.tingkat} · {verified.pw} · berlaku s.d. {new Date(verified.expiredAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
             </p>
           </div>
 
