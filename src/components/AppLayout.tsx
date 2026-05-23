@@ -159,7 +159,7 @@ export function AppLayout({
         </div>
       )}
       <div className="flex flex-1 flex-col overflow-hidden min-w-0">
-        <header className="flex h-14 sm:h-16 lg:h-[84px] shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-3 sm:px-6 lg:px-8">
+        <header className="flex h-[60px] sm:h-[68px] lg:h-[76px] shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-4 sm:px-7 lg:px-8">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button className="lg:hidden -ml-1 inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary" onClick={() => setMobileOpen(true)} aria-label="Buka menu">
               <Menu className="h-5 w-5" />
