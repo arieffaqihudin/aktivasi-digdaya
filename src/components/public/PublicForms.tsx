@@ -67,7 +67,7 @@ export function AktivasiForm() {
     if (!verified) return;
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 600));
-    const reg = actions.submitJalurA({
+    const reg = actions.submitPublicActivation({
       accessCode: verified.code,
       namaAdmin, jabatan, nik, hp, email,
       suratTugasFile: file?.name,
