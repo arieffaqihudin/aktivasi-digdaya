@@ -22,7 +22,7 @@ function Home() {
       <main className="flex-1 px-4 py-12 sm:py-16">
         <div className="mx-auto w-full max-w-[880px]">
           <div className="flex flex-col items-center text-center">
-            <Logo />
+            <Logo variant="header" />
             <h1 className="mt-5 text-[24px] font-bold tracking-tight text-foreground sm:text-[28px]">
               Portal Aktivasi Digdaya
             </h1>
