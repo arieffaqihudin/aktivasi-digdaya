@@ -67,7 +67,7 @@ export function AktivasiForm() {
     if (!verified) return;
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 600));
-    const reg = actions.submitJalurA({
+    const reg = actions.submitPublicActivation({
       accessCode: verified.code,
       namaAdmin, jabatan, nik, hp, email,
       suratTugasFile: file?.name,
@@ -126,9 +126,9 @@ export function AktivasiForm() {
             <div className="flex items-center gap-2 text-[12px] font-medium text-primary-dark">
               <CheckCircle2 className="h-4 w-4" /> Kode akses valid
             </div>
-            <p className="mt-2 text-[15px] font-semibold text-foreground">{verified.pcName}</p>
+            <p className="mt-2 text-[15px] font-semibold text-foreground">{verified.orgName}</p>
             <p className="text-[12px] text-muted-foreground">
-              {verified.pw} · berlaku s.d. {new Date(verified.expiredAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
+              Tingkat {verified.tingkat} · {verified.pw} · berlaku s.d. {new Date(verified.expiredAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
             </p>
           </div>
 
@@ -180,8 +180,8 @@ export function AktivasiForm() {
         <div className="mt-6">
           <p className="text-[13px] text-muted-foreground">Periksa kembali data sebelum mengirim.</p>
           <dl className="mt-4 grid gap-2 sm:grid-cols-2">
-            <Info label="Nama PC" value={verified.pcName} />
-            <Info label="Wilayah PW" value={verified.pw} />
+            <Info label={`Nama ${verified.tingkat}`} value={verified.orgName} />
+            <Info label="Wilayah" value={verified.pw} />
             <Info label="Administrator" value={namaAdmin} />
             <Info label="Jabatan" value={jabatan} />
             <Info label="NIK" value={maskNik(nik)} />
