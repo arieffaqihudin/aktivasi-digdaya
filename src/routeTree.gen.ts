@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as CekStatusRouteImport } from './routes/cek-status'
 import { Route as IndexRouteImport } from './routes/index'
@@ -18,6 +19,11 @@ import { Route as StatusTicketIdRouteImport } from './routes/status.$ticketId'
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DaftarRoute = DaftarRouteImport.update({
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cek-status': typeof CekStatusRoute
   '/daftar': typeof DaftarRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cek-status': typeof CekStatusRoute
   '/daftar': typeof DaftarRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
 }
@@ -60,19 +68,33 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/cek-status': typeof CekStatusRoute
   '/daftar': typeof DaftarRoute
+  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cek-status' | '/daftar' | '/login' | '/status/$ticketId'
+  fullPaths:
+    | '/'
+    | '/cek-status'
+    | '/daftar'
+    | '/dashboard'
+    | '/login'
+    | '/status/$ticketId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cek-status' | '/daftar' | '/login' | '/status/$ticketId'
+  to:
+    | '/'
+    | '/cek-status'
+    | '/daftar'
+    | '/dashboard'
+    | '/login'
+    | '/status/$ticketId'
   id:
     | '__root__'
     | '/'
     | '/cek-status'
     | '/daftar'
+    | '/dashboard'
     | '/login'
     | '/status/$ticketId'
   fileRoutesById: FileRoutesById
@@ -81,6 +103,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CekStatusRoute: typeof CekStatusRoute
   DaftarRoute: typeof DaftarRoute
+  DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   StatusTicketIdRoute: typeof StatusTicketIdRoute
 }
@@ -92,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daftar': {
@@ -129,6 +159,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CekStatusRoute: CekStatusRoute,
   DaftarRoute: DaftarRoute,
+  DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   StatusTicketIdRoute: StatusTicketIdRoute,
 }
