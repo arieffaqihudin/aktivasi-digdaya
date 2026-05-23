@@ -4,9 +4,6 @@ import {
   LogIn,
   KeyRound,
   ArrowRight,
-  RefreshCw,
-  Users,
-  Eye,
   BadgeCheck,
   Search,
 } from "lucide-react";
