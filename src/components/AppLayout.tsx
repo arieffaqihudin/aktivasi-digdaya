@@ -1,10 +1,19 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogOut, Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { LogOut, Menu, X, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Logo } from "./Logo";
 import { actions, useStore, type Role } from "@/lib/store";
 import { NotificationBell } from "./NotificationBell";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export type MenuItem = {
   to: string;
@@ -120,19 +129,16 @@ export function AppLayout({
           </div>
         ))}
       </nav>
-      <div className="border-t border-sidebar-border p-3">
-        <button
-          onClick={() => { actions.logout(); navigate({ to: "/login" }); }}
-          className={cn(
-            "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-            collapsed && "justify-center",
-          )}
-        >
-          <LogOut className="h-4 w-4" /> {!collapsed && "Keluar"}
-        </button>
-      </div>
     </aside>
   );
+
+  const initials = user.name.split(" ").map((p) => p[0]).slice(0, 2).join("");
+  const roleSuffix = user.pcName ? ` · ${user.pcName.replace("PCNU ", "")}` : user.pwName ? ` · ${user.pwName.replace("PWNU ", "")}` : "";
+  const handleLogout = () => {
+    actions.logout();
+    toast.success("Anda telah keluar.");
+    navigate({ to: "/" });
+  };
 
   return (
     <div className="flex h-dvh bg-background">
@@ -163,16 +169,35 @@ export function AppLayout({
               <h2 className="truncate text-[14px] sm:text-[17px] font-semibold text-foreground leading-tight max-w-[55vw] sm:max-w-none">{displayOrg}</h2>
             </div>
           </div>
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
             <NotificationBell />
             <div className="hidden h-9 w-px bg-border sm:block" />
-            <div className="hidden text-right sm:block">
-              <p className="text-[13px] font-semibold text-foreground leading-tight">{user.name}</p>
-              <p className="text-[11px] text-muted-foreground">{user.role}{user.pcName ? ` · ${user.pcName.replace("PCNU ", "")}` : user.pwName ? ` · ${user.pwName.replace("PWNU ", "")}` : ""}</p>
-            </div>
-            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-accent text-[12px] sm:text-sm font-semibold text-primary-dark ring-1 ring-primary/15">
-              {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("")}
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2 rounded-full p-1 pr-2 outline-none transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-primary/40 sm:gap-3">
+                <span className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-accent text-[12px] sm:text-sm font-semibold text-primary-dark ring-1 ring-primary/15">
+                  {initials}
+                </span>
+                <span className="hidden text-right sm:block">
+                  <span className="block text-[13px] font-semibold text-foreground leading-tight">{user.name}</span>
+                  <span className="block text-[11px] text-muted-foreground">{user.role}{roleSuffix}</span>
+                </span>
+                <ChevronDown className="hidden h-4 w-4 text-muted-foreground sm:block" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={8} className="w-[240px] rounded-2xl border-border/70 p-2 shadow-lg">
+                <DropdownMenuLabel className="px-2 py-2">
+                  <p className="text-[13px] font-semibold text-foreground leading-tight">{user.name}</p>
+                  {user.email && <p className="mt-0.5 truncate text-[11px] font-normal text-muted-foreground">{user.email}</p>}
+                  <p className="mt-1 text-[11px] font-medium text-primary">{user.role}{roleSuffix}</p>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onSelect={handleLogout}
+                  className="cursor-pointer rounded-lg px-2 py-2 text-[13px] font-medium text-destructive focus:bg-destructive/10 focus:text-destructive"
+                >
+                  <LogOut className="mr-2 h-4 w-4" /> Keluar
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
         <main className="flex-1 overflow-y-auto bg-background">
