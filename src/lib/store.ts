@@ -579,6 +579,27 @@ export const actions = {
       ticketId,
       detail: `${user.role === "PC" ? user.pcName : user.pwName} mendaftarkan ${payload.namaOrg} (${payload.tipeOrg}) — surat: ${payload.sumberSuratTugas === "DIGDAYA_PERSURATAN" ? "Dari Sistem" : "Upload Manual"}.`,
     });
+    const submitterName = user.role === "PC" ? user.pcName : user.pwName;
+    const statusRoute = user.role === "PC" ? `/pc/status-pengajuan/${ticketId}` : `/pw/status-pengajuan/${ticketId}`;
+    notifActions.broadcast([
+      {
+        recipientRole: "REVIEWER",
+        type: "NEW_SUBMISSION",
+        title: `Pengajuan baru dari ${submitterName}`,
+        description: `${payload.namaOrg} menunggu review Tim Digdaya.`,
+        ticketId,
+        route: `/review/inbox/${ticketId}`,
+      },
+      {
+        recipientRole: user.role === "PC" ? "PC" : "PW",
+        recipientOrgId: user.role === "PC" ? user.pcId : user.pwId,
+        type: "NEW_SUBMISSION",
+        title: "Pengajuan berhasil dikirim",
+        description: `${payload.namaOrg} sedang menunggu review Tim Digdaya.`,
+        ticketId,
+        route: statusRoute,
+      },
+    ]);
     return reg;
   },
 
