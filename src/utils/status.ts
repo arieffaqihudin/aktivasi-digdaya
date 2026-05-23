@@ -1,5 +1,22 @@
 import type { Registration } from "@/data/mockData";
 
+const dateFormatter = new Intl.DateTimeFormat("id-ID", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+  timeZone: "Asia/Jakarta",
+});
+
+const dateTimeFormatter = new Intl.DateTimeFormat("id-ID", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+  timeZone: "Asia/Jakarta",
+});
+
 export function daysSinceSubmit(reg: Registration): number {
   const submitted = new Date(reg.submittedAt).getTime();
   const end = reg.reviewedAt ? new Date(reg.reviewedAt).getTime() : Date.now();
@@ -19,21 +36,11 @@ export function slaBucket(reg: Registration, greenMax = 1, yellowMax = 3): SLABu
 }
 
 export function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("id-ID", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  return dateFormatter.format(new Date(iso));
 }
 
 export function formatDateTime(iso: string) {
-  return new Date(iso).toLocaleString("id-ID", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return dateTimeFormatter.format(new Date(iso));
 }
 
 export function formatRelativeDays(reg: Registration): string {
