@@ -443,6 +443,29 @@ export const seedRegistrations: Registration[] = [
     sumberSuratTugas: "DIGDAYA_PERSURATAN", suratTugasFile: undefined, dokumenSistem: mockSuratTugasDigdaya[7],
   }),
   regJalurB({ ticketId: "AKT-2026-000134", tipeOrg: "Ranting", namaOrg: "Ranting NU Cukir", pw: "PWNU Jawa Timur", sourcePcId: "pc-jbg", sourcePcName: "PCNU Kabupaten Jombang", namaAdmin: "Rina Marlina", jabatan: "Sekretaris", nik: "3517202020900017", hp: "+6281234567017", email: "rina@ranting-cukir.id", status: "Pending", submittedAt: daysAgo(3, 12) }),
+
+  // PW Dashboard — PWNU DIY mendaftarkan PCNU Kota Yogyakarta
+  {
+    jalur: "B",
+    sumberPengajuan: "PW_DASHBOARD",
+    tingkatPendaftar: "PW",
+    ticketId: "AKT-2026-000201",
+    tipeOrg: "PC",
+    namaOrg: "PCNU Kota Yogyakarta",
+    pw: "PWNU DI Yogyakarta",
+    sourcePwId: "pw-diy",
+    sourcePwName: "PWNU DI Yogyakarta",
+    namaAdmin: "Ahmad Fauzan",
+    jabatan: "Sekretaris",
+    nik: "3404000000002010",
+    hp: "+6281234567201",
+    email: "ahmad.fauzan@example.com",
+    sumberSuratTugas: "DIGDAYA_PERSURATAN",
+    suratTugasFile: undefined,
+    dokumenSistem: mockSuratTugasDigdaya[mockSuratTugasDigdaya.length - 1],
+    status: "Pending",
+    submittedAt: daysAgo(3, 10),
+  } as Registration,
 ];
 
 export const seedPeruriBatches: PeruriBatch[] = [
