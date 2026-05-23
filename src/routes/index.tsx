@@ -38,15 +38,18 @@ function Home() {
 
       <PublicHeader />
 
-      <main className="relative z-10 flex flex-1 items-center px-4 py-10 sm:py-14">
+      <main className="relative z-10 flex flex-1 items-center px-4 py-6 sm:py-10 lg:py-14">
         <div className="mx-auto w-full max-w-[1080px]">
-          {/* Mobile: stacked. Desktop: two columns */}
-          <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 lg:items-center">
+          {/* Mobile: right column first (CTA above the fold). Desktop: two columns */}
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 lg:items-center">
+            {/* Right column: choice card — shown first on mobile */}
+            <div className="order-1 lg:order-2">
+              <RightColumn />
+            </div>
             {/* Left column: context */}
-            <LeftColumn />
-
-            {/* Right column: choice card */}
-            <RightColumn />
+            <div className="order-2 lg:order-1">
+              <LeftColumn />
+            </div>
           </div>
         </div>
       </main>
@@ -59,23 +62,23 @@ function Home() {
 function DecorativeBackground() {
   return (
     <>
-      {/* Soft green blob top-right */}
+      {/* Soft green blob top-right - hidden on mobile to reduce visual noise */}
       <div
-        className="pointer-events-none absolute -right-20 -top-20 h-[380px] w-[380px] rounded-full opacity-[0.04]"
+        className="pointer-events-none absolute -right-20 -top-20 hidden sm:block h-[380px] w-[380px] rounded-full opacity-[0.04]"
         style={{
           background: "radial-gradient(circle, var(--color-primary) 0%, transparent 70%)",
         }}
       />
       {/* Soft green blob bottom-left */}
       <div
-        className="pointer-events-none absolute -bottom-32 -left-24 h-[440px] w-[440px] rounded-full opacity-[0.035]"
+        className="pointer-events-none absolute -bottom-32 -left-24 hidden sm:block h-[440px] w-[440px] rounded-full opacity-[0.035]"
         style={{
           background: "radial-gradient(circle, var(--color-primary) 0%, transparent 70%)",
         }}
       />
-      {/* Subtle dot pattern overlay */}
+      {/* Subtle dot pattern overlay - lighter on mobile */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.25]"
+        className="pointer-events-none absolute inset-0 opacity-[0.15] sm:opacity-[0.25]"
         style={{
           backgroundImage: `radial-gradient(var(--color-border) 1px, transparent 1px)`,
           backgroundSize: "28px 28px",
