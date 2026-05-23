@@ -119,12 +119,13 @@ function GatewayCards() {
       <GatewayOption
         to="/login"
         icon={<LogIn className="h-5 w-5" />}
-        badge="Sudah Production"
+        badge="SUDAH PRODUCTION"
         badgeTone="muted"
         title="PW/PC Anda sudah production?"
-        description="Login untuk mendaftarkan kepengurusan di bawah kewenangan Anda, seperti Lembaga, MWC, Ranting, atau struktur lainnya."
+        description="Silakan login untuk mendaftarkan kepengurusan di bawah kewenangan Anda, seperti MWC, Lembaga, Ranting, atau struktur lainnya."
         cta="Login dengan Email / NU.ID"
         ctaMobile="Login Email / NU.ID"
+        helper="Gunakan jalur ini jika PW/PC Anda sudah aktif di Digdaya."
         variant="secondary"
       />
 
@@ -139,13 +140,20 @@ function GatewayCards() {
       <GatewayOption
         to="/kode-akses"
         icon={<KeyRound className="h-5 w-5" />}
-        badge="Belum Production"
+        badge="BELUM PRODUCTION"
         badgeTone="primary"
         title="PW/PC Anda belum production?"
-        description="Gunakan kode akses dari PBNU untuk mengaktifkan kepengurusan dan mendaftarkan administrator Digdaya."
+        description="Aktifkan PW/PC Anda terlebih dahulu menggunakan kode akses dari PBNU. Setelah aktif, baru Anda dapat mendaftarkan kepengurusan di bawahnya."
         cta="Masukkan Kode Akses"
+        helper="Gunakan jalur ini jika PW/PC Anda belum memiliki akses Digdaya."
         variant="primary"
       />
+
+      <div className="mt-5 rounded-xl border border-[#D1E7DD] bg-[#F0F9F4] p-4">
+        <p className="text-[12.5px] leading-relaxed text-[#2D6A4F]">
+          <span className="font-semibold">Catatan:</span> Jika PW/PC Anda belum production, jangan login untuk mendaftarkan MWC/Lembaga/Ranting. Aktifkan PW/PC terlebih dahulu melalui kode akses.
+        </p>
+      </div>
     </div>
   );
 }
