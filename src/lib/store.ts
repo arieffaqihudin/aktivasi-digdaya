@@ -635,19 +635,24 @@ export const actions = {
   // ===== Auth =====
   login(email: string, password: string): User | null {
     if (password !== "password") return null;
+    return actions.loginAs(email);
+  },
+  /** Passwordless login (NU.ID / OTP). Unknown email defaults to PC production user. */
+  loginAs(email: string): User | null {
+    const e = email.trim().toLowerCase();
     let user: User | null = null;
-    if (email === "admin@digdaya.nu.id") {
-      user = { email, name: "Super Admin Digdaya", role: "Super Admin" };
-    } else if (email === "reviewer@digdaya.nu.id") {
-      user = { email, name: "Reviewer Digdaya", role: "Reviewer" };
-    } else if (email === "pc@digdaya.nu.id") {
-      const pc = masterPC.find((p) => p.id === demoPcUserPcId)!;
-      user = { email, name: "Administrator " + pc.nama, role: "PC", pcId: pc.id, pcName: pc.nama };
-    } else if (email === "pw@digdaya.nu.id") {
+    if (e === "admin@digdaya.nu.id") {
+      user = { email: e, name: "Super Admin Digdaya", role: "Super Admin" };
+    } else if (e === "reviewer@digdaya.nu.id") {
+      user = { email: e, name: "Reviewer Digdaya", role: "Reviewer" };
+    } else if (e === "pw@digdaya.nu.id") {
       const pw = masterPW.find((p) => p.id === demoPwUserPwId)!;
-      user = { email, name: "Administrator " + pw.nama, role: "PW", pwId: pw.id, pwName: pw.nama };
+      user = { email: e, name: "Administrator " + pw.nama, role: "PW", pwId: pw.id, pwName: pw.nama };
+    } else {
+      const pc = masterPC.find((p) => p.id === demoPcUserPcId)!;
+      user = { email: e, name: "Administrator " + pc.nama, role: "PC", pcId: pc.id, pcName: pc.nama };
     }
-    if (user) setState({ user });
+    setState({ user });
     return user;
   },
   logout() { setState({ user: null }); },
