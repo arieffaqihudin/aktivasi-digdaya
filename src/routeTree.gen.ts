@@ -37,7 +37,11 @@ import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$acces
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
 import { Route as AdminAccessCodesRouteImport } from './routes/admin.access-codes'
+import { Route as StatusTicketIdRevisiRouteImport } from './routes/status.$ticketId.revisi'
 import { Route as ReviewInboxTicketIdRouteImport } from './routes/review.inbox.$ticketId'
+import { Route as AktivasiSuksesTicketIdRouteImport } from './routes/aktivasi.sukses.$ticketId'
+import { Route as PwStatusPengajuanTicketIdRevisiRouteImport } from './routes/pw.status-pengajuan.$ticketId.revisi'
+import { Route as PcStatusPengajuanTicketIdRevisiRouteImport } from './routes/pc.status-pengajuan.$ticketId.revisi'
 
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
@@ -179,11 +183,33 @@ const AdminAccessCodesRoute = AdminAccessCodesRouteImport.update({
   path: '/access-codes',
   getParentRoute: () => AdminRoute,
 } as any)
+const StatusTicketIdRevisiRoute = StatusTicketIdRevisiRouteImport.update({
+  id: '/revisi',
+  path: '/revisi',
+  getParentRoute: () => StatusTicketIdRoute,
+} as any)
 const ReviewInboxTicketIdRoute = ReviewInboxTicketIdRouteImport.update({
   id: '/$ticketId',
   path: '/$ticketId',
   getParentRoute: () => ReviewInboxRoute,
 } as any)
+const AktivasiSuksesTicketIdRoute = AktivasiSuksesTicketIdRouteImport.update({
+  id: '/sukses/$ticketId',
+  path: '/sukses/$ticketId',
+  getParentRoute: () => AktivasiRoute,
+} as any)
+const PwStatusPengajuanTicketIdRevisiRoute =
+  PwStatusPengajuanTicketIdRevisiRouteImport.update({
+    id: '/$ticketId/revisi',
+    path: '/$ticketId/revisi',
+    getParentRoute: () => PwStatusPengajuanRoute,
+  } as any)
+const PcStatusPengajuanTicketIdRevisiRoute =
+  PcStatusPengajuanTicketIdRevisiRouteImport.update({
+    id: '/$ticketId/revisi',
+    path: '/$ticketId/revisi',
+    getParentRoute: () => PcStatusPengajuanRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -201,20 +227,24 @@ export interface FileRoutesByFullPath {
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
-  '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/pc/status-pengajuan': typeof PcStatusPengajuanRouteWithChildren
   '/pw/daftarkan': typeof PwDaftarkanRoute
   '/pw/profil': typeof PwProfilRoute
-  '/pw/status-pengajuan': typeof PwStatusPengajuanRoute
+  '/pw/status-pengajuan': typeof PwStatusPengajuanRouteWithChildren
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
   '/review/sla': typeof ReviewSlaRoute
-  '/status/$ticketId': typeof StatusTicketIdRoute
+  '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/pc/': typeof PcIndexRoute
   '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
+  '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
+  '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
+  '/pc/status-pengajuan/$ticketId/revisi': typeof PcStatusPengajuanTicketIdRevisiRoute
+  '/pw/status-pengajuan/$ticketId/revisi': typeof PwStatusPengajuanTicketIdRevisiRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -228,20 +258,24 @@ export interface FileRoutesByTo {
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
-  '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/pc/status-pengajuan': typeof PcStatusPengajuanRouteWithChildren
   '/pw/daftarkan': typeof PwDaftarkanRoute
   '/pw/profil': typeof PwProfilRoute
-  '/pw/status-pengajuan': typeof PwStatusPengajuanRoute
+  '/pw/status-pengajuan': typeof PwStatusPengajuanRouteWithChildren
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
   '/review/sla': typeof ReviewSlaRoute
-  '/status/$ticketId': typeof StatusTicketIdRoute
+  '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
   '/admin': typeof AdminIndexRoute
   '/pc': typeof PcIndexRoute
   '/pw': typeof PwIndexRoute
   '/review': typeof ReviewIndexRoute
+  '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
+  '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
+  '/pc/status-pengajuan/$ticketId/revisi': typeof PcStatusPengajuanTicketIdRevisiRoute
+  '/pw/status-pengajuan/$ticketId/revisi': typeof PwStatusPengajuanTicketIdRevisiRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -260,20 +294,24 @@ export interface FileRoutesById {
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
-  '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/pc/status-pengajuan': typeof PcStatusPengajuanRouteWithChildren
   '/pw/daftarkan': typeof PwDaftarkanRoute
   '/pw/profil': typeof PwProfilRoute
-  '/pw/status-pengajuan': typeof PwStatusPengajuanRoute
+  '/pw/status-pengajuan': typeof PwStatusPengajuanRouteWithChildren
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
   '/review/sla': typeof ReviewSlaRoute
-  '/status/$ticketId': typeof StatusTicketIdRoute
+  '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/pc/': typeof PcIndexRoute
   '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
+  '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
+  '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
+  '/pc/status-pengajuan/$ticketId/revisi': typeof PcStatusPengajuanTicketIdRevisiRoute
+  '/pw/status-pengajuan/$ticketId/revisi': typeof PwStatusPengajuanTicketIdRevisiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -306,7 +344,11 @@ export interface FileRouteTypes {
     | '/pc/'
     | '/pw/'
     | '/review/'
+    | '/aktivasi/sukses/$ticketId'
     | '/review/inbox/$ticketId'
+    | '/status/$ticketId/revisi'
+    | '/pc/status-pengajuan/$ticketId/revisi'
+    | '/pw/status-pengajuan/$ticketId/revisi'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -333,7 +375,11 @@ export interface FileRouteTypes {
     | '/pc'
     | '/pw'
     | '/review'
+    | '/aktivasi/sukses/$ticketId'
     | '/review/inbox/$ticketId'
+    | '/status/$ticketId/revisi'
+    | '/pc/status-pengajuan/$ticketId/revisi'
+    | '/pw/status-pengajuan/$ticketId/revisi'
   id:
     | '__root__'
     | '/'
@@ -364,7 +410,11 @@ export interface FileRouteTypes {
     | '/pc/'
     | '/pw/'
     | '/review/'
+    | '/aktivasi/sukses/$ticketId'
     | '/review/inbox/$ticketId'
+    | '/status/$ticketId/revisi'
+    | '/pc/status-pengajuan/$ticketId/revisi'
+    | '/pw/status-pengajuan/$ticketId/revisi'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -377,7 +427,7 @@ export interface RootRouteChildren {
   PcRoute: typeof PcRouteWithChildren
   PwRoute: typeof PwRouteWithChildren
   ReviewRoute: typeof ReviewRouteWithChildren
-  StatusTicketIdRoute: typeof StatusTicketIdRoute
+  StatusTicketIdRoute: typeof StatusTicketIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -578,12 +628,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAccessCodesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/status/$ticketId/revisi': {
+      id: '/status/$ticketId/revisi'
+      path: '/revisi'
+      fullPath: '/status/$ticketId/revisi'
+      preLoaderRoute: typeof StatusTicketIdRevisiRouteImport
+      parentRoute: typeof StatusTicketIdRoute
+    }
     '/review/inbox/$ticketId': {
       id: '/review/inbox/$ticketId'
       path: '/$ticketId'
       fullPath: '/review/inbox/$ticketId'
       preLoaderRoute: typeof ReviewInboxTicketIdRouteImport
       parentRoute: typeof ReviewInboxRoute
+    }
+    '/aktivasi/sukses/$ticketId': {
+      id: '/aktivasi/sukses/$ticketId'
+      path: '/sukses/$ticketId'
+      fullPath: '/aktivasi/sukses/$ticketId'
+      preLoaderRoute: typeof AktivasiSuksesTicketIdRouteImport
+      parentRoute: typeof AktivasiRoute
+    }
+    '/pw/status-pengajuan/$ticketId/revisi': {
+      id: '/pw/status-pengajuan/$ticketId/revisi'
+      path: '/$ticketId/revisi'
+      fullPath: '/pw/status-pengajuan/$ticketId/revisi'
+      preLoaderRoute: typeof PwStatusPengajuanTicketIdRevisiRouteImport
+      parentRoute: typeof PwStatusPengajuanRoute
+    }
+    '/pc/status-pengajuan/$ticketId/revisi': {
+      id: '/pc/status-pengajuan/$ticketId/revisi'
+      path: '/$ticketId/revisi'
+      fullPath: '/pc/status-pengajuan/$ticketId/revisi'
+      preLoaderRoute: typeof PcStatusPengajuanTicketIdRevisiRouteImport
+      parentRoute: typeof PcStatusPengajuanRoute
     }
   }
 }
@@ -606,43 +684,67 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AktivasiRouteChildren {
   AktivasiAccessCodeRoute: typeof AktivasiAccessCodeRoute
+  AktivasiSuksesTicketIdRoute: typeof AktivasiSuksesTicketIdRoute
 }
 
 const AktivasiRouteChildren: AktivasiRouteChildren = {
   AktivasiAccessCodeRoute: AktivasiAccessCodeRoute,
+  AktivasiSuksesTicketIdRoute: AktivasiSuksesTicketIdRoute,
 }
 
 const AktivasiRouteWithChildren = AktivasiRoute._addFileChildren(
   AktivasiRouteChildren,
 )
 
+interface PcStatusPengajuanRouteChildren {
+  PcStatusPengajuanTicketIdRevisiRoute: typeof PcStatusPengajuanTicketIdRevisiRoute
+}
+
+const PcStatusPengajuanRouteChildren: PcStatusPengajuanRouteChildren = {
+  PcStatusPengajuanTicketIdRevisiRoute: PcStatusPengajuanTicketIdRevisiRoute,
+}
+
+const PcStatusPengajuanRouteWithChildren =
+  PcStatusPengajuanRoute._addFileChildren(PcStatusPengajuanRouteChildren)
+
 interface PcRouteChildren {
   PcDaftarkanRoute: typeof PcDaftarkanRoute
   PcProfilRoute: typeof PcProfilRoute
-  PcStatusPengajuanRoute: typeof PcStatusPengajuanRoute
+  PcStatusPengajuanRoute: typeof PcStatusPengajuanRouteWithChildren
   PcIndexRoute: typeof PcIndexRoute
 }
 
 const PcRouteChildren: PcRouteChildren = {
   PcDaftarkanRoute: PcDaftarkanRoute,
   PcProfilRoute: PcProfilRoute,
-  PcStatusPengajuanRoute: PcStatusPengajuanRoute,
+  PcStatusPengajuanRoute: PcStatusPengajuanRouteWithChildren,
   PcIndexRoute: PcIndexRoute,
 }
 
 const PcRouteWithChildren = PcRoute._addFileChildren(PcRouteChildren)
 
+interface PwStatusPengajuanRouteChildren {
+  PwStatusPengajuanTicketIdRevisiRoute: typeof PwStatusPengajuanTicketIdRevisiRoute
+}
+
+const PwStatusPengajuanRouteChildren: PwStatusPengajuanRouteChildren = {
+  PwStatusPengajuanTicketIdRevisiRoute: PwStatusPengajuanTicketIdRevisiRoute,
+}
+
+const PwStatusPengajuanRouteWithChildren =
+  PwStatusPengajuanRoute._addFileChildren(PwStatusPengajuanRouteChildren)
+
 interface PwRouteChildren {
   PwDaftarkanRoute: typeof PwDaftarkanRoute
   PwProfilRoute: typeof PwProfilRoute
-  PwStatusPengajuanRoute: typeof PwStatusPengajuanRoute
+  PwStatusPengajuanRoute: typeof PwStatusPengajuanRouteWithChildren
   PwIndexRoute: typeof PwIndexRoute
 }
 
 const PwRouteChildren: PwRouteChildren = {
   PwDaftarkanRoute: PwDaftarkanRoute,
   PwProfilRoute: PwProfilRoute,
-  PwStatusPengajuanRoute: PwStatusPengajuanRoute,
+  PwStatusPengajuanRoute: PwStatusPengajuanRouteWithChildren,
   PwIndexRoute: PwIndexRoute,
 }
 
@@ -679,6 +781,18 @@ const ReviewRouteChildren: ReviewRouteChildren = {
 const ReviewRouteWithChildren =
   ReviewRoute._addFileChildren(ReviewRouteChildren)
 
+interface StatusTicketIdRouteChildren {
+  StatusTicketIdRevisiRoute: typeof StatusTicketIdRevisiRoute
+}
+
+const StatusTicketIdRouteChildren: StatusTicketIdRouteChildren = {
+  StatusTicketIdRevisiRoute: StatusTicketIdRevisiRoute,
+}
+
+const StatusTicketIdRouteWithChildren = StatusTicketIdRoute._addFileChildren(
+  StatusTicketIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -689,18 +803,8 @@ const rootRouteChildren: RootRouteChildren = {
   PcRoute: PcRouteWithChildren,
   PwRoute: PwRouteWithChildren,
   ReviewRoute: ReviewRouteWithChildren,
-  StatusTicketIdRoute: StatusTicketIdRoute,
+  StatusTicketIdRoute: StatusTicketIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

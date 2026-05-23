@@ -84,7 +84,7 @@ function AktivasiPage() {
     setSubmitting(false);
     if (!reg) return toast.error("Gagal mengirim pendaftaran.");
     setTicketId(reg.ticketId);
-    setStep(3);
+    navigate({ to: "/aktivasi/sukses/$ticketId", params: { ticketId: reg.ticketId } });
   };
 
   const maskNik = (n: string) => (n.length === 16 ? n.slice(0, 4) + "********" + n.slice(-4) : n);
