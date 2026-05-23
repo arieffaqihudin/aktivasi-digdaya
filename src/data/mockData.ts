@@ -282,6 +282,7 @@ export const mockSuratTugasDigdaya: DokumenSistem[] = [
   { documentId: "DOC-2026-0301", nomorSurat: "020/PC-JBG/ST/2026", namaDokumen: "Surat Tugas Administrator MWCNU Diwek",            tanggalSurat: isoDate(4),  penandatangan: "KH. Anwar Manshur (Ketua PCNU Jombang)",        status: "Tertandatangani" },
   { documentId: "DOC-2026-0302", nomorSurat: "021/PC-JBG/ST/2026", namaDokumen: "Surat Tugas Pengurus Ranting NU Cukir",            tanggalSurat: isoDate(3),  penandatangan: "KH. Anwar Manshur (Ketua PCNU Jombang)",        status: "Tertandatangani" },
   { documentId: "DOC-2026-0401", nomorSurat: "030/PC-SLO/ST/2026", namaDokumen: "Surat Tugas Pengurus LP Ma'arif PCNU Surakarta",   tanggalSurat: isoDate(1),  penandatangan: "KH. Mu'inudinillah (Ketua PCNU Surakarta)",     status: "Tertandatangani" },
+  { documentId: "DOC-2026-0203", nomorSurat: "201/PW.01/A.I.06.03/05/2026", namaDokumen: "Surat Tugas Aktivasi PCNU Kota Yogyakarta", tanggalSurat: isoDate(3), penandatangan: "KH. Hilmy Muhammad (Rais PWNU DIY)", status: "Tertandatangani" },
 ];
 
 // ============================================================
