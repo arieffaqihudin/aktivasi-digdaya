@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import {
   seedRegistrations,
   seedPeruriBatches,
@@ -62,8 +62,9 @@ function initial(): State {
   };
 }
 
-function load(): State {
-  if (typeof window === "undefined") return initial();
+const serverSnapshot = initial();
+
+function loadFromStorage(): State {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return initial();
@@ -74,8 +75,20 @@ function load(): State {
   }
 }
 
-let state: State = load();
+let state: State = initial();
+let hasHydratedFromStorage = false;
 const listeners = new Set<() => void>();
+
+function emit() {
+  listeners.forEach((l) => l());
+}
+
+function hydrateStateFromStorage() {
+  if (typeof window === "undefined" || hasHydratedFromStorage) return;
+  hasHydratedFromStorage = true;
+  state = loadFromStorage();
+  emit();
+}
 
 function persist() {
   if (typeof window === "undefined") return;
@@ -87,14 +100,24 @@ function setState(next: Partial<State> | ((s: State) => Partial<State>)) {
   const patch = typeof next === "function" ? next(state) : next;
   state = { ...state, ...patch };
   persist();
-  listeners.forEach((l) => l());
+  emit();
 }
 function subscribe(l: () => void) {
   listeners.add(l);
   return () => listeners.delete(l);
 }
 export function useStore<T>(selector: (s: State) => T): T {
-  return useSyncExternalStore(subscribe, () => selector(state), () => selector(state));
+  const selected = useSyncExternalStore(
+    subscribe,
+    () => selector(state),
+    () => selector(serverSnapshot),
+  );
+
+  useEffect(() => {
+    hydrateStateFromStorage();
+  }, []);
+
+  return selected;
 }
 export function getState() { return state; }
 
