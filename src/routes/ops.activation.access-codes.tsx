@@ -538,6 +538,3 @@ function SelectFilter({ value, onChange, options, placeholder }: { value: string
     </Select>
   );
 }
-
-// Unused export to satisfy strict tree-shaking warning suppression for Download icon if needed
-void Download;
