@@ -22,6 +22,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReviewIndexRouteImport } from './routes/review.index'
 import { Route as PwIndexRouteImport } from './routes/pw.index'
 import { Route as PcIndexRouteImport } from './routes/pc.index'
+import { Route as OpsIndexRouteImport } from './routes/ops.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as StatusTicketIdRouteImport } from './routes/status.$ticketId'
 import { Route as ReviewSlaRouteImport } from './routes/review.sla'
@@ -108,6 +109,11 @@ const PcIndexRoute = PcIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PcRoute,
+} as any)
+const OpsIndexRoute = OpsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OpsRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
@@ -224,7 +230,7 @@ export interface FileRoutesByFullPath {
   '/cek-status': typeof CekStatusRoute
   '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
-  '/ops': typeof OpsRoute
+  '/ops': typeof OpsRouteWithChildren
   '/pc': typeof PcRouteWithChildren
   '/pw': typeof PwRouteWithChildren
   '/review': typeof ReviewRouteWithChildren
@@ -244,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
   '/admin/': typeof AdminIndexRoute
+  '/ops/': typeof OpsIndexRoute
   '/pc/': typeof PcIndexRoute
   '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
@@ -259,7 +266,6 @@ export interface FileRoutesByTo {
   '/cek-status': typeof CekStatusRoute
   '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
-  '/ops': typeof OpsRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -276,6 +282,7 @@ export interface FileRoutesByTo {
   '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
   '/admin': typeof AdminIndexRoute
+  '/ops': typeof OpsIndexRoute
   '/pc': typeof PcIndexRoute
   '/pw': typeof PwIndexRoute
   '/review': typeof ReviewIndexRoute
@@ -293,7 +300,7 @@ export interface FileRoutesById {
   '/cek-status': typeof CekStatusRoute
   '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
-  '/ops': typeof OpsRoute
+  '/ops': typeof OpsRouteWithChildren
   '/pc': typeof PcRouteWithChildren
   '/pw': typeof PwRouteWithChildren
   '/review': typeof ReviewRouteWithChildren
@@ -313,6 +320,7 @@ export interface FileRoutesById {
   '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
   '/admin/': typeof AdminIndexRoute
+  '/ops/': typeof OpsIndexRoute
   '/pc/': typeof PcIndexRoute
   '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
@@ -351,6 +359,7 @@ export interface FileRouteTypes {
     | '/review/sla'
     | '/status/$ticketId'
     | '/admin/'
+    | '/ops/'
     | '/pc/'
     | '/pw/'
     | '/review/'
@@ -366,7 +375,6 @@ export interface FileRouteTypes {
     | '/cek-status'
     | '/kode-akses'
     | '/login'
-    | '/ops'
     | '/admin/access-codes'
     | '/admin/audit-log'
     | '/admin/settings'
@@ -383,6 +391,7 @@ export interface FileRouteTypes {
     | '/review/sla'
     | '/status/$ticketId'
     | '/admin'
+    | '/ops'
     | '/pc'
     | '/pw'
     | '/review'
@@ -419,6 +428,7 @@ export interface FileRouteTypes {
     | '/review/sla'
     | '/status/$ticketId'
     | '/admin/'
+    | '/ops/'
     | '/pc/'
     | '/pw/'
     | '/review/'
@@ -436,7 +446,7 @@ export interface RootRouteChildren {
   CekStatusRoute: typeof CekStatusRoute
   KodeAksesRoute: typeof KodeAksesRoute
   LoginRoute: typeof LoginRoute
-  OpsRoute: typeof OpsRoute
+  OpsRoute: typeof OpsRouteWithChildren
   PcRoute: typeof PcRouteWithChildren
   PwRoute: typeof PwRouteWithChildren
   ReviewRoute: typeof ReviewRouteWithChildren
@@ -535,6 +545,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/pc/'
       preLoaderRoute: typeof PcIndexRouteImport
       parentRoute: typeof PcRoute
+    }
+    '/ops/': {
+      id: '/ops/'
+      path: '/'
+      fullPath: '/ops/'
+      preLoaderRoute: typeof OpsIndexRouteImport
+      parentRoute: typeof OpsRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -716,6 +733,16 @@ const AktivasiRouteWithChildren = AktivasiRoute._addFileChildren(
   AktivasiRouteChildren,
 )
 
+interface OpsRouteChildren {
+  OpsIndexRoute: typeof OpsIndexRoute
+}
+
+const OpsRouteChildren: OpsRouteChildren = {
+  OpsIndexRoute: OpsIndexRoute,
+}
+
+const OpsRouteWithChildren = OpsRoute._addFileChildren(OpsRouteChildren)
+
 interface PcStatusPengajuanRouteChildren {
   PcStatusPengajuanTicketIdRevisiRoute: typeof PcStatusPengajuanTicketIdRevisiRoute
 }
@@ -820,7 +847,7 @@ const rootRouteChildren: RootRouteChildren = {
   CekStatusRoute: CekStatusRoute,
   KodeAksesRoute: KodeAksesRoute,
   LoginRoute: LoginRoute,
-  OpsRoute: OpsRoute,
+  OpsRoute: OpsRouteWithChildren,
   PcRoute: PcRouteWithChildren,
   PwRoute: PwRouteWithChildren,
   ReviewRoute: ReviewRouteWithChildren,
@@ -829,3 +856,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
