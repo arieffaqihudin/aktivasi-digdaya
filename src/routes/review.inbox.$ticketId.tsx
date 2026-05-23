@@ -114,8 +114,14 @@ function ReviewDetail() {
 
           {(reg.status === "PerluPerbaikan" || reg.status === "RejectedFinal") && reg.rejectReason && (
             <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-destructive">Alasan Penolakan</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-destructive">
+                {reg.status === "RejectedFinal" ? "Ditolak Final" : "Perlu Perbaikan"}
+                {reg.rejectionCategory && <span className="ml-2 font-normal normal-case">· {REJECTION_CATEGORY_LABEL[reg.rejectionCategory]}</span>}
+              </p>
               <p className="mt-1 text-sm">{reg.rejectReason}</p>
+              {(reg.revisionCount ?? 0) > 0 && (
+                <p className="mt-2 text-[11px] text-muted-foreground">Revisi ke-{reg.revisionCount} oleh pendaftar.</p>
+              )}
             </div>
           )}
         </div>
