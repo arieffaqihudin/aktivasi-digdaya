@@ -45,7 +45,7 @@ function AccessCodes() {
     if (pickedPcs.length === 0) { toast.error("Pilih minimal 1 PC."); return; }
     setGenerating(true);
     await new Promise((r) => setTimeout(r, 500));
-    const created = actions.generateAccessCodes(pickedPcs, validDays);
+    const created = actions.generateAccessCodes(pickedPcs, "PC", validDays);
     setGenerating(false);
     toast.success(`${created.length} kode akses berhasil digenerate.`);
     setOpen(false); setPickedPcs([]);
