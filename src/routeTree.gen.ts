@@ -14,6 +14,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as CekStatusRouteImport } from './routes/cek-status'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as StatusTicketIdRouteImport } from './routes/status.$ticketId'
 
 const LoginRoute = LoginRouteImport.update({
@@ -41,6 +42,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const StatusTicketIdRoute = StatusTicketIdRouteImport.update({
   id: '/status/$ticketId',
   path: '/status/$ticketId',
@@ -51,26 +57,28 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cek-status': typeof CekStatusRoute
   '/daftar': typeof DaftarRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cek-status': typeof CekStatusRoute
   '/daftar': typeof DaftarRoute
-  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
+  '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cek-status': typeof CekStatusRoute
   '/daftar': typeof DaftarRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,14 +89,15 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/status/$ticketId'
+    | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/cek-status'
     | '/daftar'
-    | '/dashboard'
     | '/login'
     | '/status/$ticketId'
+    | '/dashboard'
   id:
     | '__root__'
     | '/'
@@ -97,13 +106,14 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/status/$ticketId'
+    | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CekStatusRoute: typeof CekStatusRoute
   DaftarRoute: typeof DaftarRoute
-  DashboardRoute: typeof DashboardRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
   StatusTicketIdRoute: typeof StatusTicketIdRoute
 }
@@ -145,6 +155,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/status/$ticketId': {
       id: '/status/$ticketId'
       path: '/status/$ticketId'
@@ -155,11 +172,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CekStatusRoute: CekStatusRoute,
   DaftarRoute: DaftarRoute,
-  DashboardRoute: DashboardRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
   StatusTicketIdRoute: StatusTicketIdRoute,
 }
