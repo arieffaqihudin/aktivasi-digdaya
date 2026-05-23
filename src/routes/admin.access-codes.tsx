@@ -61,7 +61,7 @@ function AccessCodes() {
       if (validityFilter === "expired") return days < 0;
       return true;
     })
-    .filter((c) => !q || c.code.toLowerCase().includes(q.toLowerCase()) || c.pcName.toLowerCase().includes(q.toLowerCase())),
+    .filter((c) => !q || c.code.toLowerCase().includes(q.toLowerCase()) || (c.orgName ?? "").toLowerCase().includes(q.toLowerCase())),
     [codes, pwFilter, statusFilter, validityFilter, q]
   );
 
