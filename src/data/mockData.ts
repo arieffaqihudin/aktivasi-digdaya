@@ -166,15 +166,6 @@ export interface Registration {
   submittedAt: string;
   reviewedAt?: string;
   reviewedBy?: string;
-  // Surat Tugas
-  sumberSuratTugas: SumberSuratTugas;
-  suratTugasFile?: string;
-  dokumenSistem?: DokumenSistem;
-
-  status: Status;
-  submittedAt: string;
-  reviewedAt?: string;
-  reviewedBy?: string;
   rejectReason?: string;
   rejectionCategory?: RejectionCategory;
   revisionCount?: number;
