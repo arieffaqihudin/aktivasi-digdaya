@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { actions, useStore } from "@/lib/store";
@@ -65,8 +66,8 @@ function PeruriPage() {
             </thead>
             <tbody>
               {batches.map((b) => (
-                <>
-                  <tr key={b.id} className="border-t border-border">
+                <Fragment key={b.id}>
+                  <tr className="border-t border-border">
                     <td className="px-4 py-3 font-mono text-xs">{b.id}</td>
                     <td className="px-4 py-3 text-xs">{b.date}</td>
                     <td className="px-4 py-3 font-semibold">{b.count}</td>
@@ -105,7 +106,7 @@ function PeruriPage() {
                       </div>
                     </td></tr>
                   )}
-                </>
+                </Fragment>
               ))}
               {batches.length === 0 && (
                 <tr><td colSpan={9} className="px-4 py-12 text-center text-sm text-muted-foreground">Belum ada batch.</td></tr>
