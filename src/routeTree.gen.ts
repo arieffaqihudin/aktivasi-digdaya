@@ -16,7 +16,17 @@ import { Route as CekStatusRouteImport } from './routes/cek-status'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as StatusTicketIdRouteImport } from './routes/status.$ticketId'
+import { Route as DashboardSlaRouteImport } from './routes/dashboard.sla'
+import { Route as DashboardPeruriRouteImport } from './routes/dashboard.peruri'
+import { Route as DashboardAuditLogRouteImport } from './routes/dashboard.audit-log'
 import { Route as DashboardReviewIndexRouteImport } from './routes/dashboard.review.index'
+import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard.admin.index'
+import { Route as DashboardReviewAntrianRouteImport } from './routes/dashboard.review.antrian'
+import { Route as DashboardReviewTicketIdRouteImport } from './routes/dashboard.review.$ticketId'
+import { Route as DashboardAdminUsersRouteImport } from './routes/dashboard.admin.users'
+import { Route as DashboardAdminSlaRouteImport } from './routes/dashboard.admin.sla'
+import { Route as DashboardAdminNotifikasiRouteImport } from './routes/dashboard.admin.notifikasi'
+import { Route as DashboardAdminMasterRouteImport } from './routes/dashboard.admin.master'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -53,9 +63,60 @@ const StatusTicketIdRoute = StatusTicketIdRouteImport.update({
   path: '/status/$ticketId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardSlaRoute = DashboardSlaRouteImport.update({
+  id: '/sla',
+  path: '/sla',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPeruriRoute = DashboardPeruriRouteImport.update({
+  id: '/peruri',
+  path: '/peruri',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAuditLogRoute = DashboardAuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardReviewIndexRoute = DashboardReviewIndexRouteImport.update({
   id: '/review/',
   path: '/review/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardReviewAntrianRoute = DashboardReviewAntrianRouteImport.update({
+  id: '/review/antrian',
+  path: '/review/antrian',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardReviewTicketIdRoute = DashboardReviewTicketIdRouteImport.update({
+  id: '/review/$ticketId',
+  path: '/review/$ticketId',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAdminUsersRoute = DashboardAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAdminSlaRoute = DashboardAdminSlaRouteImport.update({
+  id: '/admin/sla',
+  path: '/admin/sla',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAdminNotifikasiRoute =
+  DashboardAdminNotifikasiRouteImport.update({
+    id: '/admin/notifikasi',
+    path: '/admin/notifikasi',
+    getParentRoute: () => DashboardRoute,
+  } as any)
+const DashboardAdminMasterRoute = DashboardAdminMasterRouteImport.update({
+  id: '/admin/master',
+  path: '/admin/master',
   getParentRoute: () => DashboardRoute,
 } as any)
 
@@ -65,8 +126,18 @@ export interface FileRoutesByFullPath {
   '/daftar': typeof DaftarRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/dashboard/audit-log': typeof DashboardAuditLogRoute
+  '/dashboard/peruri': typeof DashboardPeruriRoute
+  '/dashboard/sla': typeof DashboardSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/admin/master': typeof DashboardAdminMasterRoute
+  '/dashboard/admin/notifikasi': typeof DashboardAdminNotifikasiRoute
+  '/dashboard/admin/sla': typeof DashboardAdminSlaRoute
+  '/dashboard/admin/users': typeof DashboardAdminUsersRoute
+  '/dashboard/review/$ticketId': typeof DashboardReviewTicketIdRoute
+  '/dashboard/review/antrian': typeof DashboardReviewAntrianRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/review/': typeof DashboardReviewIndexRoute
 }
 export interface FileRoutesByTo {
@@ -74,8 +145,18 @@ export interface FileRoutesByTo {
   '/cek-status': typeof CekStatusRoute
   '/daftar': typeof DaftarRoute
   '/login': typeof LoginRoute
+  '/dashboard/audit-log': typeof DashboardAuditLogRoute
+  '/dashboard/peruri': typeof DashboardPeruriRoute
+  '/dashboard/sla': typeof DashboardSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/admin/master': typeof DashboardAdminMasterRoute
+  '/dashboard/admin/notifikasi': typeof DashboardAdminNotifikasiRoute
+  '/dashboard/admin/sla': typeof DashboardAdminSlaRoute
+  '/dashboard/admin/users': typeof DashboardAdminUsersRoute
+  '/dashboard/review/$ticketId': typeof DashboardReviewTicketIdRoute
+  '/dashboard/review/antrian': typeof DashboardReviewAntrianRoute
+  '/dashboard/admin': typeof DashboardAdminIndexRoute
   '/dashboard/review': typeof DashboardReviewIndexRoute
 }
 export interface FileRoutesById {
@@ -85,8 +166,18 @@ export interface FileRoutesById {
   '/daftar': typeof DaftarRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/dashboard/audit-log': typeof DashboardAuditLogRoute
+  '/dashboard/peruri': typeof DashboardPeruriRoute
+  '/dashboard/sla': typeof DashboardSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/admin/master': typeof DashboardAdminMasterRoute
+  '/dashboard/admin/notifikasi': typeof DashboardAdminNotifikasiRoute
+  '/dashboard/admin/sla': typeof DashboardAdminSlaRoute
+  '/dashboard/admin/users': typeof DashboardAdminUsersRoute
+  '/dashboard/review/$ticketId': typeof DashboardReviewTicketIdRoute
+  '/dashboard/review/antrian': typeof DashboardReviewAntrianRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/review/': typeof DashboardReviewIndexRoute
 }
 export interface FileRouteTypes {
@@ -97,8 +188,18 @@ export interface FileRouteTypes {
     | '/daftar'
     | '/dashboard'
     | '/login'
+    | '/dashboard/audit-log'
+    | '/dashboard/peruri'
+    | '/dashboard/sla'
     | '/status/$ticketId'
     | '/dashboard/'
+    | '/dashboard/admin/master'
+    | '/dashboard/admin/notifikasi'
+    | '/dashboard/admin/sla'
+    | '/dashboard/admin/users'
+    | '/dashboard/review/$ticketId'
+    | '/dashboard/review/antrian'
+    | '/dashboard/admin/'
     | '/dashboard/review/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -106,8 +207,18 @@ export interface FileRouteTypes {
     | '/cek-status'
     | '/daftar'
     | '/login'
+    | '/dashboard/audit-log'
+    | '/dashboard/peruri'
+    | '/dashboard/sla'
     | '/status/$ticketId'
     | '/dashboard'
+    | '/dashboard/admin/master'
+    | '/dashboard/admin/notifikasi'
+    | '/dashboard/admin/sla'
+    | '/dashboard/admin/users'
+    | '/dashboard/review/$ticketId'
+    | '/dashboard/review/antrian'
+    | '/dashboard/admin'
     | '/dashboard/review'
   id:
     | '__root__'
@@ -116,8 +227,18 @@ export interface FileRouteTypes {
     | '/daftar'
     | '/dashboard'
     | '/login'
+    | '/dashboard/audit-log'
+    | '/dashboard/peruri'
+    | '/dashboard/sla'
     | '/status/$ticketId'
     | '/dashboard/'
+    | '/dashboard/admin/master'
+    | '/dashboard/admin/notifikasi'
+    | '/dashboard/admin/sla'
+    | '/dashboard/admin/users'
+    | '/dashboard/review/$ticketId'
+    | '/dashboard/review/antrian'
+    | '/dashboard/admin/'
     | '/dashboard/review/'
   fileRoutesById: FileRoutesById
 }
@@ -181,6 +302,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StatusTicketIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/sla': {
+      id: '/dashboard/sla'
+      path: '/sla'
+      fullPath: '/dashboard/sla'
+      preLoaderRoute: typeof DashboardSlaRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/peruri': {
+      id: '/dashboard/peruri'
+      path: '/peruri'
+      fullPath: '/dashboard/peruri'
+      preLoaderRoute: typeof DashboardPeruriRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/audit-log': {
+      id: '/dashboard/audit-log'
+      path: '/audit-log'
+      fullPath: '/dashboard/audit-log'
+      preLoaderRoute: typeof DashboardAuditLogRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/review/': {
       id: '/dashboard/review/'
       path: '/review'
@@ -188,16 +330,85 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardReviewIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/admin/': {
+      id: '/dashboard/admin/'
+      path: '/admin'
+      fullPath: '/dashboard/admin/'
+      preLoaderRoute: typeof DashboardAdminIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/review/antrian': {
+      id: '/dashboard/review/antrian'
+      path: '/review/antrian'
+      fullPath: '/dashboard/review/antrian'
+      preLoaderRoute: typeof DashboardReviewAntrianRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/review/$ticketId': {
+      id: '/dashboard/review/$ticketId'
+      path: '/review/$ticketId'
+      fullPath: '/dashboard/review/$ticketId'
+      preLoaderRoute: typeof DashboardReviewTicketIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/admin/users': {
+      id: '/dashboard/admin/users'
+      path: '/admin/users'
+      fullPath: '/dashboard/admin/users'
+      preLoaderRoute: typeof DashboardAdminUsersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/admin/sla': {
+      id: '/dashboard/admin/sla'
+      path: '/admin/sla'
+      fullPath: '/dashboard/admin/sla'
+      preLoaderRoute: typeof DashboardAdminSlaRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/admin/notifikasi': {
+      id: '/dashboard/admin/notifikasi'
+      path: '/admin/notifikasi'
+      fullPath: '/dashboard/admin/notifikasi'
+      preLoaderRoute: typeof DashboardAdminNotifikasiRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/admin/master': {
+      id: '/dashboard/admin/master'
+      path: '/admin/master'
+      fullPath: '/dashboard/admin/master'
+      preLoaderRoute: typeof DashboardAdminMasterRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
 interface DashboardRouteChildren {
+  DashboardAuditLogRoute: typeof DashboardAuditLogRoute
+  DashboardPeruriRoute: typeof DashboardPeruriRoute
+  DashboardSlaRoute: typeof DashboardSlaRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardAdminMasterRoute: typeof DashboardAdminMasterRoute
+  DashboardAdminNotifikasiRoute: typeof DashboardAdminNotifikasiRoute
+  DashboardAdminSlaRoute: typeof DashboardAdminSlaRoute
+  DashboardAdminUsersRoute: typeof DashboardAdminUsersRoute
+  DashboardReviewTicketIdRoute: typeof DashboardReviewTicketIdRoute
+  DashboardReviewAntrianRoute: typeof DashboardReviewAntrianRoute
+  DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
   DashboardReviewIndexRoute: typeof DashboardReviewIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAuditLogRoute: DashboardAuditLogRoute,
+  DashboardPeruriRoute: DashboardPeruriRoute,
+  DashboardSlaRoute: DashboardSlaRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardAdminMasterRoute: DashboardAdminMasterRoute,
+  DashboardAdminNotifikasiRoute: DashboardAdminNotifikasiRoute,
+  DashboardAdminSlaRoute: DashboardAdminSlaRoute,
+  DashboardAdminUsersRoute: DashboardAdminUsersRoute,
+  DashboardReviewTicketIdRoute: DashboardReviewTicketIdRoute,
+  DashboardReviewAntrianRoute: DashboardReviewAntrianRoute,
+  DashboardAdminIndexRoute: DashboardAdminIndexRoute,
   DashboardReviewIndexRoute: DashboardReviewIndexRoute,
 }
 
@@ -216,3 +427,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
