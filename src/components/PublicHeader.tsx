@@ -183,7 +183,7 @@ export function PublicFooter() {
         </div>
 
         {/* Divider + Copyright */}
-        <div className="mt-6 border-t border-white/[0.08] pt-4 pb-[18px] sm:mt-7 sm:pb-5 lg:mt-8 lg:pb-5">
+        <div className="mt-5 border-t border-white/[0.08] pt-3.5 pb-4 sm:mt-7 sm:pt-4 sm:pb-5 lg:mt-8">
           <p className="text-center text-[11.5px] text-white/40 sm:text-[12px]">
             &copy; Pengurus Besar Nahdlatul Ulama 2026. All rights reserved.
           </p>
