@@ -3,7 +3,10 @@ import type { ReactNode, ThHTMLAttributes, TdHTMLAttributes } from "react";
 
 export function DataTable({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cn("mx-4 my-4 overflow-hidden rounded-xl border border-border bg-card sm:mx-6 lg:mx-8", className)}>
+    <div className={cn("mx-3 my-4 overflow-hidden rounded-xl border border-border bg-card sm:mx-6 lg:mx-8", className)}>
+      <p className="border-b border-border bg-muted/40 px-4 py-1.5 text-[11px] text-muted-foreground sm:hidden">
+        Geser ke samping untuk melihat detail →
+      </p>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] text-[13px]">{children}</table>
       </div>
