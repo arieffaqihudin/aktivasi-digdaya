@@ -253,6 +253,15 @@ export const actions = {
       action: "GENERATE_ACCESS_CODE",
       detail: `Generate ${created.length} kode akses tingkat ${tingkat} (berlaku ${validDays} hari).`,
     });
+    if (created.length > 0) {
+      notifActions.add({
+        recipientRole: "OPS",
+        type: "ACCESS_CODE_CREATED",
+        title: "Kode akses berhasil dibuat",
+        description: `${created.length} kode akses tingkat ${tingkat} berhasil dibuat.`,
+        route: "/ops/activation/access-codes",
+      });
+    }
     return created;
   },
 
