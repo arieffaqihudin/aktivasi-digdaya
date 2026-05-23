@@ -12,10 +12,10 @@ function PcLayout() {
       scopeLabel="Dashboard PC Aktif"
       allowedRoles={["PC"]}
       menu={[
-        { to: "/pc", label: "Ringkasan", icon: LayoutDashboard, exact: true },
-        { to: "/pc/daftarkan", label: "Daftarkan Organisasi Bawahan", icon: PlusCircle },
-        { to: "/pc/status-pengajuan", label: "Status Pengajuan", icon: ListChecks },
-        { to: "/pc/profil", label: "Profil PC", icon: User },
+        { to: "/pc", label: "Overview", icon: LayoutDashboard, exact: true, section: "Dashboard" },
+        { to: "/pc/daftarkan", label: "Daftarkan Organisasi Bawahan", icon: PlusCircle, section: "Aktivasi Organisasi" },
+        { to: "/pc/status-pengajuan", label: "Status Pengajuan", icon: ListChecks, section: "Aktivasi Organisasi" },
+        { to: "/pc/profil", label: "Profil PC", icon: User, section: "Pengaturan" },
       ]}
     />
   );
