@@ -103,7 +103,7 @@ function StatusPengajuan() {
               <TD className="max-w-xs text-[12px] text-muted-foreground">{r.rejectReason ?? "—"}</TD>
               <TD className="text-right pr-6">
                 <div className="flex justify-end gap-1">
-                  <Link to="/status/$ticketId" params={{ ticketId: r.ticketId }}>
+                  <Link to="/pc/status-pengajuan/$ticketId" params={{ ticketId: r.ticketId }}>
                     <RowAction title="Lihat detail"><Eye className="h-4 w-4" /></RowAction>
                   </Link>
                   {r.status === "PerluPerbaikan" && (
