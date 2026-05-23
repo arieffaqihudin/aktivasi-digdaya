@@ -490,6 +490,24 @@ export const actions = {
       ticketId,
       detail: `Submit aktivasi publik untuk ${targetOrgName} (${code.tingkat})${code.kind === "Scoped" ? ` via batch ${code.batchName ?? code.code}` : ""}.`,
     });
+    notifActions.broadcast([
+      {
+        recipientRole: "REVIEWER",
+        type: "NEW_SUBMISSION",
+        title: "Pengajuan baru masuk",
+        description: `${targetOrgName} menunggu review Tim Digdaya (via kode akses).`,
+        ticketId,
+        route: `/review/inbox/${ticketId}`,
+      },
+      {
+        recipientRole: "OPS",
+        type: "NEW_SUBMISSION",
+        title: "Pengajuan baru via kode akses",
+        description: `${targetOrgName} mengajukan aktivasi melalui ${code.code}.`,
+        ticketId,
+        route: `/ops/activation/submissions/${ticketId}`,
+      },
+    ]);
     return reg;
   },
 
