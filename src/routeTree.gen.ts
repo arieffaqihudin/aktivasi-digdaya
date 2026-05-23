@@ -42,6 +42,7 @@ import { Route as AdminAccessCodesRouteImport } from './routes/admin.access-code
 import { Route as OpsActivationIndexRouteImport } from './routes/ops.activation.index'
 import { Route as StatusTicketIdRevisiRouteImport } from './routes/status.$ticketId.revisi'
 import { Route as ReviewInboxTicketIdRouteImport } from './routes/review.inbox.$ticketId'
+import { Route as OpsActivationAccessCodesRouteImport } from './routes/ops.activation.access-codes'
 import { Route as AktivasiSuksesTicketIdRouteImport } from './routes/aktivasi.sukses.$ticketId'
 import { Route as PwStatusPengajuanTicketIdRevisiRouteImport } from './routes/pw.status-pengajuan.$ticketId.revisi'
 import { Route as PcStatusPengajuanTicketIdRevisiRouteImport } from './routes/pc.status-pengajuan.$ticketId.revisi'
@@ -211,6 +212,12 @@ const ReviewInboxTicketIdRoute = ReviewInboxTicketIdRouteImport.update({
   path: '/$ticketId',
   getParentRoute: () => ReviewInboxRoute,
 } as any)
+const OpsActivationAccessCodesRoute =
+  OpsActivationAccessCodesRouteImport.update({
+    id: '/activation/access-codes',
+    path: '/activation/access-codes',
+    getParentRoute: () => OpsRoute,
+  } as any)
 const AktivasiSuksesTicketIdRoute = AktivasiSuksesTicketIdRouteImport.update({
   id: '/sukses/$ticketId',
   path: '/sukses/$ticketId',
@@ -261,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
+  '/ops/activation/access-codes': typeof OpsActivationAccessCodesRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
   '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
   '/ops/activation/': typeof OpsActivationIndexRoute
@@ -294,6 +302,7 @@ export interface FileRoutesByTo {
   '/pw': typeof PwIndexRoute
   '/review': typeof ReviewIndexRoute
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
+  '/ops/activation/access-codes': typeof OpsActivationAccessCodesRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
   '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
   '/ops/activation': typeof OpsActivationIndexRoute
@@ -333,6 +342,7 @@ export interface FileRoutesById {
   '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
+  '/ops/activation/access-codes': typeof OpsActivationAccessCodesRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
   '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
   '/ops/activation/': typeof OpsActivationIndexRoute
@@ -373,6 +383,7 @@ export interface FileRouteTypes {
     | '/pw/'
     | '/review/'
     | '/aktivasi/sukses/$ticketId'
+    | '/ops/activation/access-codes'
     | '/review/inbox/$ticketId'
     | '/status/$ticketId/revisi'
     | '/ops/activation/'
@@ -406,6 +417,7 @@ export interface FileRouteTypes {
     | '/pw'
     | '/review'
     | '/aktivasi/sukses/$ticketId'
+    | '/ops/activation/access-codes'
     | '/review/inbox/$ticketId'
     | '/status/$ticketId/revisi'
     | '/ops/activation'
@@ -444,6 +456,7 @@ export interface FileRouteTypes {
     | '/pw/'
     | '/review/'
     | '/aktivasi/sukses/$ticketId'
+    | '/ops/activation/access-codes'
     | '/review/inbox/$ticketId'
     | '/status/$ticketId/revisi'
     | '/ops/activation/'
@@ -698,6 +711,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewInboxTicketIdRouteImport
       parentRoute: typeof ReviewInboxRoute
     }
+    '/ops/activation/access-codes': {
+      id: '/ops/activation/access-codes'
+      path: '/activation/access-codes'
+      fullPath: '/ops/activation/access-codes'
+      preLoaderRoute: typeof OpsActivationAccessCodesRouteImport
+      parentRoute: typeof OpsRoute
+    }
     '/aktivasi/sukses/$ticketId': {
       id: '/aktivasi/sukses/$ticketId'
       path: '/sukses/$ticketId'
@@ -754,11 +774,13 @@ const AktivasiRouteWithChildren = AktivasiRoute._addFileChildren(
 
 interface OpsRouteChildren {
   OpsIndexRoute: typeof OpsIndexRoute
+  OpsActivationAccessCodesRoute: typeof OpsActivationAccessCodesRoute
   OpsActivationIndexRoute: typeof OpsActivationIndexRoute
 }
 
 const OpsRouteChildren: OpsRouteChildren = {
   OpsIndexRoute: OpsIndexRoute,
+  OpsActivationAccessCodesRoute: OpsActivationAccessCodesRoute,
   OpsActivationIndexRoute: OpsActivationIndexRoute,
 }
 
