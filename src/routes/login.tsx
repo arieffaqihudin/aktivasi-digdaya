@@ -42,8 +42,10 @@ function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-dark via-primary to-primary-dark p-4">
       <div className="w-full max-w-md">
-        <div className="mb-6 flex justify-center [&_*]:!text-white">
-          <Logo />
+        <div className="mb-6 flex justify-center">
+          <div className="rounded-xl bg-white/95 px-5 py-3 shadow-lg">
+            <Logo />
+          </div>
         </div>
 
         <div className="rounded-xl border border-border bg-card p-7 shadow-xl">
