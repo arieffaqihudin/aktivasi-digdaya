@@ -105,10 +105,19 @@ export interface MasterLembaga {
   pwId?: string;
 }
 
+export type AccessCodeKind = "Individual" | "Scoped";
+
+export interface AccessCodeScope {
+  /** "Nasional" or specific PW id (e.g. "pw-jogja") */
+  wilayahPwId: string | "Nasional";
+  mode: "auto" | "whitelist";
+  whitelist?: string[];
+}
+
 export interface AccessCode {
   code: string;
   tingkat: Tingkat;
-  /** PC id when tingkat = PC, PW id when tingkat = PW */
+  /** Individual codes: target PC/PW id. Scoped codes: empty string (orgs are picked later). */
   orgId: string;
   orgName: string;
   /** wilayah / PW name for display */
@@ -118,6 +127,12 @@ export interface AccessCode {
   expiredAt: string;
   usedAt?: string;
   ticketId?: string;
+  /** "Scoped" = batch code that lets pendaftar pick org from filtered master list. */
+  kind?: AccessCodeKind;
+  /** Human-readable batch name for Scoped codes. */
+  batchName?: string;
+  /** Scope filter for Scoped codes. */
+  scope?: AccessCodeScope;
   // legacy alias for older code that still uses .pcId / .pcName
   pcId?: string;
   pcName?: string;
