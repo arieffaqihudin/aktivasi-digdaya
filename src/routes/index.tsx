@@ -150,24 +150,15 @@ function RightColumn() {
       </div>
 
       <div className="rounded-3xl border border-[#DDEBE3] bg-white p-5 shadow-[0_8px_30px_rgba(0,132,61,0.08)] sm:p-7">
-        <div className="mb-6">
-          <h2 className="text-[16px] font-bold text-[#0F2A1A]">
-            Silakan Pilih Akses
-          </h2>
-          <p className="mt-1 text-[13px] text-[#6B7280]">
-            Gunakan jalur yang sesuai dengan kondisi kepengurusan Anda.
-          </p>
-        </div>
-
         {/* Option 1: Login */}
         <GatewayOption
           to="/login"
           icon={<LogIn className="h-5 w-5" />}
           badge="Sudah Production"
           badgeTone="muted"
-          title="Login dengan Email / NU.ID"
-          description="Masuk untuk mendaftarkan organisasi di bawah kewenangan Anda."
-          cta="Masuk ke Dashboard"
+          title="PW/PC Anda sudah production?"
+          description="Login untuk mendaftarkan kepengurusan di bawah kewenangan Anda, seperti Lembaga, MWC, Ranting, atau struktur lainnya."
+          cta="Login dengan Email / NU.ID"
           variant="secondary"
         />
 
@@ -185,20 +176,26 @@ function RightColumn() {
           icon={<KeyRound className="h-5 w-5" />}
           badge="Belum Production"
           badgeTone="primary"
-          title="Masukkan Kode Akses"
-          description="Gunakan kode dari PBNU untuk aktivasi awal kepengurusan."
-          cta="Mulai Aktivasi"
+          title="PW/PC Anda belum production?"
+          description="Gunakan kode akses dari PBNU untuk mengaktifkan kepengurusan dan mendaftarkan administrator Digdaya."
+          cta="Masukkan Kode Akses"
           variant="primary"
         />
       </div>
 
-      <div className="text-center">
+      <div className="rounded-2xl border border-[#DDEBE3] bg-white/80 p-5 text-center backdrop-blur-sm">
+        <h3 className="text-[14px] font-semibold text-[#0F2A1A]">
+          Sudah punya nomor tiket?
+        </h3>
+        <p className="mt-1 text-[13px] text-[#6B7280]">
+          Pantau status pengajuan aktivasi Anda di sini.
+        </p>
         <Link
           to="/cek-status"
-          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-semibold text-[#00843D] transition-colors hover:bg-[#EAF8F0] hover:text-[#005C2E]"
+          className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#EAF8F0] px-4 py-2 text-[13px] font-semibold text-[#00843D] transition-colors hover:bg-[#DDF5E8] hover:text-[#005C2E]"
         >
           <Search className="h-3.5 w-3.5" />
-          Sudah punya nomor tiket? Cek status pengajuan
+          Cek Status Pengajuan
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
