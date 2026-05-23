@@ -15,7 +15,6 @@ import { Route as PcRouteImport } from './routes/pc'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as KodeAksesRouteImport } from './routes/kode-akses'
 import { Route as CekStatusRouteImport } from './routes/cek-status'
-import { Route as AktivasiRouteImport } from './routes/aktivasi'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReviewIndexRouteImport } from './routes/review.index'
@@ -67,11 +66,6 @@ const KodeAksesRoute = KodeAksesRouteImport.update({
 const CekStatusRoute = CekStatusRouteImport.update({
   id: '/cek-status',
   path: '/cek-status',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AktivasiRoute = AktivasiRouteImport.update({
-  id: '/aktivasi',
-  path: '/aktivasi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -188,7 +182,6 @@ const ReviewInboxTicketIdRoute = ReviewInboxTicketIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/aktivasi': typeof AktivasiRouteWithChildren
   '/cek-status': typeof CekStatusRoute
   '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
@@ -218,7 +211,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/aktivasi': typeof AktivasiRouteWithChildren
   '/cek-status': typeof CekStatusRoute
   '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
@@ -247,7 +239,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/aktivasi': typeof AktivasiRouteWithChildren
   '/cek-status': typeof CekStatusRoute
   '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
@@ -280,7 +271,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
-    | '/aktivasi'
     | '/cek-status'
     | '/kode-akses'
     | '/login'
@@ -310,7 +300,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/aktivasi'
     | '/cek-status'
     | '/kode-akses'
     | '/login'
@@ -338,7 +327,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
-    | '/aktivasi'
     | '/cek-status'
     | '/kode-akses'
     | '/login'
@@ -370,7 +358,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AktivasiRoute: typeof AktivasiRouteWithChildren
   CekStatusRoute: typeof CekStatusRoute
   KodeAksesRoute: typeof KodeAksesRoute
   LoginRoute: typeof LoginRoute
@@ -422,13 +409,6 @@ declare module '@tanstack/react-router' {
       path: '/cek-status'
       fullPath: '/cek-status'
       preLoaderRoute: typeof CekStatusRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/aktivasi': {
-      id: '/aktivasi'
-      path: '/aktivasi'
-      fullPath: '/aktivasi'
-      preLoaderRoute: typeof AktivasiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -604,18 +584,6 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface AktivasiRouteChildren {
-  AktivasiAccessCodeRoute: typeof AktivasiAccessCodeRoute
-}
-
-const AktivasiRouteChildren: AktivasiRouteChildren = {
-  AktivasiAccessCodeRoute: AktivasiAccessCodeRoute,
-}
-
-const AktivasiRouteWithChildren = AktivasiRoute._addFileChildren(
-  AktivasiRouteChildren,
-)
-
 interface PcRouteChildren {
   PcDaftarkanRoute: typeof PcDaftarkanRoute
   PcProfilRoute: typeof PcProfilRoute
@@ -682,7 +650,6 @@ const ReviewRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  AktivasiRoute: AktivasiRouteWithChildren,
   CekStatusRoute: CekStatusRoute,
   KodeAksesRoute: KodeAksesRoute,
   LoginRoute: LoginRoute,
@@ -694,3 +661,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
