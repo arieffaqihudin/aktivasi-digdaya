@@ -70,7 +70,7 @@ function initial(): State {
     audit: seedAudit,
     accessCodes: seedAccessCodes,
     orgStatus: {},
-    sla: { defaultDays: 3, greenMaxDays: 1, yellowMaxDays: 3, notifyEmails: "ops@digdaya.nu.id", defaultCodeValidDays: 30 },
+    sla: { defaultDays: 3, greenMaxDays: 1, yellowMaxDays: 3, notifyEmails: "ops@digdaya.nu.id", defaultCodeValidDays: 30, maxRevisions: 3 },
     notif: { emailEnabled: true, whatsappEnabled: false },
     user: null,
     nextTicketSeq: 200,
