@@ -229,17 +229,17 @@ function KodeAksesPage() {
                   )}
 
                   {selectedOrg && (
-                    <div className="rounded-md border border-primary/30 bg-accent/60 p-3.5">
+                    <div className="rounded-md border border-primary/30 bg-accent/60 p-3.5 sm:p-4">
                       <p className="text-[12px] font-semibold text-primary-dark">
                         Pastikan kepengurusan yang dipilih sudah benar.
                       </p>
-                      <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[12px]">
+                      <dl className="mt-2 grid grid-cols-1 gap-x-3 gap-y-2 text-[12px] sm:grid-cols-[auto_1fr] sm:gap-y-1.5">
                         <dt className="text-muted-foreground">Nama</dt>
-                        <dd className="font-medium text-foreground">{selectedOrg.nama}</dd>
+                        <dd className="font-medium text-foreground break-words [overflow-wrap:anywhere]">{selectedOrg.nama}</dd>
                         <dt className="text-muted-foreground">Tingkat</dt>
                         <dd className="font-medium text-foreground">{selectedOrg.tingkat}</dd>
                         <dt className="text-muted-foreground">Wilayah</dt>
-                        <dd className="font-medium text-foreground">{selectedOrg.pwName}</dd>
+                        <dd className="font-medium text-foreground break-words [overflow-wrap:anywhere]">{selectedOrg.pwName}</dd>
                         <dt className="text-muted-foreground">Status</dt>
                         <dd className="font-medium text-foreground">Belum Production</dd>
                       </dl>
@@ -256,19 +256,22 @@ function KodeAksesPage() {
               )}
 
               {verified && (
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={reset} className="h-11">
+                <div className="flex flex-col-reverse gap-2 sm:flex-row">
+                  <Button variant="outline" onClick={reset} className="h-11 w-full sm:w-auto">
                     Ganti Kode
                   </Button>
                   <Button
                     onClick={lanjut}
                     disabled={isScoped && !selectedOrgId}
-                    className="h-11 flex-1"
+                    className="h-11 w-full sm:flex-1"
                   >
-                    Lanjut Isi Data Administrator <ArrowRight className="ml-2 h-4 w-4" />
+                    <span className="sm:hidden">Lanjut Isi Data</span>
+                    <span className="hidden sm:inline">Lanjut Isi Data Administrator</span>
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
               )}
+
 
               <details className="rounded-md border border-border bg-secondary/40 p-3 text-[12px] text-muted-foreground">
                 <summary className="cursor-pointer font-medium text-foreground">Kode demo</summary>
