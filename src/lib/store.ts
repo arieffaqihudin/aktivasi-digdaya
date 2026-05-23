@@ -777,6 +777,30 @@ export const actions = {
       ticketId,
       detail: `Pengajuan ${ticketId} ditolak final. Kategori: ${payload.category}. Catatan: ${payload.note}`,
     });
+    const regRF = state.registrations.find((r) => r.ticketId === ticketId);
+    const tgtRF = regRF ? submitterTarget(regRF) : null;
+    const rfNotifs: Parameters<typeof notifActions.broadcast>[0] = [
+      {
+        recipientRole: "OPS",
+        type: "REJECTED_FINAL",
+        title: "Pengajuan ditolak final",
+        description: `${regRF?.namaOrg ?? ticketId} ditolak final oleh reviewer.`,
+        ticketId,
+        route: `/ops/activation/submissions/${ticketId}`,
+      },
+    ];
+    if (tgtRF) {
+      rfNotifs.push({
+        recipientRole: tgtRF.role,
+        recipientOrgId: tgtRF.orgId,
+        type: "REJECTED_FINAL",
+        title: "Pengajuan ditolak final",
+        description: "Pengajuan tidak dapat dilanjutkan. Silakan hubungi Tim Digdaya jika perlu bantuan.",
+        ticketId,
+        route: tgtRF.route,
+      });
+    }
+    notifActions.broadcast(rfNotifs);
   },
 
   /** Backward-compat alias — defaults to PerluPerbaikan. */
