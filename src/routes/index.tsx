@@ -181,7 +181,7 @@ function RightColumn() {
       {/* Hero Illustration */}
       <div className="mx-auto w-full max-w-[520px] rounded-3xl border border-[#DDEBE3] bg-white p-4 shadow-[0_8px_30px_rgba(0,132,61,0.08)] sm:p-6">
         <img
-          src={heroIllustration}
+          src="/illustration-digdaya-kader.png"
           alt="Ilustrasi Kader Digdaya NU"
           className="mx-auto h-auto w-full max-w-[500px] object-contain max-h-[260px] sm:max-h-[340px] md:max-h-[380px] lg:max-h-[420px]"
           loading="eager"
