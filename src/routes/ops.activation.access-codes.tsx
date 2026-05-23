@@ -72,7 +72,7 @@ function AccessCodes() {
       <OpsPageBody>
         <OpsCard
           title="Kelola Kode Akses"
-          description="Total " + ""
+          description="Buat dan pantau kode akses untuk aktivasi PW/PC yang belum production."
           action={<Button size="sm" onClick={() => setOpen(true)}><Plus className="mr-1.5 h-4 w-4" /> Generate Kode Akses</Button>}
         >
           <div className="flex flex-wrap gap-2">
