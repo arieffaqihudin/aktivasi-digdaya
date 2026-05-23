@@ -118,7 +118,7 @@ function ReviewDetail() {
             </div>
           )}
 
-          {reg.status === "Rejected" && reg.rejectReason && (
+          {(reg.status === "PerluPerbaikan" || reg.status === "RejectedFinal") && reg.rejectReason && (
             <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-5">
               <p className="text-xs font-semibold uppercase tracking-wider text-destructive">Alasan Penolakan</p>
               <p className="mt-1 text-sm">{reg.rejectReason}</p>

@@ -103,7 +103,7 @@ function StatusPengajuan() {
               <TD className="max-w-xs text-[12px] text-muted-foreground">{r.rejectReason ?? "—"}</TD>
               <TD className="text-right pr-6">
                 <div className="flex justify-end gap-1">
-                  {r.status === "Rejected" ? (
+                  {r.status === "PerluPerbaikan" || r.status === "RejectedFinal" ? (
                     <Link to="/pc/daftarkan">
                       <RowAction title="Ajukan ulang" tone="primary"><RotateCcw className="h-4 w-4" /></RowAction>
                     </Link>

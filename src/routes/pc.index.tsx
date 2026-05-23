@@ -25,7 +25,7 @@ function PcDashboard() {
           <KPI label="Total Pengajuan" value={regs.length} icon={Network} />
           <KPI label="Pending Review" value={stat("Pending")} icon={Inbox} tone="warning" />
           <KPI label="Disetujui" value={stat("Approved")} icon={CheckCircle2} tone="success" />
-          <KPI label="Ditolak" value={stat("Rejected")} icon={XCircle} tone="destructive" />
+          <KPI label="Ditolak" value={stat("RejectedFinal")} icon={XCircle} tone="destructive" />
           <KPI label="MWC Terdaftar" value={tipe("MWC")} icon={Building2} />
           <KPI label="Lembaga PC Terdaftar" value={tipe("Lembaga PC")} icon={Layers} />
           <KPI label="Ranting Terdaftar" value={tipe("Ranting")} icon={Sprout} />

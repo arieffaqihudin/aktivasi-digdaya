@@ -25,7 +25,7 @@ function PwDashboard() {
           <KPI label="Total Pengajuan" value={regs.length} icon={Network} />
           <KPI label="Pending Review" value={stat("Pending")} icon={Inbox} tone="warning" />
           <KPI label="Disetujui" value={stat("Approved")} icon={CheckCircle2} tone="success" />
-          <KPI label="Ditolak" value={stat("Rejected")} icon={XCircle} tone="destructive" />
+          <KPI label="Ditolak" value={stat("RejectedFinal")} icon={XCircle} tone="destructive" />
           <KPI label="PC Terdaftar" value={tipe("PC")} icon={Building2} />
           <KPI label="Lembaga PW" value={tipe("Lembaga PW")} icon={Layers} />
         </div>

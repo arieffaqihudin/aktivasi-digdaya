@@ -92,7 +92,7 @@ function Inbox() {
         <SelectFilter value={tingkat} onChange={setTingkat} placeholder="Tingkat Pendaftar" options={[["all","Semua Tingkat"],["PW","PW"],["PC","PC"]]} />
         <SelectFilter value={sumberSurat} onChange={setSumberSurat} placeholder="Sumber Surat Tugas" options={[["all","Semua Surat"],["DIGDAYA_PERSURATAN","Dari Sistem"],["MANUAL_UPLOAD","Upload Manual"]]} />
         <SelectFilter value={tipe} onChange={setTipe} placeholder="Tipe Organisasi" options={[["all","Semua Tipe"],["PW","PW"],["PC","PC"],["MWC","MWC"],["Lembaga PW","Lembaga PW"],["Lembaga PC","Lembaga PC"],["Ranting","Ranting"]]} />
-        <SelectFilter value={status} onChange={setStatus} placeholder="Status" options={[["all","Semua Status"],["Pending","Pending Review"],["Approved","Disetujui"],["Rejected","Ditolak"]]} />
+        <SelectFilter value={status} onChange={setStatus} placeholder="Status" options={[["all","Semua Status"],["Pending","Pending Review"],["PerluPerbaikan","Perlu Perbaikan"],["Approved","Disetujui"],["RejectedFinal","Ditolak Final"]]} />
         <SelectFilter value={pw} onChange={setPw} placeholder="Wilayah PW" options={[["all","Semua PW"], ...pws.map((p) => [p, p.replace("PWNU ","")] as [string,string])]} />
         <SelectFilter value={slaFilter} onChange={setSlaFilter} placeholder="SLA" options={[["all","Semua SLA"],["Aman","Aman"],["Mendekati","Mendekati"],["Lewat","Lewat SLA"]]} />
         <div className="relative ml-auto">

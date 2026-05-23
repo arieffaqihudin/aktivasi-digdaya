@@ -19,7 +19,7 @@ function ReviewSummary() {
   const pendingA = pending.filter((r) => r.jalur === "A").length;
   const pendingB = pending.filter((r) => r.jalur === "B").length;
   const approvedToday = regs.filter((r) => r.status === "Approved" && r.reviewedAt && new Date(r.reviewedAt).toDateString() === today).length;
-  const rejectedToday = regs.filter((r) => r.status === "Rejected" && r.reviewedAt && new Date(r.reviewedAt).toDateString() === today).length;
+  const rejectedToday = regs.filter((r) => r.status === "PerluPerbaikan" || r.status === "RejectedFinal" && r.reviewedAt && new Date(r.reviewedAt).toDateString() === today).length;
   const overSla = pending.filter((r) => slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === "Lewat").length;
   const inBatch = regs.filter((r) => r.peruriBatchId).length;
 
