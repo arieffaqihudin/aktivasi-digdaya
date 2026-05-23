@@ -159,6 +159,17 @@ function randomCode(): string {
   return `DGD-${part(4)}-${part(4)}`;
 }
 
+/** Determine submitter notification target (role + orgId + status route) for a registration. */
+function submitterTarget(reg: Registration): { role: "PC" | "PW"; orgId: string; route: string } | null {
+  if (reg.sumberPengajuan === "PC_DASHBOARD" && reg.sourcePcId) {
+    return { role: "PC", orgId: reg.sourcePcId, route: `/pc/status-pengajuan/${reg.ticketId}` };
+  }
+  if (reg.sumberPengajuan === "PW_DASHBOARD" && reg.sourcePwId) {
+    return { role: "PW", orgId: reg.sourcePwId, route: `/pw/status-pengajuan/${reg.ticketId}` };
+  }
+  return null;
+}
+
 export type VerifyResult =
   | { ok: true; code: AccessCode }
   | { ok: false; reason: "notfound" | "expired" | "used" | "disabled" };
