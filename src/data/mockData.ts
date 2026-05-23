@@ -283,6 +283,7 @@ export const mockSuratTugasDigdaya: DokumenSistem[] = [
   { documentId: "DOC-2026-0302", nomorSurat: "021/PC-JBG/ST/2026", namaDokumen: "Surat Tugas Pengurus Ranting NU Cukir",            tanggalSurat: isoDate(3),  penandatangan: "KH. Anwar Manshur (Ketua PCNU Jombang)",        status: "Tertandatangani" },
   { documentId: "DOC-2026-0401", nomorSurat: "030/PC-SLO/ST/2026", namaDokumen: "Surat Tugas Pengurus LP Ma'arif PCNU Surakarta",   tanggalSurat: isoDate(1),  penandatangan: "KH. Mu'inudinillah (Ketua PCNU Surakarta)",     status: "Tertandatangani" },
   { documentId: "DOC-2026-0203", nomorSurat: "201/PW.01/A.I.06.03/05/2026", namaDokumen: "Surat Tugas Aktivasi PCNU Kota Yogyakarta", tanggalSurat: isoDate(3), penandatangan: "KH. Hilmy Muhammad (Rais PWNU DIY)", status: "Tertandatangani" },
+  { documentId: "DOC-2026-0501", nomorSurat: "125/PC.13/A.I.06.03/05/2026", namaDokumen: "Surat Tugas Aktivasi MWCNU Banyuanyar", tanggalSurat: isoDate(1), penandatangan: "Ketua dan Sekretaris PCNU Kraksaan", status: "Tertandatangani" },
 ];
 
 // ============================================================
@@ -423,9 +424,9 @@ export const seedRegistrations: Registration[] = [
     sumberSuratTugas: "DIGDAYA_PERSURATAN", suratTugasFile: undefined,
     dokumenSistem: mockSuratTugasDigdaya[0],
   }),
-  regJalurB({ ticketId: "AKT-2026-000125", tipeOrg: "MWC", namaOrg: "MWCNU Ngaglik",   pw: "PWNU DI Yogyakarta", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kabupaten Sleman", namaAdmin: "Faisal Akbar", jabatan: "Sekretaris",nik: "3404252525910025", hp: "+6281234567025", email: "faisal@mwc-ngaglik.id", status: "Pending", submittedAt: daysAgo(4, 15),
+  regJalurB({ ticketId: "AKT-2026-000125", tipeOrg: "MWC", namaOrg: "MWCNU Banyuanyar", pw: "PWNU Jawa Timur", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kraksaan", namaAdmin: "Ahmad Subhan", jabatan: "Sekretaris", nik: "3507000000001250", hp: "+6281234500125", email: "ahmad.subhan@example.com", status: "Pending", submittedAt: "2026-05-23T02:30:00.000Z",
     sumberSuratTugas: "DIGDAYA_PERSURATAN", suratTugasFile: undefined,
-    dokumenSistem: mockSuratTugasDigdaya[3],
+    dokumenSistem: mockSuratTugasDigdaya[mockSuratTugasDigdaya.length - 1],
   }),
   regJalurB({ ticketId: "AKT-2026-000127", tipeOrg: "Lembaga PC", namaOrg: "LAZISNU PCNU Sleman", pw: "PWNU DI Yogyakarta", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kabupaten Sleman", namaAdmin: "Halimah Yusuf", jabatan: "Bendahara", nik: "3404272727870027", hp: "+6281234567027", email: "halimah@lazis-sleman.id", status: "Pending", submittedAt: daysAgo(1),
     sumberSuratTugas: "DIGDAYA_PERSURATAN", suratTugasFile: undefined,
@@ -462,7 +463,7 @@ export const seedRegistrations: Registration[] = [
     email: "ahmad.fauzan@example.com",
     sumberSuratTugas: "DIGDAYA_PERSURATAN",
     suratTugasFile: undefined,
-    dokumenSistem: mockSuratTugasDigdaya[mockSuratTugasDigdaya.length - 1],
+    dokumenSistem: mockSuratTugasDigdaya[10],
     status: "Pending",
     submittedAt: daysAgo(3, 10),
   } as Registration,
