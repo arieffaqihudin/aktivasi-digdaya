@@ -333,6 +333,47 @@ export const seedAccessCodes: AccessCode[] = [
   { code: "AKSES-EXP-001",  tingkat: "PC", ...pcMeta("pc-kp"),    status: "Expired",  generatedAt: daysAgo(60), expiredAt: daysAgo(15) },
   { code: "AKSES-DIS-001",  tingkat: "PC", ...pcMeta("pc-bantul"),status: "Disabled", generatedAt: daysAgo(10), expiredAt: daysFromNow(20) },
   { code: "AKSES-USED-001", tingkat: "PC", ...pcMeta("pc-mgl"),   status: "Used",     generatedAt: daysAgo(20), expiredAt: daysFromNow(10), usedAt: daysAgo(2), ticketId: "AKT-2026-000102" },
+
+  // ===== Scoped Batch Codes — pendaftar memilih organisasi sendiri dari daftar scope =====
+  {
+    code: "ONBOARD-PC-DIY-MEI2026",
+    kind: "Scoped",
+    batchName: "Onboarding PC DIY Mei 2026",
+    tingkat: "PC",
+    orgId: "",
+    orgName: "Onboarding PC DIY Mei 2026",
+    pw: "PWNU DI Yogyakarta",
+    scope: { wilayahPwId: "pw-jogja", mode: "auto" },
+    status: "Unused",
+    generatedAt: daysAgo(2),
+    expiredAt: daysFromNow(28),
+  },
+  {
+    code: "ONBOARD-PC-JATENG-01",
+    kind: "Scoped",
+    batchName: "Onboarding PC Jawa Tengah Batch 1",
+    tingkat: "PC",
+    orgId: "",
+    orgName: "Onboarding PC Jawa Tengah Batch 1",
+    pw: "PWNU Jawa Tengah",
+    scope: { wilayahPwId: "pw-jateng", mode: "auto" },
+    status: "Unused",
+    generatedAt: daysAgo(2),
+    expiredAt: daysFromNow(28),
+  },
+  {
+    code: "ONBOARD-PW-NASIONAL",
+    kind: "Scoped",
+    batchName: "Onboarding PW Nasional",
+    tingkat: "PW",
+    orgId: "",
+    orgName: "Onboarding PW Nasional",
+    pw: "Nasional",
+    scope: { wilayahPwId: "Nasional", mode: "auto" },
+    status: "Unused",
+    generatedAt: daysAgo(1),
+    expiredAt: daysFromNow(29),
+  },
 ];
 
 // ============================================================
