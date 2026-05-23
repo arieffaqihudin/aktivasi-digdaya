@@ -362,6 +362,13 @@ export const actions = {
       action: "GENERATE_ACCESS_CODE",
       detail: `Individual code ${codeStr} dibuat untuk ${org.nama} (${input.tingkat}). Berlaku ${input.validDays} hari.${input.note ? " Catatan: " + input.note : ""}`,
     });
+    notifActions.add({
+      recipientRole: "OPS",
+      type: "ACCESS_CODE_CREATED",
+      title: "Kode akses berhasil dibuat",
+      description: `${codeStr} telah dibuat untuk ${org.nama} (${input.tingkat}).`,
+      route: "/ops/activation/access-codes",
+    });
     return newCode;
   },
 
