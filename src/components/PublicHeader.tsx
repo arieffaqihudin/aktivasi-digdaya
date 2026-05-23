@@ -13,7 +13,10 @@ import {
   KeyRound,
   Search,
   ArrowUpRight,
+  ChevronDown,
 } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function PublicHeader() {
   return (
@@ -44,6 +47,19 @@ export function PublicHeader() {
 }
 
 export function PublicFooter() {
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set());
+
+  const toggle = (key: string) => {
+    setOpenSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+
+  const isOpen = (key: string) => openSections.has(key);
+
   return (
     <footer className="relative z-10 overflow-hidden bg-gradient-to-br from-[#0B3D28] via-[#0A3522] to-[#072A1A]">
       {/* Decorative corner ornaments */}
@@ -71,18 +87,134 @@ export function PublicFooter() {
       />
 
       <div className="relative mx-auto max-w-[1080px] px-4 sm:px-6">
-        {/* Main footer grid */}
-        <div className="grid grid-cols-1 gap-4 pt-7 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-6 sm:pt-10 lg:grid-cols-[1.15fr_1fr_1fr_1.1fr] lg:gap-8 lg:pt-11">
+        {/* ========== MOBILE (accordion) ========== */}
+        <div className="sm:hidden">
+          {/* Brand */}
+          <div className="pt-8 pb-2">
+            <img
+              src="https://digdaya.nu.id/_next/image?url=%2Fimages%2Flogo-digdaya-white.png&w=384&q=75"
+              alt="Digdaya"
+              className="block h-[34px] w-auto max-w-[150px] object-contain"
+              loading="lazy"
+            />
+            <p className="mt-3 max-w-[280px] text-[13px] leading-[1.5] text-white/60 line-clamp-3">
+              Mendukung aktivasi PW/PC dan pendaftaran administrator secara
+              tertib dan terintegrasi.
+            </p>
+          </div>
+
+          {/* Navigasi accordion */}
+          <FooterAccordion
+            title="Navigasi"
+            isOpen={isOpen("nav")}
+            onToggle={() => toggle("nav")}
+          >
+            <ul className="flex flex-col gap-2 pb-1">
+              <FooterLink to="/" icon={<Home className="h-3.5 w-3.5" />}>
+                Beranda
+              </FooterLink>
+              <FooterLink to="/login" icon={<LogIn className="h-3.5 w-3.5" />}>
+                Login
+              </FooterLink>
+              <FooterLink to="/kode-akses" icon={<KeyRound className="h-3.5 w-3.5" />}>
+                Kode Akses
+              </FooterLink>
+              <FooterLink to="/cek-status" icon={<Search className="h-3.5 w-3.5" />}>
+                Cek Status
+              </FooterLink>
+              <FooterLink
+                to="mailto:digital@nu.or.id"
+                icon={<HelpCircle className="h-3.5 w-3.5" />}
+                external
+              >
+                Pusat Bantuan
+              </FooterLink>
+            </ul>
+          </FooterAccordion>
+
+          {/* Ekosistem accordion */}
+          <FooterAccordion
+            title="Ekosistem"
+            isOpen={isOpen("eco")}
+            onToggle={() => toggle("eco")}
+          >
+            <ul className="flex flex-col gap-2 pb-1">
+              <EcosystemItem>Digdaya Persuratan</EcosystemItem>
+              <EcosystemItem>Digdaya Kepengurusan</EcosystemItem>
+              <EcosystemItem>Digdaya AI NU</EcosystemItem>
+              <EcosystemItem>NU.ID</EcosystemItem>
+            </ul>
+          </FooterAccordion>
+
+          {/* Kontak accordion */}
+          <FooterAccordion
+            title="Kontak"
+            isOpen={isOpen("contact")}
+            onToggle={() => toggle("contact")}
+          >
+            <ul className="flex flex-col gap-2.5 pb-1">
+              <li className="flex items-start gap-2">
+                <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-white/40" />
+                <span className="text-[13px] leading-relaxed text-white/60">
+                  Gedung PBNU
+                  <br />
+                  Jl. Kramat Raya No.164, Kec. Senen, DKI Jakarta 10110
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="h-3.5 w-3.5 shrink-0 text-white/40" />
+                <a
+                  href="tel:02131923033"
+                  className="text-[13px] text-white/60 transition-colors hover:text-[#7EE8B0]"
+                >
+                  Telepon: (021) 31923033
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Mail className="h-3.5 w-3.5 shrink-0 text-white/40" />
+                <a
+                  href="mailto:digital@nu.or.id"
+                  className="text-[13px] text-white/60 transition-colors hover:text-[#7EE8B0]"
+                >
+                  Email: digital@nu.or.id
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Instagram className="h-3.5 w-3.5 shrink-0 text-white/40" />
+                <a
+                  href="https://instagram.com/digdayanu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-0.5 text-[13px] text-white/60 transition-colors hover:text-[#7EE8B0]"
+                >
+                  Instagram: @digdayanu
+                  <ArrowUpRight className="h-3 w-3" />
+                </a>
+              </li>
+            </ul>
+          </FooterAccordion>
+
+          {/* Copyright mobile */}
+          <div className="mt-5 border-t border-white/[0.08] pt-4 pb-5">
+            <p className="text-center text-[12px] text-white/40">
+              &copy; Pengurus Besar Nahdlatul Ulama 2026. All rights reserved.
+            </p>
+          </div>
+        </div>
+
+        {/* ========== DESKTOP (4 columns) ========== */}
+        <div className="hidden sm:grid grid-cols-2 gap-x-8 gap-y-6 pt-10 lg:grid-cols-[1.15fr_1fr_1fr_1.1fr] lg:gap-8 lg:pt-11">
           {/* Col 1 — Branding */}
           <div className="flex flex-col">
             <img
               src="https://digdaya.nu.id/_next/image?url=%2Fimages%2Flogo-digdaya-white.png&w=384&q=75"
               alt="Digdaya"
-              className="block h-[34px] w-auto max-w-[150px] object-contain sm:h-[38px] sm:max-w-[160px] lg:h-[42px] lg:max-w-[180px]"
+              className="block h-[38px] w-auto max-w-[160px] object-contain lg:h-[42px] lg:max-w-[180px]"
               loading="lazy"
             />
             <p className="mt-3 max-w-[260px] text-[12.5px] leading-relaxed text-white/60">
-              Mendukung aktivasi PW/PC dan pendaftaran administrator secara tertib dan terintegrasi.
+              Mendukung aktivasi PW/PC dan pendaftaran administrator secara
+              tertib dan terintegrasi.
             </p>
           </div>
 
@@ -175,14 +307,52 @@ export function PublicFooter() {
           </div>
         </div>
 
-        {/* Divider + Copyright */}
-        <div className="mt-5 border-t border-white/[0.08] pt-3.5 pb-4 sm:mt-7 sm:pt-4 sm:pb-5 lg:mt-8">
-          <p className="text-center text-[11.5px] text-white/40 sm:text-[12px]">
+        {/* Divider + Copyright (desktop) */}
+        <div className="hidden sm:block mt-7 border-t border-white/[0.08] pt-4 pb-5 lg:mt-8">
+          <p className="text-center text-[12px] text-white/40">
             &copy; Pengurus Besar Nahdlatul Ulama 2026. All rights reserved.
           </p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterAccordion({
+  title,
+  isOpen,
+  onToggle,
+  children,
+}: {
+  title: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="border-t border-white/[0.1]">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="flex w-full items-center justify-between py-3.5 text-left outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+      >
+        <span className="text-[14px] font-semibold uppercase tracking-wider text-white/90">
+          {title}
+        </span>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 shrink-0 text-white/50 transition-transform duration-200",
+            isOpen && "rotate-180"
+          )}
+        />
+      </button>
+      {isOpen && (
+        <div className="pb-3.5">
+          {children}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -198,7 +368,7 @@ function FooterLink({
   external?: boolean;
 }) {
   const className =
-    "group inline-flex items-center gap-2 text-[13px] text-white/60 transition-colors hover:text-[#7EE8B0]";
+    "group inline-flex items-center gap-2 text-[13px] sm:text-[13px] text-white/60 transition-colors hover:text-[#7EE8B0]";
 
   if (external) {
     return (
@@ -228,7 +398,7 @@ function FooterLink({
 
 function EcosystemItem({ children }: { children: React.ReactNode }) {
   return (
-    <li className="inline-flex items-center gap-2 text-[13px] text-white/50">
+    <li className="inline-flex items-center gap-2 text-[13px] sm:text-[13px] text-white/50">
       <span className="inline-block h-1 w-1 rounded-full bg-white/30" />
       <span>{children}</span>
     </li>
