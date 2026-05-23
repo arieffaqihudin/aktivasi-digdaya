@@ -13,6 +13,7 @@ import { Route as ReviewRouteImport } from './routes/review'
 import { Route as PwRouteImport } from './routes/pw'
 import { Route as PcRouteImport } from './routes/pc'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as KodeAksesRouteImport } from './routes/kode-akses'
 import { Route as CekStatusRouteImport } from './routes/cek-status'
 import { Route as AktivasiRouteImport } from './routes/aktivasi'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -32,6 +33,7 @@ import { Route as PwDaftarkanRouteImport } from './routes/pw.daftarkan'
 import { Route as PcStatusPengajuanRouteImport } from './routes/pc.status-pengajuan'
 import { Route as PcProfilRouteImport } from './routes/pc.profil'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
+import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$accessCode'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
 import { Route as AdminAccessCodesRouteImport } from './routes/admin.access-codes'
@@ -55,6 +57,11 @@ const PcRoute = PcRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KodeAksesRoute = KodeAksesRouteImport.update({
+  id: '/kode-akses',
+  path: '/kode-akses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CekStatusRoute = CekStatusRouteImport.update({
@@ -152,6 +159,11 @@ const PcDaftarkanRoute = PcDaftarkanRouteImport.update({
   path: '/daftarkan',
   getParentRoute: () => PcRoute,
 } as any)
+const AktivasiAccessCodeRoute = AktivasiAccessCodeRouteImport.update({
+  id: '/$accessCode',
+  path: '/$accessCode',
+  getParentRoute: () => AktivasiRoute,
+} as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -176,8 +188,9 @@ const ReviewInboxTicketIdRoute = ReviewInboxTicketIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/aktivasi': typeof AktivasiRoute
+  '/aktivasi': typeof AktivasiRouteWithChildren
   '/cek-status': typeof CekStatusRoute
+  '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
   '/pc': typeof PcRouteWithChildren
   '/pw': typeof PwRouteWithChildren
@@ -185,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
@@ -204,12 +218,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/aktivasi': typeof AktivasiRoute
+  '/aktivasi': typeof AktivasiRouteWithChildren
   '/cek-status': typeof CekStatusRoute
+  '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
@@ -231,8 +247,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/aktivasi': typeof AktivasiRoute
+  '/aktivasi': typeof AktivasiRouteWithChildren
   '/cek-status': typeof CekStatusRoute
+  '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
   '/pc': typeof PcRouteWithChildren
   '/pw': typeof PwRouteWithChildren
@@ -240,6 +257,7 @@ export interface FileRoutesById {
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
@@ -264,6 +282,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/aktivasi'
     | '/cek-status'
+    | '/kode-akses'
     | '/login'
     | '/pc'
     | '/pw'
@@ -271,6 +290,7 @@ export interface FileRouteTypes {
     | '/admin/access-codes'
     | '/admin/audit-log'
     | '/admin/settings'
+    | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
@@ -292,10 +312,12 @@ export interface FileRouteTypes {
     | '/'
     | '/aktivasi'
     | '/cek-status'
+    | '/kode-akses'
     | '/login'
     | '/admin/access-codes'
     | '/admin/audit-log'
     | '/admin/settings'
+    | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
@@ -318,6 +340,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/aktivasi'
     | '/cek-status'
+    | '/kode-akses'
     | '/login'
     | '/pc'
     | '/pw'
@@ -325,6 +348,7 @@ export interface FileRouteTypes {
     | '/admin/access-codes'
     | '/admin/audit-log'
     | '/admin/settings'
+    | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
@@ -346,8 +370,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AktivasiRoute: typeof AktivasiRoute
+  AktivasiRoute: typeof AktivasiRouteWithChildren
   CekStatusRoute: typeof CekStatusRoute
+  KodeAksesRoute: typeof KodeAksesRoute
   LoginRoute: typeof LoginRoute
   PcRoute: typeof PcRouteWithChildren
   PwRoute: typeof PwRouteWithChildren
@@ -383,6 +408,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kode-akses': {
+      id: '/kode-akses'
+      path: '/kode-akses'
+      fullPath: '/kode-akses'
+      preLoaderRoute: typeof KodeAksesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cek-status': {
@@ -518,6 +550,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PcDaftarkanRouteImport
       parentRoute: typeof PcRoute
     }
+    '/aktivasi/$accessCode': {
+      id: '/aktivasi/$accessCode'
+      path: '/$accessCode'
+      fullPath: '/aktivasi/$accessCode'
+      preLoaderRoute: typeof AktivasiAccessCodeRouteImport
+      parentRoute: typeof AktivasiRoute
+    }
     '/admin/settings': {
       id: '/admin/settings'
       path: '/settings'
@@ -564,6 +603,18 @@ const AdminRouteChildren: AdminRouteChildren = {
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface AktivasiRouteChildren {
+  AktivasiAccessCodeRoute: typeof AktivasiAccessCodeRoute
+}
+
+const AktivasiRouteChildren: AktivasiRouteChildren = {
+  AktivasiAccessCodeRoute: AktivasiAccessCodeRoute,
+}
+
+const AktivasiRouteWithChildren = AktivasiRoute._addFileChildren(
+  AktivasiRouteChildren,
+)
 
 interface PcRouteChildren {
   PcDaftarkanRoute: typeof PcDaftarkanRoute
@@ -631,8 +682,9 @@ const ReviewRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  AktivasiRoute: AktivasiRoute,
+  AktivasiRoute: AktivasiRouteWithChildren,
   CekStatusRoute: CekStatusRoute,
+  KodeAksesRoute: KodeAksesRoute,
   LoginRoute: LoginRoute,
   PcRoute: PcRouteWithChildren,
   PwRoute: PwRouteWithChildren,
