@@ -105,7 +105,7 @@ function PeruriPage() {
                       </div>
                     </td></tr>
                   )}
-                </>
+                </React.Fragment>
               ))}
               {batches.length === 0 && (
                 <tr><td colSpan={9} className="px-4 py-12 text-center text-sm text-muted-foreground">Belum ada batch.</td></tr>
