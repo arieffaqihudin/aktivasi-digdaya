@@ -1,18 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { OpsPageHeader, OpsPageBody, OpsCard } from "@/components/ops/OpsPageHeader";
-import { ArrowRight, KeyRound, Mail, Search, Stamp, Database, LayoutDashboard } from "lucide-react";
+import { ArrowRight, KeyRound, Inbox, FileDown, Settings, ScrollText, LayoutDashboard } from "lucide-react";
 
 export const Route = createFileRoute("/ops/")({
   component: OpsHome,
 });
 
 const tiles = [
-  { to: "/ops/activation", label: "Aktivasi Digdaya", desc: "Kelola kode akses & pengajuan aktivasi PW/PC.", icon: LayoutDashboard },
-  { to: "/ops/correspondence/change-email", label: "Pengajuan Ubah Email", desc: "Verifikasi perubahan email pengurus.", icon: Mail },
-  { to: "/ops/correspondence/revert-letter-stamp", label: "Cek Order ID", desc: "Tracking order persuratan.", icon: Search },
-  { to: "/ops/correspondence/stamper", label: "Stamper", desc: "Kelola stempel digital.", icon: Stamp },
-  { to: "/ops/repository", label: "Repository", desc: "Arsip dokumen Digdaya.", icon: Database },
-  { to: "/ops/activation/access-codes", label: "Generate Kode Akses", desc: "Buat batch kode akses aktivasi.", icon: KeyRound },
+  { to: "/ops/activation", label: "Overview Aktivasi", desc: "Ringkasan kode akses & pengajuan aktivasi.", icon: LayoutDashboard },
+  { to: "/ops/activation/access-codes", label: "Kode Akses", desc: "Generate & kelola kode akses aktivasi.", icon: KeyRound },
+  { to: "/ops/activation/submissions", label: "Pengajuan Aktivasi", desc: "Pantauan seluruh pengajuan PW/PC.", icon: Inbox },
+  { to: "/ops/activation/peruri-export", label: "Export Peruri", desc: "Batch ekspor data approved ke Peruri.", icon: FileDown },
+  { to: "/ops/activation/settings", label: "Pengaturan", desc: "Konfigurasi modul aktivasi.", icon: Settings },
+  { to: "/ops/activation/audit-log", label: "Audit Log", desc: "Riwayat aktivitas operator.", icon: ScrollText },
 ];
 
 function OpsHome() {
