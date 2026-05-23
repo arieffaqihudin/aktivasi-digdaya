@@ -138,7 +138,7 @@ function StatusPengajuan() {
 function SelectFilter({ value, onChange, options, placeholder }: { value: string; onChange: (v: string) => void; options: [string, string][]; placeholder?: string }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="h-10 w-[200px]"><SelectValue placeholder={placeholder} /></SelectTrigger>
+      <SelectTrigger className="h-10 w-full sm:w-[200px]"><SelectValue placeholder={placeholder} /></SelectTrigger>
       <SelectContent>
         {options.map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}
       </SelectContent>
