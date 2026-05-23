@@ -844,12 +844,15 @@ export const actions = {
     } else if (e === "pw@digdaya.nu.id") {
       const pw = masterPW.find((p) => p.id === demoPwUserPwId)!;
       user = { email: e, name: "Administrator " + pw.nama, role: "PW", pwId: pw.id, pwName: pw.nama };
-    } else if (e === "pc.kraksaan@digdaya.nu.id" || e === "pc@digdaya.nu.id") {
+    } else if (e === "pc.kraksaan@digdaya.nu.id") {
+      const pc = masterPC.find((p) => p.id === demoPcUserPcId)!;
+      user = { email: e, name: "Admin PCNU Kraksaan", role: "PC", pcId: pc.id, pcName: "PCNU Kraksaan" };
+    } else if (e === "pc@digdaya.nu.id") {
       const pc = masterPC.find((p) => p.id === demoPcUserPcId)!;
       user = { email: e, name: "Administrator " + pc.nama, role: "PC", pcId: pc.id, pcName: pc.nama };
     } else {
       const pc = masterPC.find((p) => p.id === demoPcUserPcId)!;
-      user = { email: e, name: "Administrator " + pc.nama, role: "PC", pcId: pc.id, pcName: pc.nama };
+      user = { email: e, name: "Admin PCNU Kraksaan", role: "PC", pcId: pc.id, pcName: "PCNU Kraksaan" };
     }
     setState({ user });
     return user;
