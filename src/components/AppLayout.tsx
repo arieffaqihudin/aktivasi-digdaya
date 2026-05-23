@@ -1,10 +1,19 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogOut, Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { LogOut, Menu, X, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Logo } from "./Logo";
 import { actions, useStore, type Role } from "@/lib/store";
 import { NotificationBell } from "./NotificationBell";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export type MenuItem = {
   to: string;
