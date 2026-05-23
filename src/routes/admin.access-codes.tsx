@@ -72,7 +72,7 @@ function AccessCodes() {
 
   const exportCsv = () => {
     const rows = [["Kode","PC","PW","Status","Generated","Expired","Used At","Ticket"]];
-    filtered.forEach((c) => rows.push([c.code, c.pcName, c.pw, c.status, formatDate(c.generatedAt), formatDate(c.expiredAt), c.usedAt ? formatDate(c.usedAt) : "", c.ticketId ?? ""]));
+    filtered.forEach((c) => rows.push([c.code, c.orgName ?? "", c.pw, c.status, formatDate(c.generatedAt), formatDate(c.expiredAt), c.usedAt ? formatDate(c.usedAt) : "", c.ticketId ?? ""]));
     const csv = rows.map((r) => r.map((x) => `"${x}"`).join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
