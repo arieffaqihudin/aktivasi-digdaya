@@ -101,13 +101,13 @@ function Intro() {
       </div>
 
       <h1 className="mt-5 text-[26px] font-bold leading-tight tracking-tight text-[#0F2A1A] sm:text-[32px]">
-        Silakan pilih sesuai{" "}
-        <span className="text-[#00843D]">kondisi kepengurusan</span>{" "}
+        Pilih jalur sesuai{" "}
+        <span className="text-[#00843D]">status PW/PC</span>{" "}
         Anda.
       </h1>
 
       <p className="mt-3 max-w-[480px] text-[14px] leading-relaxed text-[#6B7280]">
-        Portal ini digunakan untuk aktivasi dan pendaftaran administrator Digdaya.
+        PW/PC yang belum production harus diaktifkan terlebih dahulu sebelum dapat mendaftarkan kepengurusan di bawahnya.
       </p>
     </div>
   );
