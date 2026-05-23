@@ -463,7 +463,7 @@ export const seedRegistrations: Registration[] = [
     email: "ahmad.fauzan@example.com",
     sumberSuratTugas: "DIGDAYA_PERSURATAN",
     suratTugasFile: undefined,
-    dokumenSistem: mockSuratTugasDigdaya[mockSuratTugasDigdaya.length - 1],
+    dokumenSistem: mockSuratTugasDigdaya[10],
     status: "Pending",
     submittedAt: daysAgo(3, 10),
   } as Registration,
