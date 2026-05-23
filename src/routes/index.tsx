@@ -124,12 +124,13 @@ function GatewayCards() {
         title="PW/PC Anda sudah production?"
         description="Login untuk mendaftarkan kepengurusan di bawah kewenangan Anda, seperti Lembaga, MWC, Ranting, atau struktur lainnya."
         cta="Login dengan Email / NU.ID"
+        ctaMobile="Login Email / NU.ID"
         variant="secondary"
       />
 
-      <div className="my-5 flex items-center gap-3">
+      <div className="my-[22px] flex items-center gap-3 sm:my-5">
         <div className="h-px flex-1 bg-[#E5EFE9]" />
-        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8A97A8]">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8A97A8] sm:text-[10px]">
           Atau
         </span>
         <div className="h-px flex-1 bg-[#E5EFE9]" />
