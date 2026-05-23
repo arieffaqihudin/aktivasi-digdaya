@@ -39,6 +39,7 @@ import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$acces
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
 import { Route as AdminAccessCodesRouteImport } from './routes/admin.access-codes'
+import { Route as OpsActivationIndexRouteImport } from './routes/ops.activation.index'
 import { Route as StatusTicketIdRevisiRouteImport } from './routes/status.$ticketId.revisi'
 import { Route as ReviewInboxTicketIdRouteImport } from './routes/review.inbox.$ticketId'
 import { Route as AktivasiSuksesTicketIdRouteImport } from './routes/aktivasi.sukses.$ticketId'
@@ -195,6 +196,11 @@ const AdminAccessCodesRoute = AdminAccessCodesRouteImport.update({
   path: '/access-codes',
   getParentRoute: () => AdminRoute,
 } as any)
+const OpsActivationIndexRoute = OpsActivationIndexRouteImport.update({
+  id: '/activation/',
+  path: '/activation/',
+  getParentRoute: () => OpsRoute,
+} as any)
 const StatusTicketIdRevisiRoute = StatusTicketIdRevisiRouteImport.update({
   id: '/revisi',
   path: '/revisi',
@@ -257,6 +263,7 @@ export interface FileRoutesByFullPath {
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
   '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
+  '/ops/activation/': typeof OpsActivationIndexRoute
   '/pc/status-pengajuan/$ticketId/revisi': typeof PcStatusPengajuanTicketIdRevisiRoute
   '/pw/status-pengajuan/$ticketId/revisi': typeof PwStatusPengajuanTicketIdRevisiRoute
 }
@@ -289,6 +296,7 @@ export interface FileRoutesByTo {
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
   '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
+  '/ops/activation': typeof OpsActivationIndexRoute
   '/pc/status-pengajuan/$ticketId/revisi': typeof PcStatusPengajuanTicketIdRevisiRoute
   '/pw/status-pengajuan/$ticketId/revisi': typeof PwStatusPengajuanTicketIdRevisiRoute
 }
@@ -327,6 +335,7 @@ export interface FileRoutesById {
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
   '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
+  '/ops/activation/': typeof OpsActivationIndexRoute
   '/pc/status-pengajuan/$ticketId/revisi': typeof PcStatusPengajuanTicketIdRevisiRoute
   '/pw/status-pengajuan/$ticketId/revisi': typeof PwStatusPengajuanTicketIdRevisiRoute
 }
@@ -366,6 +375,7 @@ export interface FileRouteTypes {
     | '/aktivasi/sukses/$ticketId'
     | '/review/inbox/$ticketId'
     | '/status/$ticketId/revisi'
+    | '/ops/activation/'
     | '/pc/status-pengajuan/$ticketId/revisi'
     | '/pw/status-pengajuan/$ticketId/revisi'
   fileRoutesByTo: FileRoutesByTo
@@ -398,6 +408,7 @@ export interface FileRouteTypes {
     | '/aktivasi/sukses/$ticketId'
     | '/review/inbox/$ticketId'
     | '/status/$ticketId/revisi'
+    | '/ops/activation'
     | '/pc/status-pengajuan/$ticketId/revisi'
     | '/pw/status-pengajuan/$ticketId/revisi'
   id:
@@ -435,6 +446,7 @@ export interface FileRouteTypes {
     | '/aktivasi/sukses/$ticketId'
     | '/review/inbox/$ticketId'
     | '/status/$ticketId/revisi'
+    | '/ops/activation/'
     | '/pc/status-pengajuan/$ticketId/revisi'
     | '/pw/status-pengajuan/$ticketId/revisi'
   fileRoutesById: FileRoutesById
@@ -665,6 +677,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAccessCodesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/ops/activation/': {
+      id: '/ops/activation/'
+      path: '/activation'
+      fullPath: '/ops/activation/'
+      preLoaderRoute: typeof OpsActivationIndexRouteImport
+      parentRoute: typeof OpsRoute
+    }
     '/status/$ticketId/revisi': {
       id: '/status/$ticketId/revisi'
       path: '/revisi'
@@ -735,10 +754,12 @@ const AktivasiRouteWithChildren = AktivasiRoute._addFileChildren(
 
 interface OpsRouteChildren {
   OpsIndexRoute: typeof OpsIndexRoute
+  OpsActivationIndexRoute: typeof OpsActivationIndexRoute
 }
 
 const OpsRouteChildren: OpsRouteChildren = {
   OpsIndexRoute: OpsIndexRoute,
+  OpsActivationIndexRoute: OpsActivationIndexRoute,
 }
 
 const OpsRouteWithChildren = OpsRoute._addFileChildren(OpsRouteChildren)
@@ -856,13 +877,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
