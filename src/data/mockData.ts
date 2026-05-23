@@ -282,6 +282,7 @@ export const mockSuratTugasDigdaya: DokumenSistem[] = [
   { documentId: "DOC-2026-0301", nomorSurat: "020/PC-JBG/ST/2026", namaDokumen: "Surat Tugas Administrator MWCNU Diwek",            tanggalSurat: isoDate(4),  penandatangan: "KH. Anwar Manshur (Ketua PCNU Jombang)",        status: "Tertandatangani" },
   { documentId: "DOC-2026-0302", nomorSurat: "021/PC-JBG/ST/2026", namaDokumen: "Surat Tugas Pengurus Ranting NU Cukir",            tanggalSurat: isoDate(3),  penandatangan: "KH. Anwar Manshur (Ketua PCNU Jombang)",        status: "Tertandatangani" },
   { documentId: "DOC-2026-0401", nomorSurat: "030/PC-SLO/ST/2026", namaDokumen: "Surat Tugas Pengurus LP Ma'arif PCNU Surakarta",   tanggalSurat: isoDate(1),  penandatangan: "KH. Mu'inudinillah (Ketua PCNU Surakarta)",     status: "Tertandatangani" },
+  { documentId: "DOC-2026-0203", nomorSurat: "201/PW.01/A.I.06.03/05/2026", namaDokumen: "Surat Tugas Aktivasi PCNU Kota Yogyakarta", tanggalSurat: isoDate(3), penandatangan: "KH. Hilmy Muhammad (Rais PWNU DIY)", status: "Tertandatangani" },
 ];
 
 // ============================================================
@@ -442,6 +443,29 @@ export const seedRegistrations: Registration[] = [
     sumberSuratTugas: "DIGDAYA_PERSURATAN", suratTugasFile: undefined, dokumenSistem: mockSuratTugasDigdaya[7],
   }),
   regJalurB({ ticketId: "AKT-2026-000134", tipeOrg: "Ranting", namaOrg: "Ranting NU Cukir", pw: "PWNU Jawa Timur", sourcePcId: "pc-jbg", sourcePcName: "PCNU Kabupaten Jombang", namaAdmin: "Rina Marlina", jabatan: "Sekretaris", nik: "3517202020900017", hp: "+6281234567017", email: "rina@ranting-cukir.id", status: "Pending", submittedAt: daysAgo(3, 12) }),
+
+  // PW Dashboard — PWNU DIY mendaftarkan PCNU Kota Yogyakarta
+  {
+    jalur: "B",
+    sumberPengajuan: "PW_DASHBOARD",
+    tingkatPendaftar: "PW",
+    ticketId: "AKT-2026-000201",
+    tipeOrg: "PC",
+    namaOrg: "PCNU Kota Yogyakarta",
+    pw: "PWNU DI Yogyakarta",
+    sourcePwId: "pw-diy",
+    sourcePwName: "PWNU DI Yogyakarta",
+    namaAdmin: "Ahmad Fauzan",
+    jabatan: "Sekretaris",
+    nik: "3404000000002010",
+    hp: "+6281234567201",
+    email: "ahmad.fauzan@example.com",
+    sumberSuratTugas: "DIGDAYA_PERSURATAN",
+    suratTugasFile: undefined,
+    dokumenSistem: mockSuratTugasDigdaya[mockSuratTugasDigdaya.length - 1],
+    status: "Pending",
+    submittedAt: daysAgo(3, 10),
+  } as Registration,
 ];
 
 export const seedPeruriBatches: PeruriBatch[] = [
