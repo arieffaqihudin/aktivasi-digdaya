@@ -1,9 +1,10 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogOut, Menu, Bell, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { LogOut, Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "./Logo";
 import { actions, useStore, type Role } from "@/lib/store";
+import { NotificationBell } from "./NotificationBell";
 
 export type MenuItem = {
   to: string;
@@ -163,10 +164,7 @@ export function AppLayout({
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
-            <button className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label="Notifikasi">
-              <Bell className="h-[18px] w-[18px]" />
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />
-            </button>
+            <NotificationBell />
             <div className="hidden h-9 w-px bg-border sm:block" />
             <div className="hidden text-right sm:block">
               <p className="text-[13px] font-semibold text-foreground leading-tight">{user.name}</p>

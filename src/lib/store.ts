@@ -1,4 +1,5 @@
 import { useEffect, useSyncExternalStore } from "react";
+import { notifActions } from "./notifications";
 import {
   seedRegistrations,
   seedPeruriBatches,
@@ -158,6 +159,17 @@ function randomCode(): string {
   return `DGD-${part(4)}-${part(4)}`;
 }
 
+/** Determine submitter notification target (role + orgId + status route) for a registration. */
+function submitterTarget(reg: Registration): { role: "PC" | "PW"; orgId: string; route: string } | null {
+  if (reg.sumberPengajuan === "PC_DASHBOARD" && reg.sourcePcId) {
+    return { role: "PC", orgId: reg.sourcePcId, route: `/pc/status-pengajuan/${reg.ticketId}` };
+  }
+  if (reg.sumberPengajuan === "PW_DASHBOARD" && reg.sourcePwId) {
+    return { role: "PW", orgId: reg.sourcePwId, route: `/pw/status-pengajuan/${reg.ticketId}` };
+  }
+  return null;
+}
+
 export type VerifyResult =
   | { ok: true; code: AccessCode }
   | { ok: false; reason: "notfound" | "expired" | "used" | "disabled" };
@@ -241,6 +253,15 @@ export const actions = {
       action: "GENERATE_ACCESS_CODE",
       detail: `Generate ${created.length} kode akses tingkat ${tingkat} (berlaku ${validDays} hari).`,
     });
+    if (created.length > 0) {
+      notifActions.add({
+        recipientRole: "OPS",
+        type: "ACCESS_CODE_CREATED",
+        title: "Kode akses berhasil dibuat",
+        description: `${created.length} kode akses tingkat ${tingkat} berhasil dibuat.`,
+        route: "/ops/activation/access-codes",
+      });
+    }
     return created;
   },
 
@@ -293,6 +314,13 @@ export const actions = {
       action: "GENERATE_ACCESS_CODE",
       detail: `Scoped batch ${codeStr} (${input.tingkat} · ${pwName}) dibuat. Mode ${input.mode}. Berlaku ${input.validDays} hari.${input.note ? " Catatan: " + input.note : ""}`,
     });
+    notifActions.add({
+      recipientRole: "OPS",
+      type: "ACCESS_CODE_CREATED",
+      title: "Kode akses berhasil dibuat",
+      description: `${codeStr} telah dibuat untuk scope ${input.tingkat} · ${pwName}.`,
+      route: "/ops/activation/access-codes",
+    });
     return newCode;
   },
 
@@ -333,6 +361,13 @@ export const actions = {
       role: state.user?.role ?? "Super Admin",
       action: "GENERATE_ACCESS_CODE",
       detail: `Individual code ${codeStr} dibuat untuk ${org.nama} (${input.tingkat}). Berlaku ${input.validDays} hari.${input.note ? " Catatan: " + input.note : ""}`,
+    });
+    notifActions.add({
+      recipientRole: "OPS",
+      type: "ACCESS_CODE_CREATED",
+      title: "Kode akses berhasil dibuat",
+      description: `${codeStr} telah dibuat untuk ${org.nama} (${input.tingkat}).`,
+      route: "/ops/activation/access-codes",
     });
     return newCode;
   },
@@ -489,6 +524,24 @@ export const actions = {
       ticketId,
       detail: `Submit aktivasi publik untuk ${targetOrgName} (${code.tingkat})${code.kind === "Scoped" ? ` via batch ${code.batchName ?? code.code}` : ""}.`,
     });
+    notifActions.broadcast([
+      {
+        recipientRole: "REVIEWER",
+        type: "NEW_SUBMISSION",
+        title: "Pengajuan baru masuk",
+        description: `${targetOrgName} menunggu review Tim Digdaya (via kode akses).`,
+        ticketId,
+        route: `/review/inbox/${ticketId}`,
+      },
+      {
+        recipientRole: "OPS",
+        type: "NEW_SUBMISSION",
+        title: "Pengajuan baru via kode akses",
+        description: `${targetOrgName} mengajukan aktivasi melalui ${code.code}.`,
+        ticketId,
+        route: `/ops/activation/submissions/${ticketId}`,
+      },
+    ]);
     return reg;
   },
 
@@ -560,6 +613,27 @@ export const actions = {
       ticketId,
       detail: `${user.role === "PC" ? user.pcName : user.pwName} mendaftarkan ${payload.namaOrg} (${payload.tipeOrg}) — surat: ${payload.sumberSuratTugas === "DIGDAYA_PERSURATAN" ? "Dari Sistem" : "Upload Manual"}.`,
     });
+    const submitterName = user.role === "PC" ? user.pcName : user.pwName;
+    const statusRoute = user.role === "PC" ? `/pc/status-pengajuan/${ticketId}` : `/pw/status-pengajuan/${ticketId}`;
+    notifActions.broadcast([
+      {
+        recipientRole: "REVIEWER",
+        type: "NEW_SUBMISSION",
+        title: `Pengajuan baru dari ${submitterName}`,
+        description: `${payload.namaOrg} menunggu review Tim Digdaya.`,
+        ticketId,
+        route: `/review/inbox/${ticketId}`,
+      },
+      {
+        recipientRole: user.role === "PC" ? "PC" : "PW",
+        recipientOrgId: user.role === "PC" ? user.pcId : user.pwId,
+        type: "NEW_SUBMISSION",
+        title: "Pengajuan berhasil dikirim",
+        description: `${payload.namaOrg} sedang menunggu review Tim Digdaya.`,
+        ticketId,
+        route: statusRoute,
+      },
+    ]);
     return reg;
   },
 
@@ -621,6 +695,29 @@ export const actions = {
       ticketId,
       detail: `Akun administrator ${reg.namaAdmin} dibuat dengan status menunggu aktivasi.`,
     });
+    const tgt = submitterTarget(reg);
+    const notifs: Parameters<typeof notifActions.broadcast>[0] = [
+      {
+        recipientRole: "OPS",
+        type: "APPROVED",
+        title: "Pengajuan disetujui",
+        description: `${reg.namaOrg} (${ticketId}) telah disetujui reviewer.`,
+        ticketId,
+        route: `/ops/activation/submissions/${ticketId}`,
+      },
+    ];
+    if (tgt) {
+      notifs.push({
+        recipientRole: tgt.role,
+        recipientOrgId: tgt.orgId,
+        type: "APPROVED",
+        title: "Pengajuan disetujui",
+        description: `${reg.namaOrg} sudah production di Digdaya.`,
+        ticketId,
+        route: tgt.route,
+      });
+    }
+    notifActions.broadcast(notifs);
   },
 
   /** Reviewer meminta perbaikan — status berubah jadi PerluPerbaikan. */
@@ -655,6 +752,20 @@ export const actions = {
       ticketId,
       detail: `Pengajuan ${ticketId} diminta perbaikan. Kategori: ${payload.category}. Catatan: ${payload.note}`,
     });
+    const reg = state.registrations.find((r) => r.ticketId === ticketId);
+    const tgt = reg ? submitterTarget(reg) : null;
+    if (tgt) {
+      const revisiRoute = tgt.route + "/revisi";
+      notifActions.add({
+        recipientRole: tgt.role,
+        recipientOrgId: tgt.orgId,
+        type: "REVISION_REQUESTED",
+        title: "Pengajuan perlu perbaikan",
+        description: `Pengajuan ${reg!.namaOrg} perlu diperbaiki. Silakan cek catatan reviewer.`,
+        ticketId,
+        route: revisiRoute,
+      });
+    }
   },
 
   /** Reviewer menolak final — tidak bisa diperbaiki lagi. */
@@ -689,6 +800,30 @@ export const actions = {
       ticketId,
       detail: `Pengajuan ${ticketId} ditolak final. Kategori: ${payload.category}. Catatan: ${payload.note}`,
     });
+    const regRF = state.registrations.find((r) => r.ticketId === ticketId);
+    const tgtRF = regRF ? submitterTarget(regRF) : null;
+    const rfNotifs: Parameters<typeof notifActions.broadcast>[0] = [
+      {
+        recipientRole: "OPS",
+        type: "REJECTED_FINAL",
+        title: "Pengajuan ditolak final",
+        description: `${regRF?.namaOrg ?? ticketId} ditolak final oleh reviewer.`,
+        ticketId,
+        route: `/ops/activation/submissions/${ticketId}`,
+      },
+    ];
+    if (tgtRF) {
+      rfNotifs.push({
+        recipientRole: tgtRF.role,
+        recipientOrgId: tgtRF.orgId,
+        type: "REJECTED_FINAL",
+        title: "Pengajuan ditolak final",
+        description: "Pengajuan tidak dapat dilanjutkan. Silakan hubungi Tim Digdaya jika perlu bantuan.",
+        ticketId,
+        route: tgtRF.route,
+      });
+    }
+    notifActions.broadcast(rfNotifs);
   },
 
   /** Backward-compat alias — defaults to PerluPerbaikan. */
@@ -779,6 +914,30 @@ export const actions = {
       ticketId,
       detail: `Revisi ke-${next.revisionCount} dikirim. Perubahan: ${changed.length ? changed.join(", ") : "tidak ada"}.`,
     });
+    const tgtRS = submitterTarget(next);
+    notifActions.broadcast([
+      {
+        recipientRole: "REVIEWER",
+        type: "REVISION_SUBMITTED",
+        title: "Revisi pengajuan dikirim",
+        description: `${next.namaOrg} mengirim revisi ke-${next.revisionCount}.`,
+        ticketId,
+        route: `/review/inbox/${ticketId}`,
+      },
+      ...(tgtRS
+        ? [
+            {
+              recipientRole: tgtRS.role,
+              recipientOrgId: tgtRS.orgId,
+              type: "REVISION_SUBMITTED" as const,
+              title: "Revisi berhasil dikirim",
+              description: "Pengajuan akan direview kembali oleh Tim Digdaya.",
+              ticketId,
+              route: tgtRS.route,
+            },
+          ]
+        : []),
+    ]);
     return next;
   },
 
@@ -810,6 +969,22 @@ export const actions = {
       action: "GENERATE_PERURI_BATCH",
       detail: `Batch ${id} dibuat (${eligible.length} record).`,
     });
+    notifActions.broadcast([
+      {
+        recipientRole: "OPS",
+        type: "PERURI_EXPORT_READY",
+        title: "Export Peruri siap",
+        description: `Batch ${id} berhasil dibuat dan berisi ${eligible.length} record yang sudah disetujui.`,
+        route: "/ops/activation/peruri-export",
+      },
+      {
+        recipientRole: "REVIEWER",
+        type: "PERURI_EXPORT_READY",
+        title: "Export Peruri siap",
+        description: `Batch ${id} berhasil dibuat (${eligible.length} record).`,
+        route: "/review/peruri",
+      },
+    ]);
     return batch;
   },
 

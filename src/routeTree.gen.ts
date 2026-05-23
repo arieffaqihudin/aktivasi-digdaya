@@ -27,9 +27,12 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as StatusTicketIdRouteImport } from './routes/status.$ticketId'
 import { Route as ReviewSlaRouteImport } from './routes/review.sla'
 import { Route as ReviewPeruriRouteImport } from './routes/review.peruri'
+import { Route as ReviewNotificationsRouteImport } from './routes/review.notifications'
 import { Route as ReviewInboxRouteImport } from './routes/review.inbox'
 import { Route as ReviewAuditLogRouteImport } from './routes/review.audit-log'
+import { Route as PwNotificationsRouteImport } from './routes/pw.notifications'
 import { Route as PwDaftarkanRouteImport } from './routes/pw.daftarkan'
+import { Route as PcNotificationsRouteImport } from './routes/pc.notifications'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
 import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$accessCode'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -45,6 +48,7 @@ import { Route as PcStatusPengajuanTicketIdRouteImport } from './routes/pc.statu
 import { Route as OpsActivationSubmissionsRouteImport } from './routes/ops.activation.submissions'
 import { Route as OpsActivationSettingsRouteImport } from './routes/ops.activation.settings'
 import { Route as OpsActivationPeruriExportRouteImport } from './routes/ops.activation.peruri-export'
+import { Route as OpsActivationNotificationsRouteImport } from './routes/ops.activation.notifications'
 import { Route as OpsActivationAuditLogRouteImport } from './routes/ops.activation.audit-log'
 import { Route as OpsActivationAccessCodesRouteImport } from './routes/ops.activation.access-codes'
 import { Route as AktivasiSuksesTicketIdRouteImport } from './routes/aktivasi.sukses.$ticketId'
@@ -143,6 +147,11 @@ const ReviewPeruriRoute = ReviewPeruriRouteImport.update({
   path: '/peruri',
   getParentRoute: () => ReviewRoute,
 } as any)
+const ReviewNotificationsRoute = ReviewNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => ReviewRoute,
+} as any)
 const ReviewInboxRoute = ReviewInboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
@@ -153,10 +162,20 @@ const ReviewAuditLogRoute = ReviewAuditLogRouteImport.update({
   path: '/audit-log',
   getParentRoute: () => ReviewRoute,
 } as any)
+const PwNotificationsRoute = PwNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => PwRoute,
+} as any)
 const PwDaftarkanRoute = PwDaftarkanRouteImport.update({
   id: '/daftarkan',
   path: '/daftarkan',
   getParentRoute: () => PwRoute,
+} as any)
+const PcNotificationsRoute = PcNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => PcRoute,
 } as any)
 const PcDaftarkanRoute = PcDaftarkanRouteImport.update({
   id: '/daftarkan',
@@ -237,6 +256,12 @@ const OpsActivationPeruriExportRoute =
     path: '/activation/peruri-export',
     getParentRoute: () => OpsRoute,
   } as any)
+const OpsActivationNotificationsRoute =
+  OpsActivationNotificationsRouteImport.update({
+    id: '/activation/notifications',
+    path: '/activation/notifications',
+    getParentRoute: () => OpsRoute,
+  } as any)
 const OpsActivationAuditLogRoute = OpsActivationAuditLogRouteImport.update({
   id: '/activation/audit-log',
   path: '/activation/audit-log',
@@ -294,9 +319,12 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
+  '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
+  '/pw/notifications': typeof PwNotificationsRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
+  '/review/notifications': typeof ReviewNotificationsRoute
   '/review/peruri': typeof ReviewPeruriRoute
   '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
@@ -308,6 +336,7 @@ export interface FileRoutesByFullPath {
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/ops/activation/access-codes': typeof OpsActivationAccessCodesRouteWithChildren
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
+  '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
   '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
@@ -334,9 +363,12 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
+  '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
+  '/pw/notifications': typeof PwNotificationsRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
+  '/review/notifications': typeof ReviewNotificationsRoute
   '/review/peruri': typeof ReviewPeruriRoute
   '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
@@ -348,6 +380,7 @@ export interface FileRoutesByTo {
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/ops/activation/access-codes': typeof OpsActivationAccessCodesRouteWithChildren
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
+  '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
   '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
@@ -380,9 +413,12 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
+  '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
+  '/pw/notifications': typeof PwNotificationsRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
+  '/review/notifications': typeof ReviewNotificationsRoute
   '/review/peruri': typeof ReviewPeruriRoute
   '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
@@ -394,6 +430,7 @@ export interface FileRoutesById {
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/ops/activation/access-codes': typeof OpsActivationAccessCodesRouteWithChildren
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
+  '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
   '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
@@ -427,9 +464,12 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
+    | '/pc/notifications'
     | '/pw/daftarkan'
+    | '/pw/notifications'
     | '/review/audit-log'
     | '/review/inbox'
+    | '/review/notifications'
     | '/review/peruri'
     | '/review/sla'
     | '/status/$ticketId'
@@ -441,6 +481,7 @@ export interface FileRouteTypes {
     | '/aktivasi/sukses/$ticketId'
     | '/ops/activation/access-codes'
     | '/ops/activation/audit-log'
+    | '/ops/activation/notifications'
     | '/ops/activation/peruri-export'
     | '/ops/activation/settings'
     | '/ops/activation/submissions'
@@ -467,9 +508,12 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
+    | '/pc/notifications'
     | '/pw/daftarkan'
+    | '/pw/notifications'
     | '/review/audit-log'
     | '/review/inbox'
+    | '/review/notifications'
     | '/review/peruri'
     | '/review/sla'
     | '/status/$ticketId'
@@ -481,6 +525,7 @@ export interface FileRouteTypes {
     | '/aktivasi/sukses/$ticketId'
     | '/ops/activation/access-codes'
     | '/ops/activation/audit-log'
+    | '/ops/activation/notifications'
     | '/ops/activation/peruri-export'
     | '/ops/activation/settings'
     | '/ops/activation/submissions'
@@ -512,9 +557,12 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
+    | '/pc/notifications'
     | '/pw/daftarkan'
+    | '/pw/notifications'
     | '/review/audit-log'
     | '/review/inbox'
+    | '/review/notifications'
     | '/review/peruri'
     | '/review/sla'
     | '/status/$ticketId'
@@ -526,6 +574,7 @@ export interface FileRouteTypes {
     | '/aktivasi/sukses/$ticketId'
     | '/ops/activation/access-codes'
     | '/ops/activation/audit-log'
+    | '/ops/activation/notifications'
     | '/ops/activation/peruri-export'
     | '/ops/activation/settings'
     | '/ops/activation/submissions'
@@ -684,6 +733,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewPeruriRouteImport
       parentRoute: typeof ReviewRoute
     }
+    '/review/notifications': {
+      id: '/review/notifications'
+      path: '/notifications'
+      fullPath: '/review/notifications'
+      preLoaderRoute: typeof ReviewNotificationsRouteImport
+      parentRoute: typeof ReviewRoute
+    }
     '/review/inbox': {
       id: '/review/inbox'
       path: '/inbox'
@@ -698,12 +754,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewAuditLogRouteImport
       parentRoute: typeof ReviewRoute
     }
+    '/pw/notifications': {
+      id: '/pw/notifications'
+      path: '/notifications'
+      fullPath: '/pw/notifications'
+      preLoaderRoute: typeof PwNotificationsRouteImport
+      parentRoute: typeof PwRoute
+    }
     '/pw/daftarkan': {
       id: '/pw/daftarkan'
       path: '/daftarkan'
       fullPath: '/pw/daftarkan'
       preLoaderRoute: typeof PwDaftarkanRouteImport
       parentRoute: typeof PwRoute
+    }
+    '/pc/notifications': {
+      id: '/pc/notifications'
+      path: '/notifications'
+      fullPath: '/pc/notifications'
+      preLoaderRoute: typeof PcNotificationsRouteImport
+      parentRoute: typeof PcRoute
     }
     '/pc/daftarkan': {
       id: '/pc/daftarkan'
@@ -808,6 +878,13 @@ declare module '@tanstack/react-router' {
       path: '/activation/peruri-export'
       fullPath: '/ops/activation/peruri-export'
       preLoaderRoute: typeof OpsActivationPeruriExportRouteImport
+      parentRoute: typeof OpsRoute
+    }
+    '/ops/activation/notifications': {
+      id: '/ops/activation/notifications'
+      path: '/activation/notifications'
+      fullPath: '/ops/activation/notifications'
+      preLoaderRoute: typeof OpsActivationNotificationsRouteImport
       parentRoute: typeof OpsRoute
     }
     '/ops/activation/audit-log': {
@@ -925,6 +1002,7 @@ interface OpsRouteChildren {
   OpsIndexRoute: typeof OpsIndexRoute
   OpsActivationAccessCodesRoute: typeof OpsActivationAccessCodesRouteWithChildren
   OpsActivationAuditLogRoute: typeof OpsActivationAuditLogRoute
+  OpsActivationNotificationsRoute: typeof OpsActivationNotificationsRoute
   OpsActivationPeruriExportRoute: typeof OpsActivationPeruriExportRoute
   OpsActivationSettingsRoute: typeof OpsActivationSettingsRoute
   OpsActivationSubmissionsRoute: typeof OpsActivationSubmissionsRouteWithChildren
@@ -935,6 +1013,7 @@ const OpsRouteChildren: OpsRouteChildren = {
   OpsIndexRoute: OpsIndexRoute,
   OpsActivationAccessCodesRoute: OpsActivationAccessCodesRouteWithChildren,
   OpsActivationAuditLogRoute: OpsActivationAuditLogRoute,
+  OpsActivationNotificationsRoute: OpsActivationNotificationsRoute,
   OpsActivationPeruriExportRoute: OpsActivationPeruriExportRoute,
   OpsActivationSettingsRoute: OpsActivationSettingsRoute,
   OpsActivationSubmissionsRoute: OpsActivationSubmissionsRouteWithChildren,
@@ -959,6 +1038,7 @@ const PcStatusPengajuanTicketIdRouteWithChildren =
 
 interface PcRouteChildren {
   PcDaftarkanRoute: typeof PcDaftarkanRoute
+  PcNotificationsRoute: typeof PcNotificationsRoute
   PcIndexRoute: typeof PcIndexRoute
   PcStatusPengajuanTicketIdRoute: typeof PcStatusPengajuanTicketIdRouteWithChildren
   PcStatusPengajuanIndexRoute: typeof PcStatusPengajuanIndexRoute
@@ -966,6 +1046,7 @@ interface PcRouteChildren {
 
 const PcRouteChildren: PcRouteChildren = {
   PcDaftarkanRoute: PcDaftarkanRoute,
+  PcNotificationsRoute: PcNotificationsRoute,
   PcIndexRoute: PcIndexRoute,
   PcStatusPengajuanTicketIdRoute: PcStatusPengajuanTicketIdRouteWithChildren,
   PcStatusPengajuanIndexRoute: PcStatusPengajuanIndexRoute,
@@ -989,6 +1070,7 @@ const PwStatusPengajuanTicketIdRouteWithChildren =
 
 interface PwRouteChildren {
   PwDaftarkanRoute: typeof PwDaftarkanRoute
+  PwNotificationsRoute: typeof PwNotificationsRoute
   PwIndexRoute: typeof PwIndexRoute
   PwStatusPengajuanTicketIdRoute: typeof PwStatusPengajuanTicketIdRouteWithChildren
   PwStatusPengajuanIndexRoute: typeof PwStatusPengajuanIndexRoute
@@ -996,6 +1078,7 @@ interface PwRouteChildren {
 
 const PwRouteChildren: PwRouteChildren = {
   PwDaftarkanRoute: PwDaftarkanRoute,
+  PwNotificationsRoute: PwNotificationsRoute,
   PwIndexRoute: PwIndexRoute,
   PwStatusPengajuanTicketIdRoute: PwStatusPengajuanTicketIdRouteWithChildren,
   PwStatusPengajuanIndexRoute: PwStatusPengajuanIndexRoute,
@@ -1018,6 +1101,7 @@ const ReviewInboxRouteWithChildren = ReviewInboxRoute._addFileChildren(
 interface ReviewRouteChildren {
   ReviewAuditLogRoute: typeof ReviewAuditLogRoute
   ReviewInboxRoute: typeof ReviewInboxRouteWithChildren
+  ReviewNotificationsRoute: typeof ReviewNotificationsRoute
   ReviewPeruriRoute: typeof ReviewPeruriRoute
   ReviewSlaRoute: typeof ReviewSlaRoute
   ReviewIndexRoute: typeof ReviewIndexRoute
@@ -1026,6 +1110,7 @@ interface ReviewRouteChildren {
 const ReviewRouteChildren: ReviewRouteChildren = {
   ReviewAuditLogRoute: ReviewAuditLogRoute,
   ReviewInboxRoute: ReviewInboxRouteWithChildren,
+  ReviewNotificationsRoute: ReviewNotificationsRoute,
   ReviewPeruriRoute: ReviewPeruriRoute,
   ReviewSlaRoute: ReviewSlaRoute,
   ReviewIndexRoute: ReviewIndexRoute,
