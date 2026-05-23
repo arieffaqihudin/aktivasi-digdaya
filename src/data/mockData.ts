@@ -309,6 +309,13 @@ export const seedAccessCodes: AccessCode[] = [
 
   { code: "DGD-OLD1-EXPR", tingkat: "PC", ...pcMeta("pc-bantul"), status: "Expired",  generatedAt: daysAgo(60), expiredAt: daysAgo(30) },
   { code: "DGD-DIS1-ABCD", tingkat: "PC", ...pcMeta("pc-gk"),     status: "Disabled", generatedAt: daysAgo(10), expiredAt: daysFromNow(20) },
+
+  // ===== Demo codes (mudah diingat untuk demo end-to-end) =====
+  { code: "AKSES-PC-001",   tingkat: "PC", ...pcMeta("pc-jogja"), status: "Unused",   generatedAt: daysAgo(1), expiredAt: daysFromNow(30) },
+  { code: "AKSES-PW-001",   tingkat: "PW", orgId: "pw-kaltara", orgName: "PWNU Kalimantan Utara", pw: "PWNU Kalimantan Utara", status: "Unused", generatedAt: daysAgo(1), expiredAt: daysFromNow(30) },
+  { code: "AKSES-EXP-001",  tingkat: "PC", ...pcMeta("pc-kp"),    status: "Expired",  generatedAt: daysAgo(60), expiredAt: daysAgo(15) },
+  { code: "AKSES-DIS-001",  tingkat: "PC", ...pcMeta("pc-bantul"),status: "Disabled", generatedAt: daysAgo(10), expiredAt: daysFromNow(20) },
+  { code: "AKSES-USED-001", tingkat: "PC", ...pcMeta("pc-mgl"),   status: "Used",     generatedAt: daysAgo(20), expiredAt: daysFromNow(10), usedAt: daysAgo(2), ticketId: "AKT-2026-000102" },
 ];
 
 // ============================================================
