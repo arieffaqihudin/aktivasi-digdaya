@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as CekStatusRouteImport } from './routes/cek-status'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StatusTicketIdRouteImport } from './routes/status.$ticketId'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DaftarRoute = DaftarRouteImport.update({
   id: '/daftar',
   path: '/daftar',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cek-status': typeof CekStatusRoute
   '/daftar': typeof DaftarRoute
+  '/login': typeof LoginRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cek-status': typeof CekStatusRoute
   '/daftar': typeof DaftarRoute
+  '/login': typeof LoginRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
 }
 export interface FileRoutesById {
@@ -52,25 +60,40 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/cek-status': typeof CekStatusRoute
   '/daftar': typeof DaftarRoute
+  '/login': typeof LoginRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cek-status' | '/daftar' | '/status/$ticketId'
+  fullPaths: '/' | '/cek-status' | '/daftar' | '/login' | '/status/$ticketId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cek-status' | '/daftar' | '/status/$ticketId'
-  id: '__root__' | '/' | '/cek-status' | '/daftar' | '/status/$ticketId'
+  to: '/' | '/cek-status' | '/daftar' | '/login' | '/status/$ticketId'
+  id:
+    | '__root__'
+    | '/'
+    | '/cek-status'
+    | '/daftar'
+    | '/login'
+    | '/status/$ticketId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CekStatusRoute: typeof CekStatusRoute
   DaftarRoute: typeof DaftarRoute
+  LoginRoute: typeof LoginRoute
   StatusTicketIdRoute: typeof StatusTicketIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/daftar': {
       id: '/daftar'
       path: '/daftar'
@@ -106,6 +129,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CekStatusRoute: CekStatusRoute,
   DaftarRoute: DaftarRoute,
+  LoginRoute: LoginRoute,
   StatusTicketIdRoute: StatusTicketIdRoute,
 }
 export const routeTree = rootRouteImport
