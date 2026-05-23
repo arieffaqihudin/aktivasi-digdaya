@@ -124,54 +124,16 @@ function LeftColumn() {
       </div>
 
       <h1 className="mt-5 text-[28px] font-bold leading-tight tracking-tight text-[#0F2A1A] sm:text-[34px]">
-        Portal{" "}
-        <span className="text-[#00843D]">Aktivasi</span>{" "}
-        Digdaya
+        Silakan pilih sesuai{" "}
+        <span className="text-[#00843D]">kondisi kepengurusan</span>{" "}
+        Anda.
       </h1>
 
       <p className="mt-3 max-w-[440px] text-[14px] leading-relaxed text-[#6B7280]">
-        Pilih cara masuk sesuai status kepengurusan Anda untuk melanjutkan
-        proses aktivasi dan onboarding.
+        Pilih jalur di bawah ini sesuai apakah PW/PC Anda sudah production
+        atau belum.
       </p>
-
-      <ul className="mt-7 space-y-3">
-        <BenefitItem icon={<RefreshCw className="h-4 w-4" />}>
-          Aktivasi PW/PC belum production
-        </BenefitItem>
-        <BenefitItem icon={<Users className="h-4 w-4" />}>
-          Login untuk PW/PC yang sudah production
-        </BenefitItem>
-        <BenefitItem icon={<Eye className="h-4 w-4" />}>
-          Status pengajuan terpantau oleh Tim Digdaya
-        </BenefitItem>
-      </ul>
-
-      <div className="mt-7 max-w-[420px] rounded-2xl border border-[#DDEBE3] bg-white/70 p-4 shadow-[0_1px_2px_rgba(0,132,61,0.04)] backdrop-blur-sm">
-        <p className="text-[12px] leading-relaxed text-[#6B7280]">
-          Sudah punya akun Digdaya? Gunakan{" "}
-          <span className="font-semibold text-[#005C2E]">login</span>. Menerima
-          kode akses dari PBNU? Gunakan{" "}
-          <span className="font-semibold text-[#005C2E]">kode akses</span>.
-        </p>
-      </div>
     </div>
-  );
-}
-
-function BenefitItem({
-  icon,
-  children,
-}: {
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <li className="flex items-start gap-2.5">
-      <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EAF8F0] text-[#00843D] ring-1 ring-[#DDEBE3]">
-        {icon}
-      </span>
-      <span className="text-[13px] text-[#374151]">{children}</span>
-    </li>
   );
 }
 
