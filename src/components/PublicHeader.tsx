@@ -89,7 +89,7 @@ export function PublicFooter() {
               </div>
             </div>
             <p className="mt-3 max-w-[260px] text-[12.5px] leading-relaxed text-white/60">
-              Portal Aktivasi Digdaya NU digunakan untuk mendukung proses aktivasi PW/PC dan pendaftaran administrator secara tertib, terpantau, dan terintegrasi.
+              Mendukung aktivasi PW/PC dan pendaftaran administrator secara tertib dan terintegrasi.
             </p>
           </div>
 
