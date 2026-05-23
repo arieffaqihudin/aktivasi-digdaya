@@ -124,12 +124,13 @@ function GatewayCards() {
         title="PW/PC Anda sudah production?"
         description="Login untuk mendaftarkan kepengurusan di bawah kewenangan Anda, seperti Lembaga, MWC, Ranting, atau struktur lainnya."
         cta="Login dengan Email / NU.ID"
+        ctaMobile="Login Email / NU.ID"
         variant="secondary"
       />
 
-      <div className="my-5 flex items-center gap-3">
+      <div className="my-[22px] flex items-center gap-3 sm:my-5">
         <div className="h-px flex-1 bg-[#E5EFE9]" />
-        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8A97A8]">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8A97A8] sm:text-[10px]">
           Atau
         </span>
         <div className="h-px flex-1 bg-[#E5EFE9]" />
@@ -178,6 +179,7 @@ function GatewayOption({
   title,
   description,
   cta,
+  ctaMobile,
   variant,
 }: {
   to: string;
@@ -187,31 +189,51 @@ function GatewayOption({
   title: string;
   description: string;
   cta: string;
+  ctaMobile?: string;
   variant: "primary" | "secondary";
 }) {
   const cardClass =
     variant === "primary"
-      ? "group block rounded-2xl border border-[#DDEBE3] bg-gradient-to-br from-[#F2FBF6] to-white p-5 transition-all hover:border-[#00843D]/40 hover:shadow-[0_6px_20px_rgba(0,132,61,0.12)]"
-      : "group block rounded-2xl border border-[#E5EFE9] bg-white p-5 transition-all hover:border-[#00843D]/30 hover:bg-[#F7FBF8] hover:shadow-[0_4px_14px_rgba(0,132,61,0.06)]";
+      ? "group block rounded-3xl border border-[#DDEBE3] bg-gradient-to-br from-[#F2FBF6] to-white p-5 transition-all hover:border-[#00843D]/40 hover:shadow-[0_6px_20px_rgba(0,132,61,0.12)] sm:rounded-2xl"
+      : "group block rounded-3xl border border-[#E5EFE9] bg-white p-5 transition-all hover:border-[#00843D]/30 hover:bg-[#F7FBF8] hover:shadow-[0_4px_14px_rgba(0,132,61,0.06)] sm:rounded-2xl";
 
   const iconWrap =
     variant === "primary"
-      ? "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#00843D] to-[#005C2E] text-white shadow-[0_4px_10px_rgba(0,132,61,0.25)]"
-      : "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EAF8F0] text-[#00843D] ring-1 ring-[#DDEBE3] transition-colors group-hover:bg-[#DDF5E8]";
+      ? "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#00843D] to-[#005C2E] text-white shadow-[0_4px_10px_rgba(0,132,61,0.25)] sm:h-11 sm:w-11"
+      : "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#EAF8F0] text-[#00843D] ring-1 ring-[#DDEBE3] transition-colors group-hover:bg-[#DDF5E8] sm:h-11 sm:w-11";
 
   const ctaClass =
     variant === "primary"
-      ? "mt-3 inline-flex h-10 items-center gap-1.5 rounded-full bg-[#00843D] px-4 text-[13px] font-semibold text-white shadow-[0_4px_12px_rgba(0,132,61,0.25)] transition-all group-hover:bg-[#005C2E] group-hover:shadow-[0_6px_16px_rgba(0,132,61,0.32)]"
-      : "mt-3 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#DDEBE3] bg-white px-4 text-[13px] font-semibold text-[#005C2E] transition-all group-hover:border-[#00843D]/40 group-hover:bg-[#EAF8F0]";
+      ? "mt-[18px] flex w-full min-h-[48px] items-center justify-center gap-2 whitespace-nowrap rounded-full bg-[#00843D] px-4 text-[15px] font-bold text-white shadow-[0_4px_12px_rgba(0,132,61,0.25)] transition-all group-hover:bg-[#005C2E] group-hover:shadow-[0_6px_16px_rgba(0,132,61,0.32)] sm:mt-3 sm:inline-flex sm:h-10 sm:min-h-0 sm:w-auto sm:text-[13px] sm:font-semibold"
+      : "mt-[18px] flex w-full min-h-[48px] items-center justify-center gap-2 whitespace-nowrap rounded-full border border-[#DDEBE3] bg-white px-4 text-[15px] font-bold text-[#005C2E] transition-all group-hover:border-[#00843D]/40 group-hover:bg-[#EAF8F0] sm:mt-3 sm:inline-flex sm:h-10 sm:min-h-0 sm:w-auto sm:text-[13px] sm:font-semibold";
 
   const badgeClass =
     badgeTone === "primary"
-      ? "inline-flex items-center rounded-full bg-[#00843D]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#00843D]"
-      : "inline-flex items-center rounded-full bg-[#F1F5F2] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#6B7280]";
+      ? "inline-flex w-fit items-center rounded-full bg-[#00843D]/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#00843D] sm:px-2 sm:py-0.5 sm:text-[10px]"
+      : "inline-flex w-fit items-center rounded-full bg-[#F1F5F2] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#6B7280] sm:px-2 sm:py-0.5 sm:text-[10px]";
 
   return (
     <Link to={to} className={cardClass}>
-      <div className="flex items-start gap-4">
+      {/* Mobile: stacked vertical */}
+      <div className="flex flex-col sm:hidden">
+        <div className={iconWrap}>{icon}</div>
+        <span className={`${badgeClass} mt-[14px]`}>{badge}</span>
+        <h3 className="mt-[12px] text-[22px] font-bold leading-[1.25] text-[#0F2A1A]">
+          {title}
+        </h3>
+        <p className="mt-[10px] text-[15px] leading-[1.55] text-[#6B7280]">
+          {description}
+        </p>
+        <div className={ctaClass}>
+          <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+            {ctaMobile ?? cta}
+          </span>
+          <ArrowRight className="h-[18px] w-[18px] shrink-0" />
+        </div>
+      </div>
+
+      {/* Desktop/tablet: horizontal */}
+      <div className="hidden sm:flex items-start gap-4">
         <div className={iconWrap}>{icon}</div>
         <div className="flex-1 min-w-0">
           <span className={badgeClass}>{badge}</span>
@@ -220,7 +242,7 @@ function GatewayOption({
             {description}
           </p>
           <div className={ctaClass}>
-            {cta}
+            <span className="whitespace-nowrap">{cta}</span>
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </div>
         </div>
