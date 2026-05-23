@@ -45,7 +45,7 @@ function AccessCodes() {
     if (pickedPcs.length === 0) { toast.error("Pilih minimal 1 PC."); return; }
     setGenerating(true);
     await new Promise((r) => setTimeout(r, 500));
-    const created = actions.generateAccessCodes(pickedPcs, validDays);
+    const created = actions.generateAccessCodes(pickedPcs, "PC", validDays);
     setGenerating(false);
     toast.success(`${created.length} kode akses berhasil digenerate.`);
     setOpen(false); setPickedPcs([]);
@@ -61,7 +61,7 @@ function AccessCodes() {
       if (validityFilter === "expired") return days < 0;
       return true;
     })
-    .filter((c) => !q || c.code.toLowerCase().includes(q.toLowerCase()) || c.pcName.toLowerCase().includes(q.toLowerCase())),
+    .filter((c) => !q || c.code.toLowerCase().includes(q.toLowerCase()) || (c.orgName ?? "").toLowerCase().includes(q.toLowerCase())),
     [codes, pwFilter, statusFilter, validityFilter, q]
   );
 
@@ -72,7 +72,7 @@ function AccessCodes() {
 
   const exportCsv = () => {
     const rows = [["Kode","PC","PW","Status","Generated","Expired","Used At","Ticket"]];
-    filtered.forEach((c) => rows.push([c.code, c.pcName, c.pw, c.status, formatDate(c.generatedAt), formatDate(c.expiredAt), c.usedAt ? formatDate(c.usedAt) : "", c.ticketId ?? ""]));
+    filtered.forEach((c) => rows.push([c.code, c.orgName ?? "", c.pw, c.status, formatDate(c.generatedAt), formatDate(c.expiredAt), c.usedAt ? formatDate(c.usedAt) : "", c.ticketId ?? ""]));
     const csv = rows.map((r) => r.map((x) => `"${x}"`).join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -154,7 +154,7 @@ function AccessCodes() {
                     </RowAction>
                   )}
                   {(c.status === "Disabled" || c.status === "Expired") && (
-                    <RowAction title="Regenerate" onClick={() => { actions.regenerateAccessCode(c.pcId); toast.success("Kode baru digenerate."); }}>
+                    <RowAction title="Regenerate" onClick={() => { actions.regenerateAccessCode(c.orgId); toast.success("Kode baru digenerate."); }}>
                       <RotateCcw className="h-4 w-4" />
                     </RowAction>
                   )}
