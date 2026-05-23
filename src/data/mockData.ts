@@ -158,6 +158,9 @@ export interface Registration {
 
   // Jalur A
   accessCode?: string;
+  /** Untuk Scoped batch code: organisasi yang dipilih pendaftar dari daftar scope. */
+  selectedOrgId?: string;
+
 
   // Jalur B / Internal source
   sourcePcId?: string;
