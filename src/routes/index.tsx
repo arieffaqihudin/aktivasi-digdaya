@@ -188,6 +188,7 @@ function GatewayOption({
   description,
   cta,
   ctaMobile,
+  helper,
   variant,
 }: {
   to: string;
@@ -198,6 +199,7 @@ function GatewayOption({
   description: string;
   cta: string;
   ctaMobile?: string;
+  helper?: string;
   variant: "primary" | "secondary";
 }) {
   const cardClass =
@@ -232,6 +234,11 @@ function GatewayOption({
         <p className="mt-[10px] text-[15px] leading-[1.55] text-[#6B7280]">
           {description}
         </p>
+        {helper && (
+          <p className="mt-2 text-[12px] leading-relaxed text-[#8A97A8]">
+            {helper}
+          </p>
+        )}
         <div className={ctaClass}>
           <span className="overflow-hidden text-ellipsis whitespace-nowrap">
             {ctaMobile ?? cta}
@@ -249,6 +256,11 @@ function GatewayOption({
           <p className="mt-1 text-[12.5px] leading-relaxed text-[#6B7280]">
             {description}
           </p>
+          {helper && (
+            <p className="mt-1.5 text-[11.5px] leading-relaxed text-[#8A97A8]">
+              {helper}
+            </p>
+          )}
           <div className={ctaClass}>
             <span className="whitespace-nowrap">{cta}</span>
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
