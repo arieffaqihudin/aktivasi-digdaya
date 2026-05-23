@@ -9,7 +9,7 @@ import {
   demoPcUserPcId,
   demoPwUserPwId,
   mockSuratTugasDigdaya,
-  SURAT_TUGAS_CATEGORIES,
+  
   type Registration,
   type PeruriBatch,
   type AuditEntry,
