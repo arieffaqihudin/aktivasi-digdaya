@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatDate } from "@/utils/status";
 import { useMemo, useState } from "react";
-import { Eye, Search, PlusCircle, RotateCcw } from "lucide-react";
+import { Eye, Search, PlusCircle, RotateCcw, RefreshCw } from "lucide-react";
 
 export const Route = createFileRoute("/pw/status-pengajuan")({
   component: StatusPengajuan,
