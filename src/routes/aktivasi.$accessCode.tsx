@@ -96,10 +96,12 @@ function AktivasiPage() {
   };
 
   const submit = async () => {
+    if (!resolvedOrg) return toast.error("Kepengurusan belum dipilih.");
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 600));
     const reg = actions.submitPublicActivation({
       accessCode: code.code,
+      selectedOrgId: isScoped ? resolvedOrg.id : undefined,
       namaAdmin, jabatan, nik, hp, email,
       suratTugasFile: file?.name,
     });
@@ -108,6 +110,7 @@ function AktivasiPage() {
     setTicketId(reg.ticketId);
     navigate({ to: "/aktivasi/sukses/$ticketId", params: { ticketId: reg.ticketId } });
   };
+
 
   const maskNik = (n: string) => (n.length === 16 ? n.slice(0, 4) + "********" + n.slice(-4) : n);
 
