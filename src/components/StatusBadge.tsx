@@ -3,15 +3,15 @@ import type { Status } from "@/data/mockData";
 
 export function StatusBadge({ status, className }: { status: Status; className?: string }) {
   const map: Record<Status, { label: string; cls: string }> = {
-    Pending: { label: "Menunggu Review", cls: "bg-warning/15 text-warning-foreground border border-warning/30" },
-    Approved: { label: "Disetujui", cls: "bg-success/15 text-success border border-success/30" },
-    Rejected: { label: "Ditolak", cls: "bg-destructive/10 text-destructive border border-destructive/30" },
+    Pending:  { label: "Pending Review", cls: "bg-[oklch(0.95_0.02_220)] text-[oklch(0.40_0.05_220)]" },
+    Approved: { label: "Disetujui",      cls: "bg-[oklch(0.94_0.06_150)] text-[oklch(0.36_0.10_152)]" },
+    Rejected: { label: "Ditolak",        cls: "bg-[oklch(0.94_0.05_25)] text-[oklch(0.42_0.15_25)]" },
   };
   const m = map[status];
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-medium",
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium",
         m.cls,
         className,
       )}
