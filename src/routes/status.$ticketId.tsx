@@ -93,12 +93,26 @@ function StatusDetail() {
                 </dl>
               </div>
 
-              {reg.status === "PerluPerbaikan" && reg.jalur === "A" && (
-                <Link to="/status/$ticketId/revisi" params={{ ticketId: reg.ticketId }}>
-                  <Button className="w-full sm:w-auto">
-                    <RefreshCw className="mr-1.5 h-4 w-4" /> Perbaiki Pengajuan
-                  </Button>
-                </Link>
+              {reg.status === "PerluPerbaikan" && (
+                reg.sumberPengajuan === "PW_DASHBOARD" ? (
+                  <Link to="/pw/status-pengajuan/$ticketId/revisi" params={{ ticketId: reg.ticketId }}>
+                    <Button className="w-full sm:w-auto">
+                      <RefreshCw className="mr-1.5 h-4 w-4" /> Perbaiki Pengajuan
+                    </Button>
+                  </Link>
+                ) : reg.sumberPengajuan === "PC_DASHBOARD" ? (
+                  <Link to="/pc/status-pengajuan/$ticketId/revisi" params={{ ticketId: reg.ticketId }}>
+                    <Button className="w-full sm:w-auto">
+                      <RefreshCw className="mr-1.5 h-4 w-4" /> Perbaiki Pengajuan
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link to="/status/$ticketId/revisi" params={{ ticketId: reg.ticketId }}>
+                    <Button className="w-full sm:w-auto">
+                      <RefreshCw className="mr-1.5 h-4 w-4" /> Perbaiki Pengajuan
+                    </Button>
+                  </Link>
+                )
               )}
 
               {reg.status === "RejectedFinal" && (
