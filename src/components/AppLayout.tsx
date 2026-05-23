@@ -123,7 +123,7 @@ export function AppLayout({
   );
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-dvh bg-background">
       <div className="hidden lg:block relative">
         {Sidebar}
         <button
