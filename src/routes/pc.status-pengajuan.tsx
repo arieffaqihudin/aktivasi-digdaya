@@ -59,7 +59,7 @@ function StatusPengajuan() {
 
       <FilterBar>
         <SelectFilter value={tipeFilter} onChange={setTipeFilter} placeholder="Tipe Organisasi" options={[["all","Semua Tipe"],["MWC","MWC"],["Lembaga PC","Lembaga PC"],["Ranting","Ranting"]]} />
-        <SelectFilter value={statusFilter} onChange={setStatusFilter} placeholder="Status" options={[["all","Semua Status"],["Pending","Pending Review"],["Approved","Disetujui"],["Rejected","Ditolak"]]} />
+        <SelectFilter value={statusFilter} onChange={setStatusFilter} placeholder="Status" options={[["all","Semua Status"],["Pending","Pending Review"],["PerluPerbaikan","Perlu Perbaikan"],["Approved","Disetujui"],["RejectedFinal","Ditolak Final"]]} />
         <div className="relative ml-auto">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
