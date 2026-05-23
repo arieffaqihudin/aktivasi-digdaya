@@ -65,8 +65,8 @@ function PeruriPage() {
             </thead>
             <tbody>
               {batches.map((b) => (
-                <>
-                  <tr key={b.id} className="border-t border-border">
+                <React.Fragment key={b.id}>
+                  <tr className="border-t border-border">
                     <td className="px-4 py-3 font-mono text-xs">{b.id}</td>
                     <td className="px-4 py-3 text-xs">{b.date}</td>
                     <td className="px-4 py-3 font-semibold">{b.count}</td>
