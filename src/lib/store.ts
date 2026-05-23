@@ -244,6 +244,119 @@ export const actions = {
     return created;
   },
 
+  /** Cek apakah kode sudah ada (case-insensitive). */
+  accessCodeExists(code: string): boolean {
+    const c = code.trim().toUpperCase();
+    return state.accessCodes.some((x) => x.code.toUpperCase() === c);
+  },
+
+  /** Buat Scoped Batch Code untuk PW/PC dalam scope wilayah tertentu. */
+  createScopedAccessCode(input: {
+    code: string;
+    batchName: string;
+    tingkat: Tingkat;
+    wilayahPwId: string; // "Nasional" atau pw-id
+    mode: "auto" | "whitelist";
+    whitelist?: string[];
+    validDays: number;
+    note?: string;
+  }): AccessCode | null {
+    const codeStr = input.code.trim().toUpperCase();
+    if (!codeStr || actions.accessCodeExists(codeStr)) return null;
+    const now = new Date();
+    const exp = new Date(now.getTime() + input.validDays * 86400000).toISOString();
+    const pwName =
+      input.wilayahPwId === "Nasional"
+        ? "Nasional"
+        : (masterPW.find((p) => p.id === input.wilayahPwId)?.nama ?? "Nasional");
+    const newCode: AccessCode = {
+      code: codeStr,
+      tingkat: input.tingkat,
+      orgId: "",
+      orgName: input.batchName,
+      pw: pwName,
+      kind: "Scoped",
+      batchName: input.batchName,
+      scope: {
+        wilayahPwId: input.wilayahPwId,
+        mode: input.mode,
+        whitelist: input.mode === "whitelist" ? (input.whitelist ?? []) : undefined,
+      },
+      status: "Unused",
+      generatedAt: now.toISOString(),
+      expiredAt: exp,
+    };
+    setState((s) => ({ accessCodes: [newCode, ...s.accessCodes] }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: "GENERATE_ACCESS_CODE",
+      detail: `Scoped batch ${codeStr} (${input.tingkat} · ${pwName}) dibuat. Mode ${input.mode}. Berlaku ${input.validDays} hari.${input.note ? " Catatan: " + input.note : ""}`,
+    });
+    return newCode;
+  },
+
+  /** Buat Individual Code untuk satu organisasi (PW/PC) tertentu. */
+  createIndividualAccessCode(input: {
+    code: string;
+    batchName?: string;
+    tingkat: Tingkat;
+    orgId: string;
+    validDays: number;
+    note?: string;
+  }): AccessCode | null {
+    const codeStr = input.code.trim().toUpperCase();
+    if (!codeStr || actions.accessCodeExists(codeStr)) return null;
+    const list = input.tingkat === "PC" ? masterPC : masterPW;
+    const org = list.find((o) => o.id === input.orgId);
+    if (!org) return null;
+    if (effectiveStatusOrg(org.id) === "Production") return null;
+    const now = new Date();
+    const exp = new Date(now.getTime() + input.validDays * 86400000).toISOString();
+    const pwName = "pw" in org ? (org as { pw: string }).pw : org.nama;
+    const newCode: AccessCode = {
+      code: codeStr,
+      tingkat: input.tingkat,
+      orgId: org.id,
+      orgName: org.nama,
+      pw: pwName,
+      kind: "Individual",
+      batchName: input.batchName,
+      status: "Unused",
+      generatedAt: now.toISOString(),
+      expiredAt: exp,
+      ...(input.tingkat === "PC" ? { pcId: org.id, pcName: org.nama } : {}),
+    };
+    setState((s) => ({ accessCodes: [newCode, ...s.accessCodes] }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: "GENERATE_ACCESS_CODE",
+      detail: `Individual code ${codeStr} dibuat untuk ${org.nama} (${input.tingkat}). Berlaku ${input.validDays} hari.${input.note ? " Catatan: " + input.note : ""}`,
+    });
+    return newCode;
+  },
+
+  /** Tambah masa berlaku kode akses (hari). */
+  extendAccessCode(code: string, days: number) {
+    setState((s) => ({
+      accessCodes: s.accessCodes.map((c) => {
+        if (c.code !== code) return c;
+        const base = new Date(c.expiredAt).getTime();
+        const from = Math.max(base, Date.now());
+        const newExp = new Date(from + days * 86400000).toISOString();
+        const newStatus: AccessCodeStatus = c.status === "Expired" ? "Unused" : c.status;
+        return { ...c, expiredAt: newExp, status: newStatus };
+      }),
+    }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: "EXTEND_ACCESS_CODE",
+      detail: `Masa berlaku ${code} diperpanjang ${days} hari.`,
+    });
+  },
+
   disableAccessCode(code: string) {
     setState((s) => ({
       accessCodes: s.accessCodes.map((c) =>
