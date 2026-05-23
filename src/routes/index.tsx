@@ -101,13 +101,13 @@ function Intro() {
       </div>
 
       <h1 className="mt-5 text-[26px] font-bold leading-tight tracking-tight text-[#0F2A1A] sm:text-[32px]">
-        Silakan pilih sesuai{" "}
-        <span className="text-[#00843D]">kondisi kepengurusan</span>{" "}
+        Pilih jalur sesuai{" "}
+        <span className="text-[#00843D]">status PW/PC</span>{" "}
         Anda.
       </h1>
 
       <p className="mt-3 max-w-[480px] text-[14px] leading-relaxed text-[#6B7280]">
-        Portal ini digunakan untuk aktivasi dan pendaftaran administrator Digdaya.
+        PW/PC yang belum production harus diaktifkan terlebih dahulu sebelum dapat mendaftarkan kepengurusan di bawahnya.
       </p>
     </div>
   );
@@ -119,12 +119,13 @@ function GatewayCards() {
       <GatewayOption
         to="/login"
         icon={<LogIn className="h-5 w-5" />}
-        badge="Sudah Production"
+        badge="SUDAH PRODUCTION"
         badgeTone="muted"
         title="PW/PC Anda sudah production?"
-        description="Login untuk mendaftarkan kepengurusan di bawah kewenangan Anda, seperti Lembaga, MWC, Ranting, atau struktur lainnya."
+        description="Silakan login untuk mendaftarkan kepengurusan di bawah kewenangan Anda, seperti MWC, Lembaga, Ranting, atau struktur lainnya."
         cta="Login dengan Email / NU.ID"
         ctaMobile="Login Email / NU.ID"
+        helper="Gunakan jalur ini jika PW/PC Anda sudah aktif di Digdaya."
         variant="secondary"
       />
 
@@ -139,13 +140,20 @@ function GatewayCards() {
       <GatewayOption
         to="/kode-akses"
         icon={<KeyRound className="h-5 w-5" />}
-        badge="Belum Production"
+        badge="BELUM PRODUCTION"
         badgeTone="primary"
         title="PW/PC Anda belum production?"
-        description="Gunakan kode akses dari PBNU untuk mengaktifkan kepengurusan dan mendaftarkan administrator Digdaya."
+        description="Aktifkan PW/PC Anda terlebih dahulu menggunakan kode akses dari PBNU. Setelah aktif, baru Anda dapat mendaftarkan kepengurusan di bawahnya."
         cta="Masukkan Kode Akses"
+        helper="Gunakan jalur ini jika PW/PC Anda belum memiliki akses Digdaya."
         variant="primary"
       />
+
+      <div className="mt-5 rounded-xl border border-[#D1E7DD] bg-[#F0F9F4] p-4">
+        <p className="text-[12.5px] leading-relaxed text-[#2D6A4F]">
+          <span className="font-semibold">Catatan:</span> Jika PW/PC Anda belum production, jangan login untuk mendaftarkan MWC/Lembaga/Ranting. Aktifkan PW/PC terlebih dahulu melalui kode akses.
+        </p>
+      </div>
     </div>
   );
 }
@@ -157,7 +165,7 @@ function StatusLink() {
         Sudah punya nomor tiket?
       </h3>
       <p className="mt-1 text-[13px] text-[#6B7280]">
-        Pantau status pengajuan aktivasi Anda di sini.
+        Cek status pengajuan aktivasi atau pendaftaran yang sudah dikirim.
       </p>
       <Link
         to="/cek-status"
@@ -180,6 +188,7 @@ function GatewayOption({
   description,
   cta,
   ctaMobile,
+  helper,
   variant,
 }: {
   to: string;
@@ -190,6 +199,7 @@ function GatewayOption({
   description: string;
   cta: string;
   ctaMobile?: string;
+  helper?: string;
   variant: "primary" | "secondary";
 }) {
   const cardClass =
@@ -224,6 +234,11 @@ function GatewayOption({
         <p className="mt-[10px] text-[15px] leading-[1.55] text-[#6B7280]">
           {description}
         </p>
+        {helper && (
+          <p className="mt-2 text-[12px] leading-relaxed text-[#8A97A8]">
+            {helper}
+          </p>
+        )}
         <div className={ctaClass}>
           <span className="overflow-hidden text-ellipsis whitespace-nowrap">
             {ctaMobile ?? cta}
@@ -241,6 +256,11 @@ function GatewayOption({
           <p className="mt-1 text-[12.5px] leading-relaxed text-[#6B7280]">
             {description}
           </p>
+          {helper && (
+            <p className="mt-1.5 text-[11.5px] leading-relaxed text-[#8A97A8]">
+              {helper}
+            </p>
+          )}
           <div className={ctaClass}>
             <span className="whitespace-nowrap">{cta}</span>
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
