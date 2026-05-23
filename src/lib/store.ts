@@ -62,7 +62,7 @@ interface State {
   nextTicketSeq: number;
 }
 
-const STORAGE_KEY = "digdaya-portal-state-v5";
+const STORAGE_KEY = "digdaya-portal-state-v6";
 
 function initial(): State {
   return {
