@@ -66,7 +66,7 @@ function PeruriPage() {
             </thead>
             <tbody>
               {batches.map((b) => (
-                <React.Fragment key={b.id}>
+                <Fragment key={b.id}>
                   <tr className="border-t border-border">
                     <td className="px-4 py-3 font-mono text-xs">{b.id}</td>
                     <td className="px-4 py-3 text-xs">{b.date}</td>
@@ -106,7 +106,7 @@ function PeruriPage() {
                       </div>
                     </td></tr>
                   )}
-                </React.Fragment>
+                </Fragment>
               ))}
               {batches.length === 0 && (
                 <tr><td colSpan={9} className="px-4 py-12 text-center text-sm text-muted-foreground">Belum ada batch.</td></tr>
