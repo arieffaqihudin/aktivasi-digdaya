@@ -101,7 +101,7 @@ function Intro() {
       </div>
 
       <h1 className="mt-5 text-[26px] font-bold leading-tight tracking-tight text-[#0F2A1A] sm:text-[32px]">
-        Pilih jalur sesuai{" "}
+        Pilih jalur sesuai<br className="sm:hidden" />{" "}
         <span className="text-[#00843D]">status PW/PC</span>{" "}
         Anda.
       </h1>
