@@ -96,7 +96,7 @@ function Intro() {
       <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[#DDEBE3] bg-[#EAF8F0] px-3 py-1 shadow-sm">
         <BadgeCheck className="h-3.5 w-3.5 text-[#00843D]" />
         <span className="text-[11px] font-semibold uppercase tracking-wider text-[#005C2E]">
-          Portal Resmi Digdaya NU
+          Portal Aktivasi Digdaya NU
         </span>
       </div>
 
