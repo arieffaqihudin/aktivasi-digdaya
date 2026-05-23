@@ -123,7 +123,7 @@ export function AppLayout({
   );
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-dvh bg-background">
       <div className="hidden lg:block relative">
         {Sidebar}
         <button
@@ -137,31 +137,31 @@ export function AppLayout({
       {mobileOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
           <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
-          <div className="relative z-10">{Sidebar}</div>
+          <div className="relative z-10 max-w-[85vw]">{Sidebar}</div>
         </div>
       )}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex h-[84px] shrink-0 items-center justify-between gap-4 border-b border-border bg-card px-4 sm:px-8">
-          <div className="flex items-center gap-3 min-w-0">
-            <button className="lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Buka menu">
+      <div className="flex flex-1 flex-col overflow-hidden min-w-0">
+        <header className="flex h-14 sm:h-16 lg:h-[84px] shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <button className="lg:hidden -ml-1 inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary" onClick={() => setMobileOpen(true)} aria-label="Buka menu">
               <Menu className="h-5 w-5" />
             </button>
             <div className="min-w-0">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Portal Aktivasi Digdaya</p>
-              <h2 className="truncate text-[17px] font-semibold text-foreground leading-tight">{displayOrg}</h2>
+              <p className="hidden sm:block text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Portal Aktivasi Digdaya</p>
+              <h2 className="truncate text-[14px] sm:text-[17px] font-semibold text-foreground leading-tight max-w-[55vw] sm:max-w-none">{displayOrg}</h2>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <button className="relative rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label="Notifikasi">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground" aria-label="Notifikasi">
               <Bell className="h-[18px] w-[18px]" />
-              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />
+              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />
             </button>
             <div className="hidden h-9 w-px bg-border sm:block" />
             <div className="hidden text-right sm:block">
               <p className="text-[13px] font-semibold text-foreground leading-tight">{user.name}</p>
               <p className="text-[11px] text-muted-foreground">{user.role}{user.pcName ? ` · ${user.pcName.replace("PCNU ", "")}` : user.pwName ? ` · ${user.pwName.replace("PWNU ", "")}` : ""}</p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-sm font-semibold text-primary-dark ring-1 ring-primary/15">
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-accent text-[12px] sm:text-sm font-semibold text-primary-dark ring-1 ring-primary/15">
               {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("")}
             </div>
           </div>

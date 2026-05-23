@@ -95,13 +95,13 @@ function Inbox() {
         <SelectFilter value={status} onChange={setStatus} placeholder="Status" options={[["all","Semua Status"],["Pending","Pending Review"],["PerluPerbaikan","Perlu Perbaikan"],["Approved","Disetujui"],["RejectedFinal","Ditolak Final"]]} />
         <SelectFilter value={pw} onChange={setPw} placeholder="Wilayah PW" options={[["all","Semua PW"], ...pws.map((p) => [p, p.replace("PWNU ","")] as [string,string])]} />
         <SelectFilter value={slaFilter} onChange={setSlaFilter} placeholder="SLA" options={[["all","Semua SLA"],["Aman","Aman"],["Mendekati","Mendekati"],["Lewat","Lewat SLA"]]} />
-        <div className="relative ml-auto">
+        <div className="relative ml-auto w-full sm:w-auto">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Cari tiket / organisasi"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            className="h-10 w-[240px] pl-9"
+            className="h-10 w-full sm:w-[240px] pl-9"
           />
         </div>
       </FilterBar>
@@ -163,7 +163,7 @@ function Inbox() {
 function SelectFilter({ value, onChange, options, placeholder }: { value: string; onChange: (v: string) => void; options: [string, string][]; placeholder?: string }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="h-10 w-[170px]"><SelectValue placeholder={placeholder} /></SelectTrigger>
+      <SelectTrigger className="h-10 w-full sm:w-[170px]"><SelectValue placeholder={placeholder} /></SelectTrigger>
       <SelectContent>
         {options.map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}
       </SelectContent>

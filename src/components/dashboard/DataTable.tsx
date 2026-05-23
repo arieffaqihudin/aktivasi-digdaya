@@ -3,9 +3,9 @@ import type { ReactNode, ThHTMLAttributes, TdHTMLAttributes } from "react";
 
 export function DataTable({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cn("mx-6 my-4 overflow-hidden rounded-xl border border-border bg-card lg:mx-8", className)}>
+    <div className={cn("mx-4 my-4 overflow-hidden rounded-xl border border-border bg-card sm:mx-6 lg:mx-8", className)}>
       <div className="overflow-x-auto">
-        <table className="w-full text-[13px]">{children}</table>
+        <table className="w-full min-w-[720px] text-[13px]">{children}</table>
       </div>
     </div>
   );

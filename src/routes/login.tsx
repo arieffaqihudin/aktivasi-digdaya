@@ -123,14 +123,14 @@ function LoginPage() {
       </aside>
 
       {/* Right form column */}
-      <main className="flex min-h-screen flex-col items-center justify-center p-6 lg:p-12">
+      <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 lg:p-12">
         {/* Mobile header */}
-        <div className="mb-6 flex flex-col items-center gap-2 lg:hidden">
+        <div className="mb-5 flex flex-col items-center gap-2 lg:hidden">
           <Logo variant="mobile" />
           <p className="text-sm font-medium text-muted-foreground">Portal Aktivasi Digdaya</p>
         </div>
 
-        <div className="w-full max-w-[440px] rounded-lg border border-border bg-card p-7 shadow-sm">
+        <div className="w-full max-w-[440px] rounded-lg border border-border bg-card p-5 sm:p-7 shadow-sm">
           <h1 className="text-xl font-semibold text-foreground">Masuk ke Portal Aktivasi</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Gunakan NU.ID atau email terdaftar untuk melanjutkan.
