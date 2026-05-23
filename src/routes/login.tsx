@@ -124,10 +124,10 @@ function LoginPage() {
 
       {/* Right form column */}
       <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-6 lg:p-12">
-        {/* Mobile header */}
-        <div className="mb-5 flex flex-col items-center gap-2 lg:hidden">
+        {/* Mobile header (compact) */}
+        <div className="mb-3 flex flex-col items-center gap-1 lg:hidden">
           <Logo variant="mobile" />
-          <p className="text-sm font-medium text-muted-foreground">Portal Aktivasi Digdaya</p>
+          <p className="text-xs font-medium text-muted-foreground">Portal Aktivasi Digdaya</p>
         </div>
 
         <div className="w-full max-w-[440px] rounded-lg border border-border bg-card p-5 sm:p-7 shadow-sm">
