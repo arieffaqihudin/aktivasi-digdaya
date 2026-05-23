@@ -4,11 +4,12 @@ import { useStore, actions } from "@/lib/store";
 import { StatusBadge } from "@/components/StatusBadge";
 import { JalurBadge } from "@/components/JalurBadge";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { RevisionRequestDialog } from "@/components/review/RevisionRequestDialog";
+import { REJECTION_CATEGORY_LABEL } from "@/data/mockData";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, CheckCircle2, FileText, XCircle, Clock } from "lucide-react";
+import { ArrowLeft, CheckCircle2, FileText, XCircle, Clock, RefreshCw } from "lucide-react";
 import { formatDateTime } from "@/utils/status";
 
 export const Route = createFileRoute("/review/inbox/$ticketId")({
@@ -20,8 +21,7 @@ function ReviewDetail() {
   const reg = useStore((s) => s.registrations.find((r) => r.ticketId === ticketId));
   const audit = useStore((s) => s.audit.filter((a) => a.ticketId === ticketId));
   const [approveOpen, setApproveOpen] = useState(false);
-  const [rejectOpen, setRejectOpen] = useState(false);
-  const [reason, setReason] = useState("");
+  const [revisionOpen, setRevisionOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
 
@@ -32,13 +32,7 @@ function ReviewDetail() {
     actions.approve(reg.ticketId); setBusy(false); setApproveOpen(false);
     toast.success(`${reg.ticketId} disetujui dan masuk batch Peruri.`);
   };
-  const doReject = async () => {
-    if (!reason.trim()) { toast.error("Alasan penolakan wajib diisi."); return; }
-    setBusy(true); await new Promise((r) => setTimeout(r, 400));
-    actions.reject(reg.ticketId, reason.trim()); setBusy(false); setRejectOpen(false);
-    toast.success(`${reg.ticketId} ditolak.`);
-    navigate({ to: "/review/inbox" });
-  };
+
 
   return (
     <div>
@@ -111,17 +105,23 @@ function ReviewDetail() {
                 <Button onClick={() => setApproveOpen(true)} className="bg-success text-success-foreground hover:bg-success/90">
                   <CheckCircle2 className="mr-1 h-4 w-4" /> Setujui Pendaftaran
                 </Button>
-                <Button variant="outline" onClick={() => setRejectOpen(true)} className="border-destructive/40 text-destructive hover:bg-destructive/5">
-                  <XCircle className="mr-1 h-4 w-4" /> Tolak Pendaftaran
+                <Button variant="outline" onClick={() => setRevisionOpen(true)} className="border-destructive/40 text-destructive hover:bg-destructive/5">
+                  <RefreshCw className="mr-1 h-4 w-4" /> Minta Perbaikan / Tolak
                 </Button>
               </div>
             </div>
           )}
 
-          {reg.status === "Rejected" && reg.rejectReason && (
+          {(reg.status === "PerluPerbaikan" || reg.status === "RejectedFinal") && reg.rejectReason && (
             <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-destructive">Alasan Penolakan</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-destructive">
+                {reg.status === "RejectedFinal" ? "Ditolak Final" : "Perlu Perbaikan"}
+                {reg.rejectionCategory && <span className="ml-2 font-normal normal-case">· {REJECTION_CATEGORY_LABEL[reg.rejectionCategory]}</span>}
+              </p>
               <p className="mt-1 text-sm">{reg.rejectReason}</p>
+              {(reg.revisionCount ?? 0) > 0 && (
+                <p className="mt-2 text-[11px] text-muted-foreground">Revisi ke-{reg.revisionCount} oleh pendaftar.</p>
+              )}
             </div>
           )}
         </div>

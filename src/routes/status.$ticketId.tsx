@@ -1,11 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PublicHeader, PublicFooter } from "@/components/PublicHeader";
 import { useStore } from "@/lib/store";
-import { StatusBadge } from "@/components/StatusBadge";
+import { StatusBadge, STATUS_COPY } from "@/components/StatusBadge";
 import { JalurBadge } from "@/components/JalurBadge";
 import { formatDateTime } from "@/utils/status";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CalendarClock, CheckCircle2, ClipboardCheck, XCircle } from "lucide-react";
+import { REJECTION_CATEGORY_LABEL } from "@/data/mockData";
+import {
+  ArrowLeft,
+  CalendarClock,
+  CheckCircle2,
+  ClipboardCheck,
+  RefreshCw,
+  XCircle,
+  AlertTriangle,
+} from "lucide-react";
 
 export const Route = createFileRoute("/status/$ticketId")({
   head: ({ params }) => ({
@@ -46,30 +55,28 @@ function StatusDetail() {
                   <div className="flex flex-col items-end gap-1.5">
                     <StatusBadge status={reg.status} />
                     <JalurBadge jalur={reg.jalur} />
+                    {(reg.revisionCount ?? 0) > 0 && (
+                      <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                        Revisi ke-{reg.revisionCount}
+                      </span>
+                    )}
                   </div>
                 </div>
 
                 <div className="mt-5 rounded-md border border-border bg-secondary/30 p-4">
-                  {reg.status === "Pending" && (
-                    <p className="text-sm text-foreground">
-                      Pendaftaran Anda sudah diterima dan sedang menunggu review Tim Digdaya PBNU.
-                    </p>
-                  )}
-                  {reg.status === "Approved" && (
-                    <p className="text-sm text-foreground">
-                      Pendaftaran disetujui. Administrator dapat melanjutkan aktivasi akun Digdaya.
-                    </p>
-                  )}
-                  {reg.status === "Rejected" && (
-                    <p className="text-sm text-foreground">
-                      Pendaftaran belum dapat diproses. Silakan perbaiki data sesuai catatan reviewer.
-                    </p>
-                  )}
+                  <p className="text-sm text-foreground">{STATUS_COPY[reg.status]}</p>
                 </div>
 
-                {reg.status === "Rejected" && reg.rejectReason && (
+                {(reg.status === "PerluPerbaikan" || reg.status === "RejectedFinal") && reg.rejectReason && (
                   <div className="mt-3 rounded-md border border-destructive/30 bg-destructive/5 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-destructive">Alasan Penolakan</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-destructive">
+                      Catatan Reviewer
+                      {reg.rejectionCategory && (
+                        <span className="ml-2 rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-medium normal-case tracking-normal">
+                          {REJECTION_CATEGORY_LABEL[reg.rejectionCategory]}
+                        </span>
+                      )}
+                    </p>
                     <p className="mt-1 text-sm text-foreground">{reg.rejectReason}</p>
                   </div>
                 )}
@@ -86,31 +93,63 @@ function StatusDetail() {
                 </dl>
               </div>
 
+              {reg.status === "PerluPerbaikan" && reg.jalur === "A" && (
+                <Link to="/status/$ticketId/revisi" params={{ ticketId: reg.ticketId }}>
+                  <Button className="w-full sm:w-auto">
+                    <RefreshCw className="mr-1.5 h-4 w-4" /> Perbaiki Pengajuan
+                  </Button>
+                </Link>
+              )}
+
+              {reg.status === "RejectedFinal" && (
+                <div className="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-foreground">
+                  <p className="flex items-center gap-2 font-medium">
+                    <AlertTriangle className="h-4 w-4 text-destructive" />
+                    Pengajuan ini tidak dapat dilanjutkan.
+                  </p>
+                  <p className="mt-1 text-muted-foreground">Silakan hubungi Tim Digdaya PBNU jika membutuhkan bantuan.</p>
+                </div>
+              )}
+
               <div className="rounded-xl border border-border bg-card p-6">
-                <h2 className="text-sm font-semibold">Linimasa Aktivasi</h2>
+                <h2 className="text-sm font-semibold">Linimasa Pengajuan</h2>
                 <ol className="mt-4 space-y-3">
-                  <Timeline icon={ClipboardCheck} active label="Pendaftaran diterima" sub={formatDateTime(reg.submittedAt)} />
+                  <Timeline icon={ClipboardCheck} active label="Pengajuan dikirim" sub={formatDateTime(reg.submittedAt)} />
+                  {(reg.revisionHistory ?? []).map((h, i) => (
+                    <Timeline
+                      key={i}
+                      icon={h.decision === "RejectedFinal" ? XCircle : RefreshCw}
+                      active
+                      error={h.decision === "RejectedFinal"}
+                      label={h.decision === "RejectedFinal" ? "Ditolak final oleh reviewer" : "Reviewer meminta perbaikan"}
+                      sub={`${formatDateTime(h.at)} — ${h.note}`}
+                    />
+                  ))}
+                  {(reg.resubmitHistory ?? []).map((h, i) => (
+                    <Timeline
+                      key={`r${i}`}
+                      icon={RefreshCw}
+                      active
+                      label={`Pendaftar mengirim revisi ke-${i + 1}`}
+                      sub={`${formatDateTime(h.at)}${h.changedFields.length ? ` — ${h.changedFields.join(", ")}` : ""}`}
+                    />
+                  ))}
                   <Timeline
-                    icon={CalendarClock}
-                    active={reg.status !== "Pending"}
-                    label={reg.status === "Pending" ? "Menunggu review Tim Digdaya" : "Review selesai"}
-                    sub={reg.reviewedAt ? formatDateTime(reg.reviewedAt) : "Maks. 3 hari kerja"}
-                  />
-                  <Timeline
-                    icon={reg.status === "Rejected" ? XCircle : CheckCircle2}
+                    icon={reg.status === "Approved" ? CheckCircle2 : CalendarClock}
                     active={reg.status === "Approved"}
-                    error={reg.status === "Rejected"}
-                    label={reg.status === "Approved" ? "Disetujui & masuk batch Peruri" : reg.status === "Rejected" ? "Ditolak" : "Menunggu hasil"}
-                    sub={reg.status === "Approved" ? "Administrator akan diaktivasi" : reg.status === "Rejected" ? "Lihat catatan reviewer" : "—"}
+                    label={
+                      reg.status === "Approved"
+                        ? "Pengajuan disetujui"
+                        : reg.status === "Pending"
+                          ? "Menunggu review Tim Digdaya"
+                          : reg.status === "PerluPerbaikan"
+                            ? "Menunggu perbaikan dari pendaftar"
+                            : "Pengajuan ditolak final"
+                    }
+                    sub={reg.reviewedAt ? formatDateTime(reg.reviewedAt) : "Maks. 3 hari kerja"}
                   />
                 </ol>
               </div>
-
-              {reg.status === "Rejected" && reg.jalur === "A" && (
-                <Link to="/aktivasi">
-                  <Button className="w-full sm:w-auto">Ajukan Ulang dengan Kode yang Sama</Button>
-                </Link>
-              )}
             </div>
           )}
         </div>

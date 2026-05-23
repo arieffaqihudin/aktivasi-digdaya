@@ -9,6 +9,7 @@ import {
   demoPcUserPcId,
   demoPwUserPwId,
   mockSuratTugasDigdaya,
+  
   type Registration,
   type PeruriBatch,
   type AuditEntry,
@@ -19,6 +20,9 @@ import {
   type Tingkat,
   type SumberSuratTugas,
   type DokumenSistem,
+  type RejectionCategory,
+  type RevisionRequestEntry,
+  type ResubmitEntry,
 } from "@/data/mockData";
 
 export interface SLAConfig {
@@ -27,6 +31,7 @@ export interface SLAConfig {
   yellowMaxDays: number;
   notifyEmails: string;
   defaultCodeValidDays: number;
+  maxRevisions: number;
 }
 export interface NotifConfig {
   emailEnabled: boolean;
@@ -65,7 +70,7 @@ function initial(): State {
     audit: seedAudit,
     accessCodes: seedAccessCodes,
     orgStatus: {},
-    sla: { defaultDays: 3, greenMaxDays: 1, yellowMaxDays: 3, notifyEmails: "ops@digdaya.nu.id", defaultCodeValidDays: 30 },
+    sla: { defaultDays: 3, greenMaxDays: 1, yellowMaxDays: 3, notifyEmails: "ops@digdaya.nu.id", defaultCodeValidDays: 30, maxRevisions: 3 },
     notif: { emailEnabled: true, whatsappEnabled: false },
     user: null,
     nextTicketSeq: 200,
@@ -422,22 +427,163 @@ export const actions = {
     });
   },
 
-  reject(ticketId: string, reason: string) {
+  /** Reviewer meminta perbaikan — status berubah jadi PerluPerbaikan. */
+  requestRevision(ticketId: string, payload: { category: RejectionCategory; note: string }) {
     const user = state.user;
+    const entry: RevisionRequestEntry = {
+      at: new Date().toISOString(),
+      reviewer: user?.email ?? "reviewer@digdaya.nu.id",
+      decision: "PerluPerbaikan",
+      category: payload.category,
+      note: payload.note,
+    };
     setState((s) => ({
       registrations: s.registrations.map((r) =>
         r.ticketId === ticketId
-          ? { ...r, status: "Rejected" as Status, reviewedAt: new Date().toISOString(), reviewedBy: user?.email ?? "reviewer@digdaya.nu.id", rejectReason: reason }
+          ? {
+              ...r,
+              status: "PerluPerbaikan" as Status,
+              reviewedAt: new Date().toISOString(),
+              reviewedBy: entry.reviewer,
+              rejectReason: payload.note,
+              rejectionCategory: payload.category,
+              revisionHistory: [...(r.revisionHistory ?? []), entry],
+            }
           : r,
       ),
     }));
     pushAudit({
-      actor: user?.email ?? "reviewer@digdaya.nu.id",
+      actor: entry.reviewer,
       role: user?.role ?? "Reviewer",
-      action: "REJECT_REGISTRATION",
+      action: "REQUEST_REVISION",
       ticketId,
-      detail: `Pendaftaran ${ticketId} ditolak. Alasan: ${reason}`,
+      detail: `Pengajuan ${ticketId} diminta perbaikan. Kategori: ${payload.category}. Catatan: ${payload.note}`,
     });
+  },
+
+  /** Reviewer menolak final — tidak bisa diperbaiki lagi. */
+  rejectFinal(ticketId: string, payload: { category: RejectionCategory; note: string }) {
+    const user = state.user;
+    const entry: RevisionRequestEntry = {
+      at: new Date().toISOString(),
+      reviewer: user?.email ?? "reviewer@digdaya.nu.id",
+      decision: "RejectedFinal",
+      category: payload.category,
+      note: payload.note,
+    };
+    setState((s) => ({
+      registrations: s.registrations.map((r) =>
+        r.ticketId === ticketId
+          ? {
+              ...r,
+              status: "RejectedFinal" as Status,
+              reviewedAt: new Date().toISOString(),
+              reviewedBy: entry.reviewer,
+              rejectReason: payload.note,
+              rejectionCategory: payload.category,
+              revisionHistory: [...(r.revisionHistory ?? []), entry],
+            }
+          : r,
+      ),
+    }));
+    pushAudit({
+      actor: entry.reviewer,
+      role: user?.role ?? "Reviewer",
+      action: "REJECT_FINAL",
+      ticketId,
+      detail: `Pengajuan ${ticketId} ditolak final. Kategori: ${payload.category}. Catatan: ${payload.note}`,
+    });
+  },
+
+  /** Backward-compat alias — defaults to PerluPerbaikan. */
+  reject(ticketId: string, reason: string) {
+    this.requestRevision(ticketId, { category: "LAINNYA", note: reason });
+  },
+
+  /** Pendaftar mengirim revisi. Kembalikan status ke Pending Review. */
+  resubmitRevision(
+    ticketId: string,
+    payload: {
+      namaAdmin?: string;
+      jabatan?: string;
+      nik?: string;
+      hp?: string;
+      email?: string;
+      sumberSuratTugas?: SumberSuratTugas;
+      suratTugasFile?: string;
+      dokumenSistem?: DokumenSistem;
+      submitterEmail?: string;
+      submitterRole?: string;
+    },
+  ): Registration | null {
+    const reg = state.registrations.find((r) => r.ticketId === ticketId);
+    if (!reg) return null;
+    if (reg.status !== "PerluPerbaikan") return null;
+
+    const previous: ResubmitEntry["previous"] = {
+      namaAdmin: reg.namaAdmin,
+      jabatan: reg.jabatan,
+      nik: reg.nik,
+      hp: reg.hp,
+      email: reg.email,
+      sumberSuratTugas: reg.sumberSuratTugas,
+      suratTugasFile: reg.suratTugasFile,
+      dokumenSistem: reg.dokumenSistem,
+    };
+
+    const next: Registration = {
+      ...reg,
+      namaAdmin: payload.namaAdmin ?? reg.namaAdmin,
+      jabatan: payload.jabatan ?? reg.jabatan,
+      nik: payload.nik ?? reg.nik,
+      hp: payload.hp ?? reg.hp,
+      email: payload.email ?? reg.email,
+      sumberSuratTugas: payload.sumberSuratTugas ?? reg.sumberSuratTugas,
+      suratTugasFile:
+        (payload.sumberSuratTugas ?? reg.sumberSuratTugas) === "MANUAL_UPLOAD"
+          ? (payload.suratTugasFile ?? reg.suratTugasFile ?? "surat-tugas.pdf")
+          : undefined,
+      dokumenSistem:
+        (payload.sumberSuratTugas ?? reg.sumberSuratTugas) === "DIGDAYA_PERSURATAN"
+          ? (payload.dokumenSistem ?? reg.dokumenSistem)
+          : undefined,
+      status: "Pending",
+      reviewedAt: undefined,
+      reviewedBy: undefined,
+    };
+
+    const changed: string[] = [];
+    if (previous.namaAdmin !== next.namaAdmin) changed.push("namaAdmin");
+    if (previous.jabatan !== next.jabatan) changed.push("jabatan");
+    if (previous.nik !== next.nik) changed.push("nik");
+    if (previous.hp !== next.hp) changed.push("hp");
+    if (previous.email !== next.email) changed.push("email");
+    if (previous.sumberSuratTugas !== next.sumberSuratTugas) changed.push("sumberSuratTugas");
+    if (previous.suratTugasFile !== next.suratTugasFile) changed.push("suratTugasFile");
+    if (previous.dokumenSistem?.documentId !== next.dokumenSistem?.documentId) changed.push("dokumenSistem");
+
+    const resubmit: ResubmitEntry = {
+      at: new Date().toISOString(),
+      by: payload.submitterEmail ?? next.email,
+      changedFields: changed,
+      previous,
+    };
+
+    next.resubmitHistory = [...(reg.resubmitHistory ?? []), resubmit];
+    next.revisionCount = (reg.revisionCount ?? 0) + 1;
+
+    setState((s) => ({
+      registrations: s.registrations.map((r) => (r.ticketId === ticketId ? next : r)),
+    }));
+
+    pushAudit({
+      actor: resubmit.by,
+      role: payload.submitterRole ?? "Pendaftar",
+      action: "RESUBMIT_REVISION",
+      ticketId,
+      detail: `Revisi ke-${next.revisionCount} dikirim. Perubahan: ${changed.length ? changed.join(", ") : "tidak ada"}.`,
+    });
+    return next;
   },
 
   // ===== Peruri =====

@@ -9,7 +9,57 @@ export type TipeOrg =
   | "Lembaga PC"
   | "Ranting";
 
-export type Status = "Pending" | "Approved" | "Rejected";
+export type Status = "Pending" | "Approved" | "PerluPerbaikan" | "RejectedFinal";
+
+export type RejectionCategory =
+  | "SURAT_SALAH"
+  | "SURAT_TIDAK_TERBACA"
+  | "SURAT_TIDAK_SESUAI_NAMA"
+  | "DATA_ADMIN"
+  | "NIK_HP_EMAIL"
+  | "KEWENANGAN"
+  | "LAINNYA";
+
+export const REJECTION_CATEGORY_LABEL: Record<RejectionCategory, string> = {
+  SURAT_SALAH: "Surat tugas salah",
+  SURAT_TIDAK_TERBACA: "Surat tugas tidak terbaca",
+  SURAT_TIDAK_SESUAI_NAMA: "Surat tugas tidak sesuai nama organisasi",
+  DATA_ADMIN: "Data administrator tidak sesuai",
+  NIK_HP_EMAIL: "NIK / nomor HP / email perlu diperbaiki",
+  KEWENANGAN: "Kewenangan pendaftar tidak sesuai",
+  LAINNYA: "Lainnya",
+};
+
+/** Kategori yang mewajibkan upload surat tugas baru saat revisi. */
+export const SURAT_TUGAS_CATEGORIES: RejectionCategory[] = [
+  "SURAT_SALAH",
+  "SURAT_TIDAK_TERBACA",
+  "SURAT_TIDAK_SESUAI_NAMA",
+];
+
+export interface RevisionRequestEntry {
+  at: string;
+  reviewer: string;
+  decision: "PerluPerbaikan" | "RejectedFinal";
+  category: RejectionCategory;
+  note: string;
+}
+
+export interface ResubmitEntry {
+  at: string;
+  by: string;
+  changedFields: string[];
+  previous: {
+    namaAdmin: string;
+    jabatan: string;
+    nik: string;
+    hp: string;
+    email: string;
+    sumberSuratTugas: SumberSuratTugas;
+    suratTugasFile?: string;
+    dokumenSistem?: DokumenSistem;
+  };
+}
 
 /** Legacy "jalur": A = publik via kode akses, B = internal dashboard. */
 export type Jalur = "A" | "B";
@@ -117,6 +167,10 @@ export interface Registration {
   reviewedAt?: string;
   reviewedBy?: string;
   rejectReason?: string;
+  rejectionCategory?: RejectionCategory;
+  revisionCount?: number;
+  revisionHistory?: RevisionRequestEntry[];
+  resubmitHistory?: ResubmitEntry[];
   peruriBatchId?: string;
 }
 
@@ -291,7 +345,7 @@ export const seedRegistrations: Registration[] = [
   regJalurA({ ticketId: "AKT-2026-000112", namaOrg: "PCNU Kabupaten Jombang", pw: "PWNU Jawa Timur",    accessCode: "DGD-X4Q1-77ZD", namaAdmin: "Khairul Anwar",     jabatan: "Ketua",      nik: "3578121212840012", hp: "+6281234567012", email: "khairul@pcnu-jombang.id", status: "Approved", submittedAt: daysAgo(6), reviewedAt: daysAgo(5), reviewedBy: "reviewer@digdaya.nu.id", peruriBatchId: "BATCH-2026-001" }),
   regJalurA({ ticketId: "AKT-2026-000121", namaOrg: "PCNU Kabupaten Klaten",  pw: "PWNU Jawa Tengah",   accessCode: "DGD-AB12-CDEF", namaAdmin: "Imam Subekti",      jabatan: "Sekretaris", nik: "3374090909860009", hp: "+6281234567009", email: "imam@pcnu-klaten.id",     status: "Pending", submittedAt: daysAgo(0, 8) }),
   regJalurA({ ticketId: "AKT-2026-000122", namaOrg: "PCNU Kabupaten Banyumas",pw: "PWNU Jawa Tengah",   accessCode: "DGD-NP56-QRST", namaAdmin: "Salman Alfarisi",   jabatan: "Ketua",      nik: "3302222222880011", hp: "+6281234567011", email: "salman@pcnu-bms.id",      status: "Pending", submittedAt: daysAgo(2, 10) }),
-  regJalurA({ ticketId: "AKT-2026-000123", namaOrg: "PCNU Gunungkidul",       pw: "PWNU DI Yogyakarta", accessCode: "DGD-T5Z9-MWPE", namaAdmin: "Yusuf Mansur",      jabatan: "Sekretaris", nik: "3403030303850016", hp: "+6281234567016", email: "yusuf@pcnu-gk.id",        status: "Rejected", submittedAt: daysAgo(4), reviewedAt: daysAgo(3), reviewedBy: "reviewer@digdaya.nu.id", rejectReason: "Scan surat tugas tidak terbaca. Mohon upload ulang dengan kualitas lebih jelas." }),
+  regJalurA({ ticketId: "AKT-2026-000123", namaOrg: "PCNU Gunungkidul",       pw: "PWNU DI Yogyakarta", accessCode: "DGD-T5Z9-MWPE", namaAdmin: "Yusuf Mansur",      jabatan: "Sekretaris", nik: "3403030303850016", hp: "+6281234567016", email: "yusuf@pcnu-gk.id",        status: "PerluPerbaikan", submittedAt: daysAgo(4), reviewedAt: daysAgo(3), reviewedBy: "reviewer@digdaya.nu.id", rejectReason: "Scan surat tugas tidak terbaca. Mohon upload ulang dengan kualitas lebih jelas.", rejectionCategory: "SURAT_TIDAK_TERBACA", revisionCount: 0, revisionHistory: [{ at: daysAgo(3), reviewer: "reviewer@digdaya.nu.id", decision: "PerluPerbaikan", category: "SURAT_TIDAK_TERBACA", note: "Scan surat tugas tidak terbaca. Mohon upload ulang dengan kualitas lebih jelas." }] }),
 
   // Jalur B — PCNU Sleman mendaftarkan MWC, Lembaga, Ranting (campuran sumber surat tugas)
   regJalurB({ ticketId: "AKT-2026-000103", tipeOrg: "MWC", namaOrg: "MWCNU Depok", pw: "PWNU DI Yogyakarta", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kabupaten Sleman", namaAdmin: "Siti Aminah",  jabatan: "Bendahara", nik: "3404030303850003", hp: "+6281234567003", email: "aminah@mwc-depok.id",   status: "Approved", submittedAt: daysAgo(5), reviewedAt: daysAgo(4), reviewedBy: "reviewer@digdaya.nu.id", peruriBatchId: "BATCH-2026-001" }),
