@@ -61,8 +61,8 @@ export function AppLayout({
         collapsed ? "w-[72px]" : "w-[260px]",
       )}
     >
-      <div className={cn("flex h-[84px] items-center border-b border-sidebar-border", collapsed ? "justify-center px-2" : "justify-between px-5")}>
-        <Logo compact={collapsed} />
+      <div className={cn("flex h-16 items-center border-b border-sidebar-border", collapsed ? "justify-center px-2" : "justify-between px-5")}>
+        <Logo variant={collapsed ? "sidebar-collapsed" : "sidebar"} />
         <button
           className="lg:hidden text-sidebar-foreground/70 hover:text-sidebar-foreground"
           onClick={() => setMobileOpen(false)}

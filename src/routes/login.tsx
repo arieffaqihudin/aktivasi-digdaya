@@ -58,7 +58,7 @@ function LoginPage() {
         }}
       >
         <div>
-          <Logo />
+          <Logo variant="login" />
         </div>
         <div className="relative max-w-md">
           <h2 className="text-3xl font-bold tracking-tight text-foreground">
@@ -85,7 +85,7 @@ function LoginPage() {
       <main className="flex min-h-screen flex-col items-center justify-center p-6 lg:p-12">
         {/* Mobile header */}
         <div className="mb-6 flex flex-col items-center gap-2 lg:hidden">
-          <Logo />
+          <Logo variant="mobile" />
           <p className="text-sm font-medium text-muted-foreground">Portal Aktivasi Digdaya</p>
         </div>
 
