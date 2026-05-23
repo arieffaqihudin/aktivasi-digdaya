@@ -88,7 +88,7 @@ export function ListControls({
 /** Horizontal filter row */
 export function FilterBar({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-wrap items-center gap-2 px-4 pt-4 sm:px-6 lg:px-8">
+    <div className="flex flex-wrap items-center gap-2 px-3 pt-4 sm:px-6 lg:px-8 [&>*]:min-w-0 [&>*]:flex-1 sm:[&>*]:flex-none">
       {children}
     </div>
   );
