@@ -456,12 +456,22 @@ export const actions = {
     const reg = state.registrations.find((r) => r.ticketId === ticketId);
     if (!reg) return;
 
-    // Tentukan org yang harus diubah jadi production (jika ini aktivasi publik)
+    // Tentukan org yang harus diubah jadi production (jika ini aktivasi publik).
+    // Scoped code → pakai selectedOrgId; Individual code → pakai code.orgId.
     let setOrgProduction: string | null = null;
     if (reg.sumberPengajuan === "PUBLIC" && reg.accessCode) {
-      const code = state.accessCodes.find((c) => c.code === reg.accessCode);
-      if (code) setOrgProduction = code.orgId;
+      if (reg.selectedOrgId) {
+        setOrgProduction = reg.selectedOrgId;
+      } else {
+        const code = state.accessCodes.find((c) => c.code === reg.accessCode);
+        if (code && code.orgId) setOrgProduction = code.orgId;
+      }
     }
+
+    // Scoped batch codes tetap reusable setelah approve (status tidak diubah ke "Used").
+    const codeForReg = reg.accessCode ? state.accessCodes.find((c) => c.code === reg.accessCode) : null;
+    const shouldMarkCodeUsed = !!codeForReg && codeForReg.kind !== "Scoped";
+
 
     setState((s) => ({
       registrations: s.registrations.map((r) =>
