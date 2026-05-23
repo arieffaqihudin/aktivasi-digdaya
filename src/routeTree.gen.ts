@@ -13,6 +13,7 @@ import { Route as ReviewRouteImport } from './routes/review'
 import { Route as PwRouteImport } from './routes/pw'
 import { Route as PcRouteImport } from './routes/pc'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as KodeAksesRouteImport } from './routes/kode-akses'
 import { Route as CekStatusRouteImport } from './routes/cek-status'
 import { Route as AktivasiRouteImport } from './routes/aktivasi'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -55,6 +56,11 @@ const PcRoute = PcRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KodeAksesRoute = KodeAksesRouteImport.update({
+  id: '/kode-akses',
+  path: '/kode-akses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CekStatusRoute = CekStatusRouteImport.update({
@@ -178,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/aktivasi': typeof AktivasiRoute
   '/cek-status': typeof CekStatusRoute
+  '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
   '/pc': typeof PcRouteWithChildren
   '/pw': typeof PwRouteWithChildren
@@ -206,6 +213,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/aktivasi': typeof AktivasiRoute
   '/cek-status': typeof CekStatusRoute
+  '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
@@ -233,6 +241,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/aktivasi': typeof AktivasiRoute
   '/cek-status': typeof CekStatusRoute
+  '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
   '/pc': typeof PcRouteWithChildren
   '/pw': typeof PwRouteWithChildren
@@ -264,6 +273,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/aktivasi'
     | '/cek-status'
+    | '/kode-akses'
     | '/login'
     | '/pc'
     | '/pw'
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
     | '/'
     | '/aktivasi'
     | '/cek-status'
+    | '/kode-akses'
     | '/login'
     | '/admin/access-codes'
     | '/admin/audit-log'
@@ -318,6 +329,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/aktivasi'
     | '/cek-status'
+    | '/kode-akses'
     | '/login'
     | '/pc'
     | '/pw'
@@ -348,6 +360,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AktivasiRoute: typeof AktivasiRoute
   CekStatusRoute: typeof CekStatusRoute
+  KodeAksesRoute: typeof KodeAksesRoute
   LoginRoute: typeof LoginRoute
   PcRoute: typeof PcRouteWithChildren
   PwRoute: typeof PwRouteWithChildren
@@ -383,6 +396,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kode-akses': {
+      id: '/kode-akses'
+      path: '/kode-akses'
+      fullPath: '/kode-akses'
+      preLoaderRoute: typeof KodeAksesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cek-status': {
@@ -633,6 +653,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AktivasiRoute: AktivasiRoute,
   CekStatusRoute: CekStatusRoute,
+  KodeAksesRoute: KodeAksesRoute,
   LoginRoute: LoginRoute,
   PcRoute: PcRouteWithChildren,
   PwRoute: PwRouteWithChildren,
