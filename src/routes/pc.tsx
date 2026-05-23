@@ -1,12 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
 import { LayoutDashboard, PlusCircle, ListChecks } from "lucide-react";
+import { actions, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/pc")({
   component: PcLayout,
 });
 
 function PcLayout() {
+  const user = useStore((s) => s.user);
+
+  if (!user) {
+    actions.loginAs("pc.kraksaan@digdaya.nu.id");
+  }
+
   return (
     <AppLayout
       scopeLabel="Dashboard PC Aktif"
