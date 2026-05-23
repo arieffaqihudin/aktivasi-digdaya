@@ -110,7 +110,7 @@ function KodeAksesPage() {
             </p>
           </div>
 
-          <div className="mt-7 rounded-xl border border-border bg-card p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:p-7">
+          <div className="mt-7 rounded-xl border border-border bg-card p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:p-7">
             <div className="space-y-4">
               <div>
                 <Label htmlFor="code" className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
@@ -198,7 +198,7 @@ function KodeAksesPage() {
                             disabled={disabled}
                             onClick={() => setSelectedOrgId(o.id)}
                             className={[
-                              "flex w-full items-center justify-between gap-3 px-3.5 py-3 text-left text-[13px] transition",
+                              "flex w-full items-start gap-3 px-3.5 py-3 text-left text-[13px] transition",
                               disabled
                                 ? "cursor-not-allowed bg-muted/30 text-muted-foreground"
                                 : selected
@@ -206,40 +206,40 @@ function KodeAksesPage() {
                                   : "bg-card hover:bg-secondary/60",
                             ].join(" ")}
                           >
-                            <div className="flex min-w-0 items-center gap-2.5">
-                              <Building2 className="h-4 w-4 shrink-0 text-muted-foreground" />
-                              <div className="min-w-0">
-                                <p className="truncate font-medium text-foreground">{o.nama}</p>
-                                <p className="truncate text-[11px] text-muted-foreground">
-                                  Tingkat {o.tingkat} · {o.pwName}
-                                </p>
-                              </div>
+                            <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                            <div className="min-w-0 flex-1">
+                              <p className="font-medium text-foreground break-words [overflow-wrap:anywhere]">{o.nama}</p>
+                              <p className="text-[11px] text-muted-foreground break-words [overflow-wrap:anywhere]">
+                                Tingkat {o.tingkat} · {o.pwName}
+                              </p>
+                              {disabled && (
+                                <span className="mt-1.5 inline-block rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                  Sudah ada pengajuan
+                                </span>
+                              )}
                             </div>
-                            {disabled ? (
-                              <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                                Sudah ada pengajuan
-                              </span>
-                            ) : selected ? (
-                              <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
-                            ) : null}
+                            {selected && !disabled && (
+                              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                            )}
                           </button>
+
                         );
                       })}
                     </div>
                   )}
 
                   {selectedOrg && (
-                    <div className="rounded-md border border-primary/30 bg-accent/60 p-3.5">
+                    <div className="rounded-md border border-primary/30 bg-accent/60 p-3.5 sm:p-4">
                       <p className="text-[12px] font-semibold text-primary-dark">
                         Pastikan kepengurusan yang dipilih sudah benar.
                       </p>
-                      <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[12px]">
+                      <dl className="mt-2 grid grid-cols-1 gap-x-3 gap-y-2 text-[12px] sm:grid-cols-[auto_1fr] sm:gap-y-1.5">
                         <dt className="text-muted-foreground">Nama</dt>
-                        <dd className="font-medium text-foreground">{selectedOrg.nama}</dd>
+                        <dd className="font-medium text-foreground break-words [overflow-wrap:anywhere]">{selectedOrg.nama}</dd>
                         <dt className="text-muted-foreground">Tingkat</dt>
                         <dd className="font-medium text-foreground">{selectedOrg.tingkat}</dd>
                         <dt className="text-muted-foreground">Wilayah</dt>
-                        <dd className="font-medium text-foreground">{selectedOrg.pwName}</dd>
+                        <dd className="font-medium text-foreground break-words [overflow-wrap:anywhere]">{selectedOrg.pwName}</dd>
                         <dt className="text-muted-foreground">Status</dt>
                         <dd className="font-medium text-foreground">Belum Production</dd>
                       </dl>
@@ -256,19 +256,22 @@ function KodeAksesPage() {
               )}
 
               {verified && (
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={reset} className="h-11">
+                <div className="flex flex-col-reverse gap-2 sm:flex-row">
+                  <Button variant="outline" onClick={reset} className="h-11 w-full sm:w-auto">
                     Ganti Kode
                   </Button>
                   <Button
                     onClick={lanjut}
                     disabled={isScoped && !selectedOrgId}
-                    className="h-11 flex-1"
+                    className="h-11 w-full sm:flex-1"
                   >
-                    Lanjut Isi Data Administrator <ArrowRight className="ml-2 h-4 w-4" />
+                    <span className="sm:hidden">Lanjut Isi Data</span>
+                    <span className="hidden sm:inline">Lanjut Isi Data Administrator</span>
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
               )}
+
 
               <details className="rounded-md border border-border bg-secondary/40 p-3 text-[12px] text-muted-foreground">
                 <summary className="cursor-pointer font-medium text-foreground">Kode demo</summary>
