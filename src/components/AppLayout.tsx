@@ -129,19 +129,16 @@ export function AppLayout({
           </div>
         ))}
       </nav>
-      <div className="border-t border-sidebar-border p-3">
-        <button
-          onClick={() => { actions.logout(); navigate({ to: "/login" }); }}
-          className={cn(
-            "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-            collapsed && "justify-center",
-          )}
-        >
-          <LogOut className="h-4 w-4" /> {!collapsed && "Keluar"}
-        </button>
-      </div>
     </aside>
   );
+
+  const initials = user.name.split(" ").map((p) => p[0]).slice(0, 2).join("");
+  const roleSuffix = user.pcName ? ` · ${user.pcName.replace("PCNU ", "")}` : user.pwName ? ` · ${user.pwName.replace("PWNU ", "")}` : "";
+  const handleLogout = () => {
+    actions.logout();
+    toast.success("Anda telah keluar.");
+    navigate({ to: "/" });
+  };
 
   return (
     <div className="flex h-dvh bg-background">
