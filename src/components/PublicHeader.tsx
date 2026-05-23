@@ -75,19 +75,12 @@ export function PublicFooter() {
         <div className="grid grid-cols-1 gap-4 pt-7 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-6 sm:pt-10 lg:grid-cols-[1.15fr_1fr_1fr_1.1fr] lg:gap-8 lg:pt-11">
           {/* Col 1 — Branding */}
           <div className="flex flex-col">
-            <div className="inline-flex w-fit items-center gap-2.5">
-              <div className="inline-flex items-center justify-center rounded-xl bg-white/95 p-1.5 shadow-sm">
-                <Logo variant="footer" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[15px] font-bold leading-tight tracking-wide text-white">
-                  DIGDAYA
-                </span>
-                <span className="text-[10px] font-medium uppercase tracking-widest text-white/50">
-                  Digitalisasi Data Layanan
-                </span>
-              </div>
-            </div>
+            <img
+              src="https://digdaya.nu.id/_next/image?url=%2Fimages%2Flogo-digdaya-white.png&w=384&q=75"
+              alt="Digdaya"
+              className="block h-[34px] w-auto max-w-[150px] object-contain sm:h-[38px] sm:max-w-[160px] lg:h-[42px] lg:max-w-[180px]"
+              loading="lazy"
+            />
             <p className="mt-3 max-w-[260px] text-[12.5px] leading-relaxed text-white/60">
               Mendukung aktivasi PW/PC dan pendaftaran administrator secara tertib dan terintegrasi.
             </p>
