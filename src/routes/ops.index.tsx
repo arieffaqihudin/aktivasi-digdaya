@@ -1,26 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { OpsPageHeader, OpsPageBody, OpsCard } from "@/components/ops/OpsPageHeader";
-import { ArrowRight, KeyRound, Inbox, FileDown, Settings, ScrollText, LayoutDashboard } from "lucide-react";
+import { ArrowRight, LayoutDashboard, Mail, Search, FileText, Stamp, FolderArchive } from "lucide-react";
 
 export const Route = createFileRoute("/ops/")({
   component: OpsHome,
 });
 
 const tiles = [
-  { to: "/ops/activation", label: "Overview Aktivasi", desc: "Ringkasan kode akses & pengajuan aktivasi.", icon: LayoutDashboard },
-  { to: "/ops/activation/access-codes", label: "Kode Akses", desc: "Generate & kelola kode akses aktivasi.", icon: KeyRound },
-  { to: "/ops/activation/submissions", label: "Pengajuan Aktivasi", desc: "Pantauan seluruh pengajuan PW/PC.", icon: Inbox },
-  { to: "/ops/activation/peruri-export", label: "Export Peruri", desc: "Batch ekspor data approved ke Peruri.", icon: FileDown },
-  { to: "/ops/activation/settings", label: "Pengaturan", desc: "Konfigurasi modul aktivasi.", icon: Settings },
-  { to: "/ops/activation/audit-log", label: "Audit Log", desc: "Riwayat aktivitas operator.", icon: ScrollText },
-];
+  { to: "/ops/activation", label: "Portal Aktivasi", desc: "Modul aktivasi PW/PC: kode akses, pengajuan, export Peruri.", icon: LayoutDashboard },
+  { to: "/ops/persuratan/pengajuan-ubah-email", label: "Pengajuan Ubah Email", desc: "Kelola pengajuan perubahan email pengguna.", icon: Mail },
+  { to: "/ops/persuratan/cek-order-id", label: "Cek Order ID", desc: "Pengecekan order ID persuratan.", icon: Search },
+  { to: "/ops/persuratan/kop-surat", label: "Kop Surat", desc: "Template & pengelolaan kop surat.", icon: FileText },
+  { to: "/ops/persuratan/stamper", label: "Stamper", desc: "Tools stamper digital untuk dokumen.", icon: Stamp },
+  { to: "/ops/repository", label: "Repository", desc: "Repository dokumen dan arsip.", icon: FolderArchive },
+] as const;
 
 function OpsHome() {
   return (
     <div>
-      <OpsPageHeader title="Selamat datang di Digdaya Ops" subtitle="Kelola kebutuhan operasional Digdaya dari satu tempat." breadcrumb={[{ label: "Beranda" }]} />
+      <OpsPageHeader title="Digdaya Ops" subtitle="Pusat operasional untuk pengelolaan layanan Digdaya." breadcrumb={[{ label: "Beranda" }]} />
       <OpsPageBody>
-        <OpsCard>
+        <OpsCard title="Akses cepat" description="Buka modul operasional Digdaya.">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {tiles.map((t) => (
               <Link

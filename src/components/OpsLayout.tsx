@@ -7,22 +7,33 @@ import {
   FileDown,
   Settings,
   ScrollText,
+  Mail,
+  Search,
+  FileText,
+  Stamp,
+  FolderArchive,
 } from "lucide-react";
 
 /**
- * Sidebar groups for the Digdaya Ops shell. Trimmed to focus on the
- * Aktivasi Digdaya module — non-functional Persuratan/Repository entries
- * were removed to keep the demo clean.
+ * Sidebar Digdaya Ops — existing modules (Persuratan, Repository) plus
+ * the new Portal Aktivasi module grouped as its own section.
  */
 const opsMenu: MenuItem[] = [
   { to: "/ops", label: "Beranda", icon: Home, exact: true, section: "BERANDA" },
 
-  { to: "/ops/activation", label: "Overview Aktivasi", icon: LayoutDashboard, exact: true, section: "AKTIVASI DIGDAYA" },
-  { to: "/ops/activation/access-codes", label: "Kode Akses", icon: KeyRound, section: "AKTIVASI DIGDAYA" },
-  { to: "/ops/activation/submissions", label: "Pengajuan Aktivasi", icon: Inbox, section: "AKTIVASI DIGDAYA" },
-  { to: "/ops/activation/peruri-export", label: "Export Peruri", icon: FileDown, section: "AKTIVASI DIGDAYA" },
-  { to: "/ops/activation/settings", label: "Pengaturan", icon: Settings, section: "AKTIVASI DIGDAYA" },
-  { to: "/ops/activation/audit-log", label: "Audit Log", icon: ScrollText, section: "AKTIVASI DIGDAYA" },
+  { to: "/ops/persuratan/pengajuan-ubah-email", label: "Pengajuan Ubah Email", icon: Mail, section: "PERSURATAN" },
+  { to: "/ops/persuratan/cek-order-id", label: "Cek Order ID", icon: Search, section: "PERSURATAN" },
+  { to: "/ops/persuratan/kop-surat", label: "Kop Surat", icon: FileText, section: "PERSURATAN" },
+  { to: "/ops/persuratan/stamper", label: "Stamper", icon: Stamp, section: "PERSURATAN" },
+
+  { to: "/ops/activation", label: "Overview Aktivasi", icon: LayoutDashboard, exact: true, section: "PORTAL AKTIVASI" },
+  { to: "/ops/activation/access-codes", label: "Kode Akses", icon: KeyRound, section: "PORTAL AKTIVASI" },
+  { to: "/ops/activation/submissions", label: "Pengajuan Aktivasi", icon: Inbox, section: "PORTAL AKTIVASI" },
+  { to: "/ops/activation/peruri-export", label: "Export Peruri", icon: FileDown, section: "PORTAL AKTIVASI" },
+  { to: "/ops/activation/settings", label: "Pengaturan Aktivasi", icon: Settings, section: "PORTAL AKTIVASI" },
+  { to: "/ops/activation/audit-log", label: "Audit Log Aktivasi", icon: ScrollText, section: "PORTAL AKTIVASI" },
+
+  { to: "/ops/repository", label: "Repository", icon: FolderArchive, section: "REPOSITORY" },
 ];
 
 export function OpsLayout() {
