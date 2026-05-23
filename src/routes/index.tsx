@@ -165,7 +165,7 @@ function StatusLink() {
         Sudah punya nomor tiket?
       </h3>
       <p className="mt-1 text-[13px] text-[#6B7280]">
-        Pantau status pengajuan aktivasi Anda di sini.
+        Cek status pengajuan aktivasi atau pendaftaran yang sudah dikirim.
       </p>
       <Link
         to="/cek-status"
