@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/StatusBadge";
-import { JalurBadge } from "@/components/JalurBadge";
 import { SLABadge } from "@/components/SLABadge";
+import { SumberPengajuanBadge, SumberSuratBadge } from "@/components/SumberBadge";
 import { formatDate, slaBucket } from "@/utils/status";
 import { useState, useMemo } from "react";
 import { Eye, Search, FileDown, Download } from "lucide-react";
@@ -19,7 +19,9 @@ export const Route = createFileRoute("/review/inbox")({
 function Inbox() {
   const regs = useStore((s) => s.registrations);
   const sla = useStore((s) => s.sla);
-  const [jalur, setJalur] = useState("all");
+  const [sumber, setSumber] = useState("all");
+  const [tingkat, setTingkat] = useState("all");
+  const [sumberSurat, setSumberSurat] = useState("all");
   const [tipe, setTipe] = useState("all");
   const [status, setStatus] = useState("Pending");
   const [pw, setPw] = useState("all");
@@ -31,7 +33,9 @@ function Inbox() {
   const pws = Array.from(new Set(regs.map((r) => r.pw)));
 
   const filtered = useMemo(() => regs
-    .filter((r) => jalur === "all" || r.jalur === jalur)
+    .filter((r) => sumber === "all" || r.sumberPengajuan === sumber)
+    .filter((r) => tingkat === "all" || r.tingkatPendaftar === tingkat)
+    .filter((r) => sumberSurat === "all" || r.sumberSuratTugas === sumberSurat)
     .filter((r) => tipe === "all" || r.tipeOrg === tipe)
     .filter((r) => status === "all" || r.status === status)
     .filter((r) => pw === "all" || r.pw === pw)
@@ -42,7 +46,7 @@ function Inbox() {
       return r.ticketId.toLowerCase().includes(s) || r.namaOrg.toLowerCase().includes(s) || r.namaAdmin.toLowerCase().includes(s);
     })
     .sort((a, b) => new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime()),
-    [regs, jalur, tipe, status, pw, slaFilter, q, sla]
+    [regs, sumber, tingkat, sumberSurat, tipe, status, pw, slaFilter, q, sla]
   );
 
   const total = filtered.length;
@@ -50,13 +54,19 @@ function Inbox() {
   const end = Math.min(page * pageSize, total);
   const paged = filtered.slice((page - 1) * pageSize, page * pageSize);
 
+  const pendaftarLabel = (r: typeof regs[number]) => {
+    if (r.sumberPengajuan === "PUBLIC") return "Aktivasi Publik";
+    if (r.sumberPengajuan === "PW_DASHBOARD") return r.sourcePwName ?? "PW";
+    return r.sourcePcName ?? "PC";
+  };
+
   return (
     <div>
       <PageHeader
         title="Inbox Pendaftaran"
         count={total}
         breadcrumb={[{ label: "Review", to: "/review" }, { label: "Inbox Pendaftaran" }]}
-        subtitle="Semua pengajuan Jalur A dan Jalur B dalam satu inbox terpusat."
+        subtitle="Semua pengajuan dari portal publik, dashboard PW, dan dashboard PC."
       />
 
       <ListControls
@@ -78,8 +88,10 @@ function Inbox() {
       />
 
       <FilterBar>
-        <SelectFilter value={jalur} onChange={setJalur} placeholder="Pilih Jalur" options={[["all","Semua Jalur"],["A","Jalur A"],["B","Jalur B"]]} />
-        <SelectFilter value={tipe} onChange={setTipe} placeholder="Tipe Organisasi" options={[["all","Semua Tipe"],["PC","PC"],["MWC","MWC"],["Lembaga PC","Lembaga PC"],["Ranting","Ranting"]]} />
+        <SelectFilter value={sumber} onChange={setSumber} placeholder="Sumber Pengajuan" options={[["all","Semua Sumber"],["PUBLIC","Public Activation"],["PW_DASHBOARD","PW Dashboard"],["PC_DASHBOARD","PC Dashboard"]]} />
+        <SelectFilter value={tingkat} onChange={setTingkat} placeholder="Tingkat Pendaftar" options={[["all","Semua Tingkat"],["PW","PW"],["PC","PC"]]} />
+        <SelectFilter value={sumberSurat} onChange={setSumberSurat} placeholder="Sumber Surat Tugas" options={[["all","Semua Surat"],["DIGDAYA_PERSURATAN","Dari Sistem"],["MANUAL_UPLOAD","Upload Manual"]]} />
+        <SelectFilter value={tipe} onChange={setTipe} placeholder="Tipe Organisasi" options={[["all","Semua Tipe"],["PW","PW"],["PC","PC"],["MWC","MWC"],["Lembaga PW","Lembaga PW"],["Lembaga PC","Lembaga PC"],["Ranting","Ranting"]]} />
         <SelectFilter value={status} onChange={setStatus} placeholder="Status" options={[["all","Semua Status"],["Pending","Pending Review"],["Approved","Disetujui"],["Rejected","Ditolak"]]} />
         <SelectFilter value={pw} onChange={setPw} placeholder="Wilayah PW" options={[["all","Semua PW"], ...pws.map((p) => [p, p.replace("PWNU ","")] as [string,string])]} />
         <SelectFilter value={slaFilter} onChange={setSlaFilter} placeholder="SLA" options={[["all","Semua SLA"],["Aman","Aman"],["Mendekati","Mendekati"],["Lewat","Lewat SLA"]]} />
@@ -89,7 +101,7 @@ function Inbox() {
             placeholder="Cari tiket / organisasi"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            className="h-10 w-[260px] pl-9"
+            className="h-10 w-[240px] pl-9"
           />
         </div>
       </FilterBar>
@@ -98,11 +110,12 @@ function Inbox() {
         <THead>
           <tr>
             <TH>Nomor Tiket</TH>
-            <TH>Jalur</TH>
-            <TH>Tipe</TH>
-            <TH>Nama Organisasi</TH>
-            <TH>Sumber Pendaftar</TH>
-            <TH>Tanggal Pengajuan</TH>
+            <TH>Sumber</TH>
+            <TH>Pendaftar</TH>
+            <TH>Tipe / Organisasi</TH>
+            <TH>Admin</TH>
+            <TH>Surat Tugas</TH>
+            <TH>Tanggal</TH>
             <TH>Status</TH>
             <TH>SLA</TH>
             <TH className="text-right pr-6">Aksi</TH>
@@ -112,13 +125,14 @@ function Inbox() {
           {paged.map((r) => (
             <TR key={r.ticketId}>
               <TD className="font-mono text-[12px] text-primary-dark">{r.ticketId}</TD>
-              <TD><JalurBadge jalur={r.jalur} /></TD>
-              <TD className="text-[12px]">{r.tipeOrg}</TD>
+              <TD><SumberPengajuanBadge sumber={r.sumberPengajuan} /></TD>
+              <TD className="text-[12px] text-muted-foreground">{pendaftarLabel(r)}</TD>
               <TD>
-                <div className="font-medium text-foreground">{r.namaOrg}</div>
+                <div className="text-[12px] font-medium text-foreground">{r.tipeOrg} · {r.namaOrg}</div>
                 <div className="text-[11px] text-muted-foreground">{r.pw.replace("PWNU ","")}</div>
               </TD>
-              <TD className="text-[12px] text-muted-foreground">{r.jalur === "A" ? "PC sendiri" : r.sourcePcName}</TD>
+              <TD className="text-[12px]">{r.namaAdmin}</TD>
+              <TD><SumberSuratBadge sumber={r.sumberSuratTugas} /></TD>
               <TD className="text-[12px] whitespace-nowrap">{formatDate(r.submittedAt)}</TD>
               <TD><StatusBadge status={r.status} /></TD>
               <TD><SLABadge bucket={slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays)} /></TD>
@@ -131,7 +145,7 @@ function Inbox() {
               </TD>
             </TR>
           ))}
-          {paged.length === 0 && <EmptyRow colSpan={9}>Tidak ada pendaftaran sesuai filter.</EmptyRow>}
+          {paged.length === 0 && <EmptyRow colSpan={10}>Tidak ada pendaftaran sesuai filter.</EmptyRow>}
         </tbody>
       </DataTable>
 

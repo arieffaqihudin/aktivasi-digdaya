@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { actions, useStore } from "@/lib/store";
-import { masterMWC, masterLembaga, type TipeOrg } from "@/data/mockData";
+import { masterPC, masterLembaga, masterMWC, type TipeOrg } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,14 +12,14 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { SuratTugasPicker, validateSuratTugas, type SuratTugasValue } from "@/components/internal/SuratTugasPicker";
 
-export const Route = createFileRoute("/pc/daftarkan")({
+export const Route = createFileRoute("/pw/daftarkan")({
   component: Daftarkan,
 });
 
 function Daftarkan() {
   const user = useStore((s) => s.user);
   const navigate = useNavigate();
-  const [tipe, setTipe] = useState<TipeOrg>("MWC");
+  const [tipe, setTipe] = useState<TipeOrg>("PC");
   const [namaOrg, setNamaOrg] = useState("");
   const [namaAdmin, setNamaAdmin] = useState("");
   const [jabatan, setJabatan] = useState("");
@@ -29,8 +29,10 @@ function Daftarkan() {
   const [surat, setSurat] = useState<SuratTugasValue>({ sumber: "DIGDAYA_PERSURATAN", dokumen: null, file: null });
   const [busy, setBusy] = useState(false);
 
-  const mwcOptions = masterMWC.filter((m) => m.pcId === user?.pcId);
-  const lembagaOptions = masterLembaga.filter((m) => m.pcId === user?.pcId);
+  const pcOptions = masterPC.filter((p) => p.pwId === user?.pwId);
+  const pcInWilayah = pcOptions.map((p) => p.id);
+  const mwcOptions = masterMWC.filter((m) => pcInWilayah.includes(m.pcId));
+  const lembagaOptions = masterLembaga.filter((l) => l.pwId === user?.pwId);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +43,7 @@ function Daftarkan() {
     if (!isValidPhone(normHp)) { toast.error("Nomor HP tidak valid."); return; }
     const sErr = validateSuratTugas(surat);
     if (sErr) { toast.error(sErr); return; }
+
     setBusy(true); await new Promise((r) => setTimeout(r, 500));
     const reg = actions.submitInternal({
       tipeOrg: tipe, namaOrg, namaAdmin, jabatan, nik, hp: normHp, email,
@@ -51,12 +54,12 @@ function Daftarkan() {
     setBusy(false);
     if (!reg) { toast.error("Gagal mengirim."); return; }
     toast.success(`Pendaftaran dikirim. Tiket: ${reg.ticketId}`);
-    navigate({ to: "/pc/status-pengajuan" });
+    navigate({ to: "/pw/status-pengajuan" });
   };
 
   return (
     <div>
-      <PageHeader title="Daftarkan Organisasi Bawahan" subtitle={`Diajukan oleh ${user?.pcName ?? "PC"}`} />
+      <PageHeader title="Daftarkan Organisasi Bawahan" subtitle={`Diajukan oleh ${user?.pwName ?? "PW"}`} />
       <form onSubmit={submit} className="mx-auto max-w-2xl space-y-5 p-6">
         <p className="rounded-md border border-border bg-secondary/40 p-3 text-[12px] text-muted-foreground">
           Gunakan menu ini untuk mendaftarkan organisasi di bawah kewenangan Anda. Surat tugas dapat diambil dari Digdaya Persuratan atau diunggah secara manual.
@@ -68,15 +71,23 @@ function Daftarkan() {
             <Select value={tipe} onValueChange={(v) => { setTipe(v as TipeOrg); setNamaOrg(""); }}>
               <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
               <SelectContent>
+                <SelectItem value="PC">PC</SelectItem>
                 <SelectItem value="MWC">MWC</SelectItem>
-                <SelectItem value="Lembaga PC">Lembaga PC</SelectItem>
-                <SelectItem value="Ranting">Ranting</SelectItem>
+                <SelectItem value="Lembaga PW">Lembaga PW</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div>
             <Label className="text-xs uppercase tracking-wider text-muted-foreground">Nama Organisasi</Label>
+            {tipe === "PC" && (
+              <Select value={namaOrg} onValueChange={setNamaOrg}>
+                <SelectTrigger className="mt-1.5"><SelectValue placeholder="Pilih PC…" /></SelectTrigger>
+                <SelectContent>
+                  {pcOptions.map((m) => <SelectItem key={m.id} value={m.nama}>{m.nama}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            )}
             {tipe === "MWC" && (
               <Select value={namaOrg} onValueChange={setNamaOrg}>
                 <SelectTrigger className="mt-1.5"><SelectValue placeholder="Pilih MWC…" /></SelectTrigger>
@@ -85,7 +96,7 @@ function Daftarkan() {
                 </SelectContent>
               </Select>
             )}
-            {tipe === "Lembaga PC" && (
+            {tipe === "Lembaga PW" && (
               <Select value={namaOrg} onValueChange={setNamaOrg}>
                 <SelectTrigger className="mt-1.5"><SelectValue placeholder="Pilih Lembaga…" /></SelectTrigger>
                 <SelectContent>
@@ -93,10 +104,6 @@ function Daftarkan() {
                 </SelectContent>
               </Select>
             )}
-            {tipe === "Ranting" && (
-              <Input className="mt-1.5" value={namaOrg} onChange={(e) => setNamaOrg(e.target.value)} placeholder="Contoh: Ranting NU Condongcatur" />
-            )}
-            {tipe === "Ranting" && <p className="mt-1 text-xs text-muted-foreground">Ranting diisi manual karena belum ada master data terpusat.</p>}
           </div>
         </div>
 

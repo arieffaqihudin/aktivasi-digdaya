@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, ListControls, FilterBar } from "@/components/dashboard/PageHeader";
 import { DataTable, THead, TH, TR, TD, RowAction, EmptyRow } from "@/components/dashboard/DataTable";
-import { actions, useStore } from "@/lib/store";
-import { masterPC } from "@/data/mockData";
+import { actions, useStore, effectiveStatusOrg } from "@/lib/store";
+import { masterPC, masterPW, type Tingkat } from "@/data/mockData";
 import { AccessCodeStatusBadge } from "@/components/JalurBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,11 +23,13 @@ function AccessCodes() {
   const codes = useStore((s) => s.accessCodes);
   const sla = useStore((s) => s.sla);
   const [open, setOpen] = useState(false);
+  const [tingkatModal, setTingkatModal] = useState<Tingkat>("PC");
   const [pwFilterModal, setPwFilterModal] = useState<string>("all");
-  const [pickedPcs, setPickedPcs] = useState<string[]>([]);
+  const [picked, setPicked] = useState<string[]>([]);
   const [validDays, setValidDays] = useState(sla.defaultCodeValidDays);
   const [generating, setGenerating] = useState(false);
 
+  const [tingkatFilter, setTingkatFilter] = useState("all");
   const [pwFilter, setPwFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [validityFilter, setValidityFilter] = useState("all");
@@ -36,22 +38,35 @@ function AccessCodes() {
   const [page, setPage] = useState(1);
 
   const pws = Array.from(new Set(masterPC.map((p) => p.pw)));
-  const pcOptions = masterPC.filter((p) => pwFilterModal === "all" || p.pw === pwFilterModal);
 
-  const togglePc = (id: string) =>
-    setPickedPcs((cur) => cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]);
+  // Org options for the modal — hanya yang belum production
+  const orgOptions = useMemo(() => {
+    if (tingkatModal === "PW") {
+      return masterPW
+        .filter((p) => effectiveStatusOrg(p.id) !== "Production")
+        .map((p) => ({ id: p.id, nama: p.nama, pw: p.nama }));
+    }
+    return masterPC
+      .filter((p) => effectiveStatusOrg(p.id) !== "Production")
+      .filter((p) => pwFilterModal === "all" || p.pw === pwFilterModal)
+      .map((p) => ({ id: p.id, nama: p.nama, pw: p.pw }));
+  }, [tingkatModal, pwFilterModal, codes]);
+
+  const togglePick = (id: string) =>
+    setPicked((cur) => cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]);
 
   const generate = async () => {
-    if (pickedPcs.length === 0) { toast.error("Pilih minimal 1 PC."); return; }
+    if (picked.length === 0) { toast.error(`Pilih minimal 1 ${tingkatModal}.`); return; }
     setGenerating(true);
     await new Promise((r) => setTimeout(r, 500));
-    const created = actions.generateAccessCodes(pickedPcs, "PC", validDays);
+    const created = actions.generateAccessCodes(picked, tingkatModal, validDays);
     setGenerating(false);
     toast.success(`${created.length} kode akses berhasil digenerate.`);
-    setOpen(false); setPickedPcs([]);
+    setOpen(false); setPicked([]);
   };
 
   const filtered = useMemo(() => codes
+    .filter((c) => tingkatFilter === "all" || c.tingkat === tingkatFilter)
     .filter((c) => pwFilter === "all" || c.pw === pwFilter)
     .filter((c) => statusFilter === "all" || c.status === statusFilter)
     .filter((c) => {
@@ -62,7 +77,7 @@ function AccessCodes() {
       return true;
     })
     .filter((c) => !q || c.code.toLowerCase().includes(q.toLowerCase()) || (c.orgName ?? "").toLowerCase().includes(q.toLowerCase())),
-    [codes, pwFilter, statusFilter, validityFilter, q]
+    [codes, tingkatFilter, pwFilter, statusFilter, validityFilter, q]
   );
 
   const total = filtered.length;
@@ -71,8 +86,8 @@ function AccessCodes() {
   const paged = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   const exportCsv = () => {
-    const rows = [["Kode","PC","PW","Status","Generated","Expired","Used At","Ticket"]];
-    filtered.forEach((c) => rows.push([c.code, c.orgName ?? "", c.pw, c.status, formatDate(c.generatedAt), formatDate(c.expiredAt), c.usedAt ? formatDate(c.usedAt) : "", c.ticketId ?? ""]));
+    const rows = [["Kode","Tingkat","Organisasi","Wilayah PW","Status","Generated","Expired","Used At","Ticket"]];
+    filtered.forEach((c) => rows.push([c.code, c.tingkat, c.orgName ?? "", c.pw, c.status, formatDate(c.generatedAt), formatDate(c.expiredAt), c.usedAt ? formatDate(c.usedAt) : "", c.ticketId ?? ""]));
     const csv = rows.map((r) => r.map((x) => `"${x}"`).join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -85,8 +100,8 @@ function AccessCodes() {
       <PageHeader
         title="Kode Akses Aktivasi"
         count={total}
-        breadcrumb={[{ label: "Admin", to: "/admin" }, { label: "Kode Akses PC" }]}
-        subtitle="Generate dan kelola kode akses one-time untuk aktivasi Pengurus Cabang."
+        breadcrumb={[{ label: "Admin", to: "/admin" }, { label: "Kode Akses" }]}
+        subtitle="Generate dan kelola kode akses one-time untuk aktivasi PW/PC yang belum production."
       />
 
       <ListControls
@@ -106,13 +121,14 @@ function AccessCodes() {
       />
 
       <FilterBar>
+        <SelectFilter value={tingkatFilter} onChange={setTingkatFilter} placeholder="Tingkat" options={[["all","Semua Tingkat"],["PW","PW"],["PC","PC"]]} />
         <SelectFilter value={pwFilter} onChange={setPwFilter} placeholder="Wilayah PW" options={[["all","Semua PW"], ...pws.map((p) => [p, p.replace("PWNU ","")] as [string,string])]} />
-        <SelectFilter value={statusFilter} onChange={setStatusFilter} placeholder="Status kode" options={[["all","Semua Status"],["Unused","Belum Digunakan"],["Used","Sudah Digunakan"],["Expired","Kedaluwarsa"],["Disabled","Dinonaktifkan"]]} />
+        <SelectFilter value={statusFilter} onChange={setStatusFilter} placeholder="Status" options={[["all","Semua Status"],["Unused","Belum Digunakan"],["Used","Sudah Digunakan"],["Expired","Kedaluwarsa"],["Disabled","Dinonaktifkan"]]} />
         <SelectFilter value={validityFilter} onChange={setValidityFilter} placeholder="Masa berlaku" options={[["all","Semua Periode"],["soon","Segera Kedaluwarsa (7 hari)"],["expired","Sudah Kedaluwarsa"]]} />
         <div className="relative ml-auto">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Cari PC / kode akses"
+            placeholder="Cari organisasi / kode"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             className="h-10 w-[260px] pl-9"
@@ -124,11 +140,12 @@ function AccessCodes() {
         <THead>
           <tr>
             <TH>Kode Akses</TH>
-            <TH>Nama PC</TH>
+            <TH>Tingkat</TH>
+            <TH>Nama Organisasi</TH>
             <TH>Wilayah PW</TH>
             <TH>Status</TH>
-            <TH>Generated At</TH>
-            <TH>Expired At</TH>
+            <TH>Generated</TH>
+            <TH>Expired</TH>
             <TH>Used At</TH>
             <TH className="text-right pr-6">Aksi</TH>
           </tr>
@@ -137,7 +154,12 @@ function AccessCodes() {
           {paged.map((c) => (
             <TR key={c.code}>
               <TD className="font-mono text-[12px] text-primary-dark">{c.code}</TD>
-              <TD className="font-medium">{c.pcName}</TD>
+              <TD>
+                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${c.tingkat === "PW" ? "bg-[oklch(0.93_0.06_240)] text-[oklch(0.34_0.10_240)]" : "bg-secondary text-foreground"}`}>
+                  {c.tingkat}
+                </span>
+              </TD>
+              <TD className="font-medium">{c.orgName}</TD>
               <TD className="text-[12px] text-muted-foreground">{c.pw.replace("PWNU ","")}</TD>
               <TD><AccessCodeStatusBadge status={c.status} /></TD>
               <TD className="text-[12px]">{formatDate(c.generatedAt)}</TD>
@@ -154,7 +176,7 @@ function AccessCodes() {
                     </RowAction>
                   )}
                   {(c.status === "Disabled" || c.status === "Expired") && (
-                    <RowAction title="Regenerate" onClick={() => { actions.regenerateAccessCode(c.orgId); toast.success("Kode baru digenerate."); }}>
+                    <RowAction title="Regenerate" onClick={() => { actions.regenerateAccessCode(c.orgId, c.tingkat); toast.success("Kode baru digenerate."); }}>
                       <RotateCcw className="h-4 w-4" />
                     </RowAction>
                   )}
@@ -162,7 +184,7 @@ function AccessCodes() {
               </TD>
             </TR>
           ))}
-          {paged.length === 0 && <EmptyRow colSpan={8}>Tidak ada kode akses sesuai filter.</EmptyRow>}
+          {paged.length === 0 && <EmptyRow colSpan={9}>Tidak ada kode akses sesuai filter.</EmptyRow>}
         </tbody>
       </DataTable>
 
@@ -179,27 +201,44 @@ function AccessCodes() {
           <DialogHeader><DialogTitle>Generate Kode Akses</DialogTitle></DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Filter Wilayah PW</Label>
-              <Select value={pwFilterModal} onValueChange={setPwFilterModal}>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Tingkat Organisasi</Label>
+              <Select value={tingkatModal} onValueChange={(v) => { setTingkatModal(v as Tingkat); setPicked([]); }}>
                 <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Semua PW</SelectItem>
-                  {pws.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                  <SelectItem value="PW">PW (Pengurus Wilayah)</SelectItem>
+                  <SelectItem value="PC">PC (Pengurus Cabang)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+            {tingkatModal === "PC" && (
+              <div>
+                <Label className="text-xs uppercase tracking-wider text-muted-foreground">Filter Wilayah PW</Label>
+                <Select value={pwFilterModal} onValueChange={setPwFilterModal}>
+                  <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua PW</SelectItem>
+                    {pws.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div>
-              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Pilih PC ({pickedPcs.length} dipilih)</Label>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Pilih Organisasi ({picked.length} dipilih)</Label>
               <div className="mt-1.5 max-h-56 space-y-1 overflow-y-auto rounded-md border border-border p-2">
-                {pcOptions.map((p) => (
+                {orgOptions.map((p) => (
                   <label key={p.id} className="flex items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-secondary/50">
-                    <Checkbox checked={pickedPcs.includes(p.id)} onCheckedChange={() => togglePc(p.id)} />
+                    <Checkbox checked={picked.includes(p.id)} onCheckedChange={() => togglePick(p.id)} />
                     <span className="flex-1">{p.nama}</span>
                     <span className="text-xs text-muted-foreground">{p.pw.replace("PWNU ","")}</span>
                   </label>
                 ))}
+                {orgOptions.length === 0 && (
+                  <p className="px-2 py-4 text-center text-xs text-muted-foreground">
+                    Tidak ada {tingkatModal} yang belum production.
+                  </p>
+                )}
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">Jika PC sudah memiliki kode aktif, kode lama akan dinonaktifkan.</p>
+              <p className="mt-1 text-xs text-muted-foreground">Kode hanya bisa dibuat untuk organisasi yang belum production. Jika organisasi sudah memiliki kode aktif, kode lama akan dinonaktifkan.</p>
             </div>
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Masa Berlaku (hari)</Label>
@@ -219,7 +258,7 @@ function AccessCodes() {
 function SelectFilter({ value, onChange, options, placeholder }: { value: string; onChange: (v: string) => void; options: [string, string][]; placeholder?: string }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="h-10 w-[200px]"><SelectValue placeholder={placeholder} /></SelectTrigger>
+      <SelectTrigger className="h-10 w-[180px]"><SelectValue placeholder={placeholder} /></SelectTrigger>
       <SelectContent>
         {options.map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}
       </SelectContent>

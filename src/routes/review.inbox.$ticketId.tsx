@@ -78,14 +78,30 @@ function ReviewDetail() {
           </div>
 
           <div className="rounded-xl border border-border bg-card p-5">
-            <p className="text-sm font-semibold">Preview Surat Tugas</p>
-            <div className="mt-3 flex items-center gap-3 rounded-md border border-dashed border-border bg-secondary/30 p-6">
-              <FileText className="h-8 w-8 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-medium">{reg.suratTugasFile ?? "surat-tugas.pdf"}</p>
-                <p className="text-xs text-muted-foreground">Preview dokumen (mock)</p>
-              </div>
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-semibold">Surat Tugas</p>
+              <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium ${reg.sumberSuratTugas === "DIGDAYA_PERSURATAN" ? "bg-[oklch(0.94_0.06_150)] text-[oklch(0.36_0.10_152)]" : "bg-secondary text-muted-foreground"}`}>
+                {reg.sumberSuratTugas === "DIGDAYA_PERSURATAN" ? "Dari Sistem" : "Upload Manual"}
+              </span>
             </div>
+            {reg.sumberSuratTugas === "DIGDAYA_PERSURATAN" && reg.dokumenSistem ? (
+              <div className="mt-3 rounded-md border border-primary/30 bg-accent/40 p-4 space-y-1.5">
+                <p className="text-[15px] font-semibold text-foreground">{reg.dokumenSistem.namaDokumen}</p>
+                <p className="text-[12px] text-muted-foreground">Nomor: <span className="font-mono">{reg.dokumenSistem.nomorSurat}</span></p>
+                <p className="text-[12px] text-muted-foreground">Tanggal: {new Date(reg.dokumenSistem.tanggalSurat).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</p>
+                <p className="text-[12px] text-muted-foreground">Penandatangan: {reg.dokumenSistem.penandatangan}</p>
+                <p className="text-[12px] text-muted-foreground">Status: {reg.dokumenSistem.status}</p>
+                <Button type="button" variant="outline" size="sm" className="mt-2 h-8 text-[12px]">Lihat Dokumen</Button>
+              </div>
+            ) : (
+              <div className="mt-3 flex items-center gap-3 rounded-md border border-dashed border-border bg-secondary/30 p-6">
+                <FileText className="h-8 w-8 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-medium">{reg.suratTugasFile ?? "surat-tugas.pdf"}</p>
+                  <p className="text-xs text-muted-foreground">Preview dokumen (mock)</p>
+                </div>
+              </div>
+            )}
           </div>
 
           {reg.status === "Pending" && (
