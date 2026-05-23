@@ -110,7 +110,7 @@ function KodeAksesPage() {
             </p>
           </div>
 
-          <div className="mt-7 rounded-xl border border-border bg-card p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:p-7">
+          <div className="mt-7 rounded-xl border border-border bg-card p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:p-7">
             <div className="space-y-4">
               <div>
                 <Label htmlFor="code" className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
