@@ -20,10 +20,10 @@ export function JalurBadge({ jalur, className }: { jalur: Jalur; className?: str
 
 export function AccessCodeStatusBadge({ status }: { status: AccessCodeStatus }) {
   const map: Record<AccessCodeStatus, { label: string; cls: string }> = {
-    Unused:   { label: "Belum Digunakan", cls: "bg-[oklch(0.95_0.005_160)] text-[oklch(0.38_0.02_160)]" },
-    Used:     { label: "Sudah Digunakan", cls: "bg-[oklch(0.94_0.06_150)] text-[oklch(0.36_0.10_152)]" },
-    Expired:  { label: "Kedaluwarsa",     cls: "bg-[oklch(0.95_0.08_85)] text-[oklch(0.42_0.08_80)]" },
-    Disabled: { label: "Dinonaktifkan",   cls: "bg-[oklch(0.90_0.005_160)] text-[oklch(0.35_0.02_160)]" },
+    Unused:   { label: "Aktif",         cls: "bg-[oklch(0.94_0.06_150)] text-[oklch(0.36_0.10_152)]" },
+    Used:     { label: "Dinonaktifkan", cls: "bg-[oklch(0.90_0.005_160)] text-[oklch(0.35_0.02_160)]" },
+    Expired:  { label: "Kedaluwarsa",   cls: "bg-[oklch(0.95_0.08_85)] text-[oklch(0.42_0.08_80)]" },
+    Disabled: { label: "Dinonaktifkan", cls: "bg-[oklch(0.90_0.005_160)] text-[oklch(0.35_0.02_160)]" },
   };
   const m = map[status];
   return (
