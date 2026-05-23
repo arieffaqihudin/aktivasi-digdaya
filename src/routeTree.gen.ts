@@ -9,38 +9,41 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ReviewRouteImport } from './routes/review'
+import { Route as PcRouteImport } from './routes/pc'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as CekStatusRouteImport } from './routes/cek-status'
+import { Route as AktivasiRouteImport } from './routes/aktivasi'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as ReviewIndexRouteImport } from './routes/review.index'
+import { Route as PcIndexRouteImport } from './routes/pc.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as StatusTicketIdRouteImport } from './routes/status.$ticketId'
-import { Route as DashboardSlaRouteImport } from './routes/dashboard.sla'
-import { Route as DashboardPeruriRouteImport } from './routes/dashboard.peruri'
-import { Route as DashboardAuditLogRouteImport } from './routes/dashboard.audit-log'
-import { Route as DashboardReviewIndexRouteImport } from './routes/dashboard.review.index'
-import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard.admin.index'
-import { Route as DashboardReviewAntrianRouteImport } from './routes/dashboard.review.antrian'
-import { Route as DashboardReviewTicketIdRouteImport } from './routes/dashboard.review.$ticketId'
-import { Route as DashboardAdminUsersRouteImport } from './routes/dashboard.admin.users'
-import { Route as DashboardAdminSlaRouteImport } from './routes/dashboard.admin.sla'
-import { Route as DashboardAdminNotifikasiRouteImport } from './routes/dashboard.admin.notifikasi'
-import { Route as DashboardAdminMasterRouteImport } from './routes/dashboard.admin.master'
+import { Route as ReviewSlaRouteImport } from './routes/review.sla'
+import { Route as ReviewPeruriRouteImport } from './routes/review.peruri'
+import { Route as ReviewInboxRouteImport } from './routes/review.inbox'
+import { Route as PcStatusPengajuanRouteImport } from './routes/pc.status-pengajuan'
+import { Route as PcProfilRouteImport } from './routes/pc.profil'
+import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
+import { Route as AdminAccessCodesRouteImport } from './routes/admin.access-codes'
+import { Route as ReviewInboxTicketIdRouteImport } from './routes/review.inbox.$ticketId'
 
+const ReviewRoute = ReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PcRoute = PcRouteImport.update({
+  id: '/pc',
+  path: '/pc',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DaftarRoute = DaftarRouteImport.update({
-  id: '/daftar',
-  path: '/daftar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CekStatusRoute = CekStatusRouteImport.update({
@@ -48,230 +51,260 @@ const CekStatusRoute = CekStatusRouteImport.update({
   path: '/cek-status',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AktivasiRoute = AktivasiRouteImport.update({
+  id: '/aktivasi',
+  path: '/aktivasi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
+const ReviewIndexRoute = ReviewIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => DashboardRoute,
+  getParentRoute: () => ReviewRoute,
+} as any)
+const PcIndexRoute = PcIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PcRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const StatusTicketIdRoute = StatusTicketIdRouteImport.update({
   id: '/status/$ticketId',
   path: '/status/$ticketId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardSlaRoute = DashboardSlaRouteImport.update({
+const ReviewSlaRoute = ReviewSlaRouteImport.update({
   id: '/sla',
   path: '/sla',
-  getParentRoute: () => DashboardRoute,
+  getParentRoute: () => ReviewRoute,
 } as any)
-const DashboardPeruriRoute = DashboardPeruriRouteImport.update({
+const ReviewPeruriRoute = ReviewPeruriRouteImport.update({
   id: '/peruri',
   path: '/peruri',
-  getParentRoute: () => DashboardRoute,
+  getParentRoute: () => ReviewRoute,
 } as any)
-const DashboardAuditLogRoute = DashboardAuditLogRouteImport.update({
+const ReviewInboxRoute = ReviewInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => ReviewRoute,
+} as any)
+const PcStatusPengajuanRoute = PcStatusPengajuanRouteImport.update({
+  id: '/status-pengajuan',
+  path: '/status-pengajuan',
+  getParentRoute: () => PcRoute,
+} as any)
+const PcProfilRoute = PcProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => PcRoute,
+} as any)
+const PcDaftarkanRoute = PcDaftarkanRouteImport.update({
+  id: '/daftarkan',
+  path: '/daftarkan',
+  getParentRoute: () => PcRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditLogRoute = AdminAuditLogRouteImport.update({
   id: '/audit-log',
   path: '/audit-log',
-  getParentRoute: () => DashboardRoute,
+  getParentRoute: () => AdminRoute,
 } as any)
-const DashboardReviewIndexRoute = DashboardReviewIndexRouteImport.update({
-  id: '/review/',
-  path: '/review/',
-  getParentRoute: () => DashboardRoute,
+const AdminAccessCodesRoute = AdminAccessCodesRouteImport.update({
+  id: '/access-codes',
+  path: '/access-codes',
+  getParentRoute: () => AdminRoute,
 } as any)
-const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardReviewAntrianRoute = DashboardReviewAntrianRouteImport.update({
-  id: '/review/antrian',
-  path: '/review/antrian',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardReviewTicketIdRoute = DashboardReviewTicketIdRouteImport.update({
-  id: '/review/$ticketId',
-  path: '/review/$ticketId',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardAdminUsersRoute = DashboardAdminUsersRouteImport.update({
-  id: '/admin/users',
-  path: '/admin/users',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardAdminSlaRoute = DashboardAdminSlaRouteImport.update({
-  id: '/admin/sla',
-  path: '/admin/sla',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardAdminNotifikasiRoute =
-  DashboardAdminNotifikasiRouteImport.update({
-    id: '/admin/notifikasi',
-    path: '/admin/notifikasi',
-    getParentRoute: () => DashboardRoute,
-  } as any)
-const DashboardAdminMasterRoute = DashboardAdminMasterRouteImport.update({
-  id: '/admin/master',
-  path: '/admin/master',
-  getParentRoute: () => DashboardRoute,
+const ReviewInboxTicketIdRoute = ReviewInboxTicketIdRouteImport.update({
+  id: '/$ticketId',
+  path: '/$ticketId',
+  getParentRoute: () => ReviewInboxRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/aktivasi': typeof AktivasiRoute
   '/cek-status': typeof CekStatusRoute
-  '/daftar': typeof DaftarRoute
-  '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
-  '/dashboard/audit-log': typeof DashboardAuditLogRoute
-  '/dashboard/peruri': typeof DashboardPeruriRoute
-  '/dashboard/sla': typeof DashboardSlaRoute
+  '/pc': typeof PcRouteWithChildren
+  '/review': typeof ReviewRouteWithChildren
+  '/admin/access-codes': typeof AdminAccessCodesRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/pc/daftarkan': typeof PcDaftarkanRoute
+  '/pc/profil': typeof PcProfilRoute
+  '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/review/inbox': typeof ReviewInboxRouteWithChildren
+  '/review/peruri': typeof ReviewPeruriRoute
+  '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
-  '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/admin/master': typeof DashboardAdminMasterRoute
-  '/dashboard/admin/notifikasi': typeof DashboardAdminNotifikasiRoute
-  '/dashboard/admin/sla': typeof DashboardAdminSlaRoute
-  '/dashboard/admin/users': typeof DashboardAdminUsersRoute
-  '/dashboard/review/$ticketId': typeof DashboardReviewTicketIdRoute
-  '/dashboard/review/antrian': typeof DashboardReviewAntrianRoute
-  '/dashboard/admin/': typeof DashboardAdminIndexRoute
-  '/dashboard/review/': typeof DashboardReviewIndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/pc/': typeof PcIndexRoute
+  '/review/': typeof ReviewIndexRoute
+  '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aktivasi': typeof AktivasiRoute
   '/cek-status': typeof CekStatusRoute
-  '/daftar': typeof DaftarRoute
   '/login': typeof LoginRoute
-  '/dashboard/audit-log': typeof DashboardAuditLogRoute
-  '/dashboard/peruri': typeof DashboardPeruriRoute
-  '/dashboard/sla': typeof DashboardSlaRoute
+  '/admin/access-codes': typeof AdminAccessCodesRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/pc/daftarkan': typeof PcDaftarkanRoute
+  '/pc/profil': typeof PcProfilRoute
+  '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/review/inbox': typeof ReviewInboxRouteWithChildren
+  '/review/peruri': typeof ReviewPeruriRoute
+  '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
-  '/dashboard': typeof DashboardIndexRoute
-  '/dashboard/admin/master': typeof DashboardAdminMasterRoute
-  '/dashboard/admin/notifikasi': typeof DashboardAdminNotifikasiRoute
-  '/dashboard/admin/sla': typeof DashboardAdminSlaRoute
-  '/dashboard/admin/users': typeof DashboardAdminUsersRoute
-  '/dashboard/review/$ticketId': typeof DashboardReviewTicketIdRoute
-  '/dashboard/review/antrian': typeof DashboardReviewAntrianRoute
-  '/dashboard/admin': typeof DashboardAdminIndexRoute
-  '/dashboard/review': typeof DashboardReviewIndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/pc': typeof PcIndexRoute
+  '/review': typeof ReviewIndexRoute
+  '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/aktivasi': typeof AktivasiRoute
   '/cek-status': typeof CekStatusRoute
-  '/daftar': typeof DaftarRoute
-  '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
-  '/dashboard/audit-log': typeof DashboardAuditLogRoute
-  '/dashboard/peruri': typeof DashboardPeruriRoute
-  '/dashboard/sla': typeof DashboardSlaRoute
+  '/pc': typeof PcRouteWithChildren
+  '/review': typeof ReviewRouteWithChildren
+  '/admin/access-codes': typeof AdminAccessCodesRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/pc/daftarkan': typeof PcDaftarkanRoute
+  '/pc/profil': typeof PcProfilRoute
+  '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/review/inbox': typeof ReviewInboxRouteWithChildren
+  '/review/peruri': typeof ReviewPeruriRoute
+  '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRoute
-  '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/admin/master': typeof DashboardAdminMasterRoute
-  '/dashboard/admin/notifikasi': typeof DashboardAdminNotifikasiRoute
-  '/dashboard/admin/sla': typeof DashboardAdminSlaRoute
-  '/dashboard/admin/users': typeof DashboardAdminUsersRoute
-  '/dashboard/review/$ticketId': typeof DashboardReviewTicketIdRoute
-  '/dashboard/review/antrian': typeof DashboardReviewAntrianRoute
-  '/dashboard/admin/': typeof DashboardAdminIndexRoute
-  '/dashboard/review/': typeof DashboardReviewIndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/pc/': typeof PcIndexRoute
+  '/review/': typeof ReviewIndexRoute
+  '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/aktivasi'
     | '/cek-status'
-    | '/daftar'
-    | '/dashboard'
     | '/login'
-    | '/dashboard/audit-log'
-    | '/dashboard/peruri'
-    | '/dashboard/sla'
+    | '/pc'
+    | '/review'
+    | '/admin/access-codes'
+    | '/admin/audit-log'
+    | '/admin/settings'
+    | '/pc/daftarkan'
+    | '/pc/profil'
+    | '/pc/status-pengajuan'
+    | '/review/inbox'
+    | '/review/peruri'
+    | '/review/sla'
     | '/status/$ticketId'
-    | '/dashboard/'
-    | '/dashboard/admin/master'
-    | '/dashboard/admin/notifikasi'
-    | '/dashboard/admin/sla'
-    | '/dashboard/admin/users'
-    | '/dashboard/review/$ticketId'
-    | '/dashboard/review/antrian'
-    | '/dashboard/admin/'
-    | '/dashboard/review/'
+    | '/admin/'
+    | '/pc/'
+    | '/review/'
+    | '/review/inbox/$ticketId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/aktivasi'
     | '/cek-status'
-    | '/daftar'
     | '/login'
-    | '/dashboard/audit-log'
-    | '/dashboard/peruri'
-    | '/dashboard/sla'
+    | '/admin/access-codes'
+    | '/admin/audit-log'
+    | '/admin/settings'
+    | '/pc/daftarkan'
+    | '/pc/profil'
+    | '/pc/status-pengajuan'
+    | '/review/inbox'
+    | '/review/peruri'
+    | '/review/sla'
     | '/status/$ticketId'
-    | '/dashboard'
-    | '/dashboard/admin/master'
-    | '/dashboard/admin/notifikasi'
-    | '/dashboard/admin/sla'
-    | '/dashboard/admin/users'
-    | '/dashboard/review/$ticketId'
-    | '/dashboard/review/antrian'
-    | '/dashboard/admin'
-    | '/dashboard/review'
+    | '/admin'
+    | '/pc'
+    | '/review'
+    | '/review/inbox/$ticketId'
   id:
     | '__root__'
     | '/'
+    | '/admin'
+    | '/aktivasi'
     | '/cek-status'
-    | '/daftar'
-    | '/dashboard'
     | '/login'
-    | '/dashboard/audit-log'
-    | '/dashboard/peruri'
-    | '/dashboard/sla'
+    | '/pc'
+    | '/review'
+    | '/admin/access-codes'
+    | '/admin/audit-log'
+    | '/admin/settings'
+    | '/pc/daftarkan'
+    | '/pc/profil'
+    | '/pc/status-pengajuan'
+    | '/review/inbox'
+    | '/review/peruri'
+    | '/review/sla'
     | '/status/$ticketId'
-    | '/dashboard/'
-    | '/dashboard/admin/master'
-    | '/dashboard/admin/notifikasi'
-    | '/dashboard/admin/sla'
-    | '/dashboard/admin/users'
-    | '/dashboard/review/$ticketId'
-    | '/dashboard/review/antrian'
-    | '/dashboard/admin/'
-    | '/dashboard/review/'
+    | '/admin/'
+    | '/pc/'
+    | '/review/'
+    | '/review/inbox/$ticketId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AktivasiRoute: typeof AktivasiRoute
   CekStatusRoute: typeof CekStatusRoute
-  DaftarRoute: typeof DaftarRoute
-  DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
+  PcRoute: typeof PcRouteWithChildren
+  ReviewRoute: typeof ReviewRouteWithChildren
   StatusTicketIdRoute: typeof StatusTicketIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/review': {
+      id: '/review'
+      path: '/review'
+      fullPath: '/review'
+      preLoaderRoute: typeof ReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pc': {
+      id: '/pc'
+      path: '/pc'
+      fullPath: '/pc'
+      preLoaderRoute: typeof PcRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/daftar': {
-      id: '/daftar'
-      path: '/daftar'
-      fullPath: '/daftar'
-      preLoaderRoute: typeof DaftarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cek-status': {
@@ -281,6 +314,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CekStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aktivasi': {
+      id: '/aktivasi'
+      path: '/aktivasi'
+      fullPath: '/aktivasi'
+      preLoaderRoute: typeof AktivasiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -288,12 +335,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/': {
-      id: '/dashboard/'
+    '/review/': {
+      id: '/review/'
       path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRoute
+      fullPath: '/review/'
+      preLoaderRoute: typeof ReviewIndexRouteImport
+      parentRoute: typeof ReviewRoute
+    }
+    '/pc/': {
+      id: '/pc/'
+      path: '/'
+      fullPath: '/pc/'
+      preLoaderRoute: typeof PcIndexRouteImport
+      parentRoute: typeof PcRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/status/$ticketId': {
       id: '/status/$ticketId'
@@ -302,126 +363,148 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StatusTicketIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/sla': {
-      id: '/dashboard/sla'
+    '/review/sla': {
+      id: '/review/sla'
       path: '/sla'
-      fullPath: '/dashboard/sla'
-      preLoaderRoute: typeof DashboardSlaRouteImport
-      parentRoute: typeof DashboardRoute
+      fullPath: '/review/sla'
+      preLoaderRoute: typeof ReviewSlaRouteImport
+      parentRoute: typeof ReviewRoute
     }
-    '/dashboard/peruri': {
-      id: '/dashboard/peruri'
+    '/review/peruri': {
+      id: '/review/peruri'
       path: '/peruri'
-      fullPath: '/dashboard/peruri'
-      preLoaderRoute: typeof DashboardPeruriRouteImport
-      parentRoute: typeof DashboardRoute
+      fullPath: '/review/peruri'
+      preLoaderRoute: typeof ReviewPeruriRouteImport
+      parentRoute: typeof ReviewRoute
     }
-    '/dashboard/audit-log': {
-      id: '/dashboard/audit-log'
+    '/review/inbox': {
+      id: '/review/inbox'
+      path: '/inbox'
+      fullPath: '/review/inbox'
+      preLoaderRoute: typeof ReviewInboxRouteImport
+      parentRoute: typeof ReviewRoute
+    }
+    '/pc/status-pengajuan': {
+      id: '/pc/status-pengajuan'
+      path: '/status-pengajuan'
+      fullPath: '/pc/status-pengajuan'
+      preLoaderRoute: typeof PcStatusPengajuanRouteImport
+      parentRoute: typeof PcRoute
+    }
+    '/pc/profil': {
+      id: '/pc/profil'
+      path: '/profil'
+      fullPath: '/pc/profil'
+      preLoaderRoute: typeof PcProfilRouteImport
+      parentRoute: typeof PcRoute
+    }
+    '/pc/daftarkan': {
+      id: '/pc/daftarkan'
+      path: '/daftarkan'
+      fullPath: '/pc/daftarkan'
+      preLoaderRoute: typeof PcDaftarkanRouteImport
+      parentRoute: typeof PcRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/audit-log': {
+      id: '/admin/audit-log'
       path: '/audit-log'
-      fullPath: '/dashboard/audit-log'
-      preLoaderRoute: typeof DashboardAuditLogRouteImport
-      parentRoute: typeof DashboardRoute
+      fullPath: '/admin/audit-log'
+      preLoaderRoute: typeof AdminAuditLogRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/dashboard/review/': {
-      id: '/dashboard/review/'
-      path: '/review'
-      fullPath: '/dashboard/review/'
-      preLoaderRoute: typeof DashboardReviewIndexRouteImport
-      parentRoute: typeof DashboardRoute
+    '/admin/access-codes': {
+      id: '/admin/access-codes'
+      path: '/access-codes'
+      fullPath: '/admin/access-codes'
+      preLoaderRoute: typeof AdminAccessCodesRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/dashboard/admin/': {
-      id: '/dashboard/admin/'
-      path: '/admin'
-      fullPath: '/dashboard/admin/'
-      preLoaderRoute: typeof DashboardAdminIndexRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/review/antrian': {
-      id: '/dashboard/review/antrian'
-      path: '/review/antrian'
-      fullPath: '/dashboard/review/antrian'
-      preLoaderRoute: typeof DashboardReviewAntrianRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/review/$ticketId': {
-      id: '/dashboard/review/$ticketId'
-      path: '/review/$ticketId'
-      fullPath: '/dashboard/review/$ticketId'
-      preLoaderRoute: typeof DashboardReviewTicketIdRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/admin/users': {
-      id: '/dashboard/admin/users'
-      path: '/admin/users'
-      fullPath: '/dashboard/admin/users'
-      preLoaderRoute: typeof DashboardAdminUsersRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/admin/sla': {
-      id: '/dashboard/admin/sla'
-      path: '/admin/sla'
-      fullPath: '/dashboard/admin/sla'
-      preLoaderRoute: typeof DashboardAdminSlaRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/admin/notifikasi': {
-      id: '/dashboard/admin/notifikasi'
-      path: '/admin/notifikasi'
-      fullPath: '/dashboard/admin/notifikasi'
-      preLoaderRoute: typeof DashboardAdminNotifikasiRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/admin/master': {
-      id: '/dashboard/admin/master'
-      path: '/admin/master'
-      fullPath: '/dashboard/admin/master'
-      preLoaderRoute: typeof DashboardAdminMasterRouteImport
-      parentRoute: typeof DashboardRoute
+    '/review/inbox/$ticketId': {
+      id: '/review/inbox/$ticketId'
+      path: '/$ticketId'
+      fullPath: '/review/inbox/$ticketId'
+      preLoaderRoute: typeof ReviewInboxTicketIdRouteImport
+      parentRoute: typeof ReviewInboxRoute
     }
   }
 }
 
-interface DashboardRouteChildren {
-  DashboardAuditLogRoute: typeof DashboardAuditLogRoute
-  DashboardPeruriRoute: typeof DashboardPeruriRoute
-  DashboardSlaRoute: typeof DashboardSlaRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardAdminMasterRoute: typeof DashboardAdminMasterRoute
-  DashboardAdminNotifikasiRoute: typeof DashboardAdminNotifikasiRoute
-  DashboardAdminSlaRoute: typeof DashboardAdminSlaRoute
-  DashboardAdminUsersRoute: typeof DashboardAdminUsersRoute
-  DashboardReviewTicketIdRoute: typeof DashboardReviewTicketIdRoute
-  DashboardReviewAntrianRoute: typeof DashboardReviewAntrianRoute
-  DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
-  DashboardReviewIndexRoute: typeof DashboardReviewIndexRoute
+interface AdminRouteChildren {
+  AdminAccessCodesRoute: typeof AdminAccessCodesRoute
+  AdminAuditLogRoute: typeof AdminAuditLogRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
-const DashboardRouteChildren: DashboardRouteChildren = {
-  DashboardAuditLogRoute: DashboardAuditLogRoute,
-  DashboardPeruriRoute: DashboardPeruriRoute,
-  DashboardSlaRoute: DashboardSlaRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
-  DashboardAdminMasterRoute: DashboardAdminMasterRoute,
-  DashboardAdminNotifikasiRoute: DashboardAdminNotifikasiRoute,
-  DashboardAdminSlaRoute: DashboardAdminSlaRoute,
-  DashboardAdminUsersRoute: DashboardAdminUsersRoute,
-  DashboardReviewTicketIdRoute: DashboardReviewTicketIdRoute,
-  DashboardReviewAntrianRoute: DashboardReviewAntrianRoute,
-  DashboardAdminIndexRoute: DashboardAdminIndexRoute,
-  DashboardReviewIndexRoute: DashboardReviewIndexRoute,
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAccessCodesRoute: AdminAccessCodesRoute,
+  AdminAuditLogRoute: AdminAuditLogRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 
-const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
-  DashboardRouteChildren,
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface PcRouteChildren {
+  PcDaftarkanRoute: typeof PcDaftarkanRoute
+  PcProfilRoute: typeof PcProfilRoute
+  PcStatusPengajuanRoute: typeof PcStatusPengajuanRoute
+  PcIndexRoute: typeof PcIndexRoute
+}
+
+const PcRouteChildren: PcRouteChildren = {
+  PcDaftarkanRoute: PcDaftarkanRoute,
+  PcProfilRoute: PcProfilRoute,
+  PcStatusPengajuanRoute: PcStatusPengajuanRoute,
+  PcIndexRoute: PcIndexRoute,
+}
+
+const PcRouteWithChildren = PcRoute._addFileChildren(PcRouteChildren)
+
+interface ReviewInboxRouteChildren {
+  ReviewInboxTicketIdRoute: typeof ReviewInboxTicketIdRoute
+}
+
+const ReviewInboxRouteChildren: ReviewInboxRouteChildren = {
+  ReviewInboxTicketIdRoute: ReviewInboxTicketIdRoute,
+}
+
+const ReviewInboxRouteWithChildren = ReviewInboxRoute._addFileChildren(
+  ReviewInboxRouteChildren,
 )
+
+interface ReviewRouteChildren {
+  ReviewInboxRoute: typeof ReviewInboxRouteWithChildren
+  ReviewPeruriRoute: typeof ReviewPeruriRoute
+  ReviewSlaRoute: typeof ReviewSlaRoute
+  ReviewIndexRoute: typeof ReviewIndexRoute
+}
+
+const ReviewRouteChildren: ReviewRouteChildren = {
+  ReviewInboxRoute: ReviewInboxRouteWithChildren,
+  ReviewPeruriRoute: ReviewPeruriRoute,
+  ReviewSlaRoute: ReviewSlaRoute,
+  ReviewIndexRoute: ReviewIndexRoute,
+}
+
+const ReviewRouteWithChildren =
+  ReviewRoute._addFileChildren(ReviewRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AktivasiRoute: AktivasiRoute,
   CekStatusRoute: CekStatusRoute,
-  DaftarRoute: DaftarRoute,
-  DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
+  PcRoute: PcRouteWithChildren,
+  ReviewRoute: ReviewRouteWithChildren,
   StatusTicketIdRoute: StatusTicketIdRoute,
 }
 export const routeTree = rootRouteImport

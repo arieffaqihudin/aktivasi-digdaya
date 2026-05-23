@@ -11,7 +11,7 @@ export function PublicHeader() {
 
   const links = [
     { to: "/", label: "Beranda" },
-    { to: "/daftar", label: "Daftar Administrator" },
+    { to: "/aktivasi", label: "Aktivasi PC" },
     { to: "/cek-status", label: "Cek Status" },
   ];
 
@@ -66,7 +66,7 @@ export function PublicFooter() {
         <div>
           <Logo />
           <p className="mt-2 max-w-md text-xs text-muted-foreground">
-            Portal self-service onboarding administrator Digdaya untuk kepengurusan Nahdlatul Ulama.
+            Portal aktivasi administrator Digdaya untuk kepengurusan Nahdlatul Ulama melalui kode akses resmi PBNU.
           </p>
         </div>
         <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Tim Digdaya PBNU. Untuk keperluan internal.</p>

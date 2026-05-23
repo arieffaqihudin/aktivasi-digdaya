@@ -12,7 +12,7 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "Login Internal — Portal Aktivasi Digdaya" },
-      { name: "description", content: "Masuk ke dashboard aktivasi Digdaya." },
+      { name: "description", content: "Masuk ke Portal Aktivasi Digdaya." },
     ],
   }),
   component: LoginPage,
@@ -27,16 +27,17 @@ function LoginPage() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 400));
     const user = actions.login(email.trim().toLowerCase(), pwd);
     setLoading(false);
-    if (!user) {
-      toast.error("Email atau kata sandi salah.");
-      return;
-    }
+    if (!user) { toast.error("Email atau kata sandi salah."); return; }
     toast.success(`Selamat datang, ${user.name}.`);
-    navigate({ to: user.role === "Super Admin" ? "/dashboard/admin" : "/dashboard/review" });
+    if (user.role === "Super Admin") navigate({ to: "/admin" });
+    else if (user.role === "Reviewer") navigate({ to: "/review" });
+    else navigate({ to: "/pc" });
   };
+
+  const quickFill = (e: string) => { setEmail(e); setPwd("password"); };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-dark via-primary to-primary-dark p-4">
@@ -45,9 +46,9 @@ function LoginPage() {
           <Logo variant="light" />
         </div>
         <div className="rounded-xl border border-border bg-card p-7 shadow-xl">
-          <h1 className="text-xl font-bold text-foreground">Masuk ke Dashboard Aktivasi Digdaya</h1>
+          <h1 className="text-xl font-bold text-foreground">Masuk ke Portal Aktivasi Digdaya</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Khusus Tim Digdaya PBNU dan PMO yang berwenang.
+            Khusus Tim Digdaya PBNU, Reviewer, dan PC yang sudah aktif.
           </p>
           <form onSubmit={submit} className="mt-6 space-y-4">
             <div>
@@ -64,10 +65,17 @@ function LoginPage() {
             </Button>
           </form>
           <details className="mt-5 text-xs text-muted-foreground">
-            <summary className="cursor-pointer select-none">Akun demo (development)</summary>
+            <summary className="cursor-pointer select-none">Akun demo (development helper)</summary>
             <div className="mt-2 space-y-1 rounded-md border border-border bg-secondary/30 p-3 font-mono">
-              <p>reviewer@digdaya.nu.id / password</p>
-              <p>admin@digdaya.nu.id / password</p>
+              {[
+                { e: "admin@digdaya.nu.id",    r: "Super Admin PBNU" },
+                { e: "reviewer@digdaya.nu.id", r: "Reviewer Tim Digdaya" },
+                { e: "pc@digdaya.nu.id",       r: "PC Aktif (PCNU Sleman)" },
+              ].map((u) => (
+                <button type="button" key={u.e} onClick={() => quickFill(u.e)} className="block w-full text-left hover:text-foreground">
+                  {u.e} · password — {u.r}
+                </button>
+              ))}
             </div>
           </details>
         </div>

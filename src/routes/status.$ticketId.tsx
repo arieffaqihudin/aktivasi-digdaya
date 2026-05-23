@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PublicHeader, PublicFooter } from "@/components/PublicHeader";
 import { useStore } from "@/lib/store";
 import { StatusBadge } from "@/components/StatusBadge";
+import { JalurBadge } from "@/components/JalurBadge";
 import { formatDateTime } from "@/utils/status";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CalendarClock, CheckCircle2, ClipboardCheck, XCircle } from "lucide-react";
@@ -42,18 +43,21 @@ function StatusDetail() {
                     <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Nomor Tiket</p>
                     <p className="mt-1 font-mono text-lg font-bold text-primary-dark">{reg.ticketId}</p>
                   </div>
-                  <StatusBadge status={reg.status} />
+                  <div className="flex flex-col items-end gap-1.5">
+                    <StatusBadge status={reg.status} />
+                    <JalurBadge jalur={reg.jalur} />
+                  </div>
                 </div>
 
                 <div className="mt-5 rounded-md border border-border bg-secondary/30 p-4">
                   {reg.status === "Pending" && (
                     <p className="text-sm text-foreground">
-                      Pendaftaran Anda sudah diterima dan sedang menunggu review Tim Digdaya.
+                      Pendaftaran Anda sudah diterima dan sedang menunggu review Tim Digdaya PBNU.
                     </p>
                   )}
                   {reg.status === "Approved" && (
                     <p className="text-sm text-foreground">
-                      Pendaftaran disetujui. Administrator dapat melanjutkan proses aktivasi akun.
+                      Pendaftaran disetujui. Administrator dapat melanjutkan aktivasi akun Digdaya.
                     </p>
                   )}
                   {reg.status === "Rejected" && (
@@ -71,14 +75,14 @@ function StatusDetail() {
                 )}
 
                 <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
-                  <Info label="Nama Kepengurusan" value={reg.namaKepengurusan} />
-                  <Info label="Tingkat" value={reg.tingkat} />
+                  <Info label="Nama Organisasi" value={reg.namaOrg} />
+                  <Info label="Tipe Organisasi" value={reg.tipeOrg} />
                   <Info label="Wilayah PW" value={reg.pw} />
+                  {reg.sourcePcName && <Info label="Didaftarkan oleh" value={reg.sourcePcName} />}
                   <Info label="Nama Administrator" value={reg.namaAdmin} />
                   <Info label="Jabatan" value={reg.jabatan} />
                   <Info label="Email" value={reg.email} />
                   <Info label="Tanggal Submit" value={formatDateTime(reg.submittedAt)} />
-                  <Info label="Estimasi Proses" value="Maksimal 3 hari kerja" />
                 </dl>
               </div>
 
@@ -102,13 +106,9 @@ function StatusDetail() {
                 </ol>
               </div>
 
-              <div className="rounded-md border border-border bg-secondary/40 p-4 text-xs text-muted-foreground">
-                Notifikasi juga akan dikirim melalui email dan WhatsApp jika sudah tersedia.
-              </div>
-
-              {reg.status === "Rejected" && (
-                <Link to="/daftar">
-                  <Button className="w-full sm:w-auto">Daftar Ulang</Button>
+              {reg.status === "Rejected" && reg.jalur === "A" && (
+                <Link to="/aktivasi">
+                  <Button className="w-full sm:w-auto">Ajukan Ulang dengan Kode yang Sama</Button>
                 </Link>
               )}
             </div>
@@ -130,17 +130,10 @@ function Info({ label, value }: { label: string; value: string }) {
 }
 
 function Timeline({
-  icon: Icon,
-  label,
-  sub,
-  active,
-  error,
+  icon: Icon, label, sub, active, error,
 }: {
   icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  sub: string;
-  active?: boolean;
-  error?: boolean;
+  label: string; sub: string; active?: boolean; error?: boolean;
 }) {
   const cls = error
     ? "bg-destructive/10 text-destructive border-destructive/30"
