@@ -729,6 +729,20 @@ export const actions = {
       ticketId,
       detail: `Pengajuan ${ticketId} diminta perbaikan. Kategori: ${payload.category}. Catatan: ${payload.note}`,
     });
+    const reg = state.registrations.find((r) => r.ticketId === ticketId);
+    const tgt = reg ? submitterTarget(reg) : null;
+    if (tgt) {
+      const revisiRoute = tgt.route + "/revisi";
+      notifActions.add({
+        recipientRole: tgt.role,
+        recipientOrgId: tgt.orgId,
+        type: "REVISION_REQUESTED",
+        title: "Pengajuan perlu perbaikan",
+        description: `Pengajuan ${reg!.namaOrg} perlu diperbaiki. Silakan cek catatan reviewer.`,
+        ticketId,
+        route: revisiRoute,
+      });
+    }
   },
 
   /** Reviewer menolak final — tidak bisa diperbaiki lagi. */
