@@ -29,15 +29,12 @@ import { Route as ReviewSlaRouteImport } from './routes/review.sla'
 import { Route as ReviewPeruriRouteImport } from './routes/review.peruri'
 import { Route as ReviewInboxRouteImport } from './routes/review.inbox'
 import { Route as ReviewAuditLogRouteImport } from './routes/review.audit-log'
-import { Route as PwSuratTugasRouteImport } from './routes/pw.surat-tugas'
 import { Route as PwStatusPengajuanRouteImport } from './routes/pw.status-pengajuan'
 import { Route as PwProfilRouteImport } from './routes/pw.profil'
 import { Route as PwDaftarkanRouteImport } from './routes/pw.daftarkan'
-import { Route as PcSuratTugasRouteImport } from './routes/pc.surat-tugas'
 import { Route as PcStatusPengajuanRouteImport } from './routes/pc.status-pengajuan'
 import { Route as PcProfilRouteImport } from './routes/pc.profil'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
-import { Route as OpsRepositoryRouteImport } from './routes/ops.repository'
 import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$accessCode'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
@@ -47,10 +44,6 @@ import { Route as StatusTicketIdRevisiRouteImport } from './routes/status.$ticke
 import { Route as ReviewInboxTicketIdRouteImport } from './routes/review.inbox.$ticketId'
 import { Route as PwStatusPengajuanTicketIdRouteImport } from './routes/pw.status-pengajuan.$ticketId'
 import { Route as PcStatusPengajuanTicketIdRouteImport } from './routes/pc.status-pengajuan.$ticketId'
-import { Route as OpsCorrespondenceStamperRouteImport } from './routes/ops.correspondence.stamper'
-import { Route as OpsCorrespondenceRevertLetterStampRouteImport } from './routes/ops.correspondence.revert-letter-stamp'
-import { Route as OpsCorrespondenceLetterheadRouteImport } from './routes/ops.correspondence.letterhead'
-import { Route as OpsCorrespondenceChangeEmailRouteImport } from './routes/ops.correspondence.change-email'
 import { Route as OpsActivationSubmissionsRouteImport } from './routes/ops.activation.submissions'
 import { Route as OpsActivationSettingsRouteImport } from './routes/ops.activation.settings'
 import { Route as OpsActivationPeruriExportRouteImport } from './routes/ops.activation.peruri-export'
@@ -162,11 +155,6 @@ const ReviewAuditLogRoute = ReviewAuditLogRouteImport.update({
   path: '/audit-log',
   getParentRoute: () => ReviewRoute,
 } as any)
-const PwSuratTugasRoute = PwSuratTugasRouteImport.update({
-  id: '/surat-tugas',
-  path: '/surat-tugas',
-  getParentRoute: () => PwRoute,
-} as any)
 const PwStatusPengajuanRoute = PwStatusPengajuanRouteImport.update({
   id: '/status-pengajuan',
   path: '/status-pengajuan',
@@ -182,11 +170,6 @@ const PwDaftarkanRoute = PwDaftarkanRouteImport.update({
   path: '/daftarkan',
   getParentRoute: () => PwRoute,
 } as any)
-const PcSuratTugasRoute = PcSuratTugasRouteImport.update({
-  id: '/surat-tugas',
-  path: '/surat-tugas',
-  getParentRoute: () => PcRoute,
-} as any)
 const PcStatusPengajuanRoute = PcStatusPengajuanRouteImport.update({
   id: '/status-pengajuan',
   path: '/status-pengajuan',
@@ -201,11 +184,6 @@ const PcDaftarkanRoute = PcDaftarkanRouteImport.update({
   id: '/daftarkan',
   path: '/daftarkan',
   getParentRoute: () => PcRoute,
-} as any)
-const OpsRepositoryRoute = OpsRepositoryRouteImport.update({
-  id: '/repository',
-  path: '/repository',
-  getParentRoute: () => OpsRoute,
 } as any)
 const AktivasiAccessCodeRoute = AktivasiAccessCodeRouteImport.update({
   id: '/$accessCode',
@@ -253,30 +231,6 @@ const PcStatusPengajuanTicketIdRoute =
     id: '/$ticketId',
     path: '/$ticketId',
     getParentRoute: () => PcStatusPengajuanRoute,
-  } as any)
-const OpsCorrespondenceStamperRoute =
-  OpsCorrespondenceStamperRouteImport.update({
-    id: '/correspondence/stamper',
-    path: '/correspondence/stamper',
-    getParentRoute: () => OpsRoute,
-  } as any)
-const OpsCorrespondenceRevertLetterStampRoute =
-  OpsCorrespondenceRevertLetterStampRouteImport.update({
-    id: '/correspondence/revert-letter-stamp',
-    path: '/correspondence/revert-letter-stamp',
-    getParentRoute: () => OpsRoute,
-  } as any)
-const OpsCorrespondenceLetterheadRoute =
-  OpsCorrespondenceLetterheadRouteImport.update({
-    id: '/correspondence/letterhead',
-    path: '/correspondence/letterhead',
-    getParentRoute: () => OpsRoute,
-  } as any)
-const OpsCorrespondenceChangeEmailRoute =
-  OpsCorrespondenceChangeEmailRouteImport.update({
-    id: '/correspondence/change-email',
-    path: '/correspondence/change-email',
-    getParentRoute: () => OpsRoute,
   } as any)
 const OpsActivationSubmissionsRoute =
   OpsActivationSubmissionsRouteImport.update({
@@ -351,15 +305,12 @@ export interface FileRoutesByFullPath {
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
-  '/ops/repository': typeof OpsRepositoryRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRouteWithChildren
-  '/pc/surat-tugas': typeof PcSuratTugasRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
   '/pw/profil': typeof PwProfilRoute
   '/pw/status-pengajuan': typeof PwStatusPengajuanRouteWithChildren
-  '/pw/surat-tugas': typeof PwSuratTugasRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
@@ -376,10 +327,6 @@ export interface FileRoutesByFullPath {
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
   '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
-  '/ops/correspondence/change-email': typeof OpsCorrespondenceChangeEmailRoute
-  '/ops/correspondence/letterhead': typeof OpsCorrespondenceLetterheadRoute
-  '/ops/correspondence/revert-letter-stamp': typeof OpsCorrespondenceRevertLetterStampRoute
-  '/ops/correspondence/stamper': typeof OpsCorrespondenceStamperRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
@@ -400,15 +347,12 @@ export interface FileRoutesByTo {
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
-  '/ops/repository': typeof OpsRepositoryRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRouteWithChildren
-  '/pc/surat-tugas': typeof PcSuratTugasRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
   '/pw/profil': typeof PwProfilRoute
   '/pw/status-pengajuan': typeof PwStatusPengajuanRouteWithChildren
-  '/pw/surat-tugas': typeof PwSuratTugasRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
@@ -425,10 +369,6 @@ export interface FileRoutesByTo {
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
   '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
-  '/ops/correspondence/change-email': typeof OpsCorrespondenceChangeEmailRoute
-  '/ops/correspondence/letterhead': typeof OpsCorrespondenceLetterheadRoute
-  '/ops/correspondence/revert-letter-stamp': typeof OpsCorrespondenceRevertLetterStampRoute
-  '/ops/correspondence/stamper': typeof OpsCorrespondenceStamperRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
@@ -455,15 +395,12 @@ export interface FileRoutesById {
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
-  '/ops/repository': typeof OpsRepositoryRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRouteWithChildren
-  '/pc/surat-tugas': typeof PcSuratTugasRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
   '/pw/profil': typeof PwProfilRoute
   '/pw/status-pengajuan': typeof PwStatusPengajuanRouteWithChildren
-  '/pw/surat-tugas': typeof PwSuratTugasRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
@@ -480,10 +417,6 @@ export interface FileRoutesById {
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
   '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
-  '/ops/correspondence/change-email': typeof OpsCorrespondenceChangeEmailRoute
-  '/ops/correspondence/letterhead': typeof OpsCorrespondenceLetterheadRoute
-  '/ops/correspondence/revert-letter-stamp': typeof OpsCorrespondenceRevertLetterStampRoute
-  '/ops/correspondence/stamper': typeof OpsCorrespondenceStamperRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
@@ -511,15 +444,12 @@ export interface FileRouteTypes {
     | '/admin/audit-log'
     | '/admin/settings'
     | '/aktivasi/$accessCode'
-    | '/ops/repository'
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
-    | '/pc/surat-tugas'
     | '/pw/daftarkan'
     | '/pw/profil'
     | '/pw/status-pengajuan'
-    | '/pw/surat-tugas'
     | '/review/audit-log'
     | '/review/inbox'
     | '/review/peruri'
@@ -536,10 +466,6 @@ export interface FileRouteTypes {
     | '/ops/activation/peruri-export'
     | '/ops/activation/settings'
     | '/ops/activation/submissions'
-    | '/ops/correspondence/change-email'
-    | '/ops/correspondence/letterhead'
-    | '/ops/correspondence/revert-letter-stamp'
-    | '/ops/correspondence/stamper'
     | '/pc/status-pengajuan/$ticketId'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
@@ -560,15 +486,12 @@ export interface FileRouteTypes {
     | '/admin/audit-log'
     | '/admin/settings'
     | '/aktivasi/$accessCode'
-    | '/ops/repository'
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
-    | '/pc/surat-tugas'
     | '/pw/daftarkan'
     | '/pw/profil'
     | '/pw/status-pengajuan'
-    | '/pw/surat-tugas'
     | '/review/audit-log'
     | '/review/inbox'
     | '/review/peruri'
@@ -585,10 +508,6 @@ export interface FileRouteTypes {
     | '/ops/activation/peruri-export'
     | '/ops/activation/settings'
     | '/ops/activation/submissions'
-    | '/ops/correspondence/change-email'
-    | '/ops/correspondence/letterhead'
-    | '/ops/correspondence/revert-letter-stamp'
-    | '/ops/correspondence/stamper'
     | '/pc/status-pengajuan/$ticketId'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
@@ -614,15 +533,12 @@ export interface FileRouteTypes {
     | '/admin/audit-log'
     | '/admin/settings'
     | '/aktivasi/$accessCode'
-    | '/ops/repository'
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
-    | '/pc/surat-tugas'
     | '/pw/daftarkan'
     | '/pw/profil'
     | '/pw/status-pengajuan'
-    | '/pw/surat-tugas'
     | '/review/audit-log'
     | '/review/inbox'
     | '/review/peruri'
@@ -639,10 +555,6 @@ export interface FileRouteTypes {
     | '/ops/activation/peruri-export'
     | '/ops/activation/settings'
     | '/ops/activation/submissions'
-    | '/ops/correspondence/change-email'
-    | '/ops/correspondence/letterhead'
-    | '/ops/correspondence/revert-letter-stamp'
-    | '/ops/correspondence/stamper'
     | '/pc/status-pengajuan/$ticketId'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
@@ -810,13 +722,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewAuditLogRouteImport
       parentRoute: typeof ReviewRoute
     }
-    '/pw/surat-tugas': {
-      id: '/pw/surat-tugas'
-      path: '/surat-tugas'
-      fullPath: '/pw/surat-tugas'
-      preLoaderRoute: typeof PwSuratTugasRouteImport
-      parentRoute: typeof PwRoute
-    }
     '/pw/status-pengajuan': {
       id: '/pw/status-pengajuan'
       path: '/status-pengajuan'
@@ -838,13 +743,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PwDaftarkanRouteImport
       parentRoute: typeof PwRoute
     }
-    '/pc/surat-tugas': {
-      id: '/pc/surat-tugas'
-      path: '/surat-tugas'
-      fullPath: '/pc/surat-tugas'
-      preLoaderRoute: typeof PcSuratTugasRouteImport
-      parentRoute: typeof PcRoute
-    }
     '/pc/status-pengajuan': {
       id: '/pc/status-pengajuan'
       path: '/status-pengajuan'
@@ -865,13 +763,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/pc/daftarkan'
       preLoaderRoute: typeof PcDaftarkanRouteImport
       parentRoute: typeof PcRoute
-    }
-    '/ops/repository': {
-      id: '/ops/repository'
-      path: '/repository'
-      fullPath: '/ops/repository'
-      preLoaderRoute: typeof OpsRepositoryRouteImport
-      parentRoute: typeof OpsRoute
     }
     '/aktivasi/$accessCode': {
       id: '/aktivasi/$accessCode'
@@ -935,34 +826,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/pc/status-pengajuan/$ticketId'
       preLoaderRoute: typeof PcStatusPengajuanTicketIdRouteImport
       parentRoute: typeof PcStatusPengajuanRoute
-    }
-    '/ops/correspondence/stamper': {
-      id: '/ops/correspondence/stamper'
-      path: '/correspondence/stamper'
-      fullPath: '/ops/correspondence/stamper'
-      preLoaderRoute: typeof OpsCorrespondenceStamperRouteImport
-      parentRoute: typeof OpsRoute
-    }
-    '/ops/correspondence/revert-letter-stamp': {
-      id: '/ops/correspondence/revert-letter-stamp'
-      path: '/correspondence/revert-letter-stamp'
-      fullPath: '/ops/correspondence/revert-letter-stamp'
-      preLoaderRoute: typeof OpsCorrespondenceRevertLetterStampRouteImport
-      parentRoute: typeof OpsRoute
-    }
-    '/ops/correspondence/letterhead': {
-      id: '/ops/correspondence/letterhead'
-      path: '/correspondence/letterhead'
-      fullPath: '/ops/correspondence/letterhead'
-      preLoaderRoute: typeof OpsCorrespondenceLetterheadRouteImport
-      parentRoute: typeof OpsRoute
-    }
-    '/ops/correspondence/change-email': {
-      id: '/ops/correspondence/change-email'
-      path: '/correspondence/change-email'
-      fullPath: '/ops/correspondence/change-email'
-      preLoaderRoute: typeof OpsCorrespondenceChangeEmailRouteImport
-      parentRoute: typeof OpsRoute
     }
     '/ops/activation/submissions': {
       id: '/ops/activation/submissions'
@@ -1097,33 +960,22 @@ const OpsActivationSubmissionsRouteWithChildren =
   )
 
 interface OpsRouteChildren {
-  OpsRepositoryRoute: typeof OpsRepositoryRoute
   OpsIndexRoute: typeof OpsIndexRoute
   OpsActivationAccessCodesRoute: typeof OpsActivationAccessCodesRouteWithChildren
   OpsActivationAuditLogRoute: typeof OpsActivationAuditLogRoute
   OpsActivationPeruriExportRoute: typeof OpsActivationPeruriExportRoute
   OpsActivationSettingsRoute: typeof OpsActivationSettingsRoute
   OpsActivationSubmissionsRoute: typeof OpsActivationSubmissionsRouteWithChildren
-  OpsCorrespondenceChangeEmailRoute: typeof OpsCorrespondenceChangeEmailRoute
-  OpsCorrespondenceLetterheadRoute: typeof OpsCorrespondenceLetterheadRoute
-  OpsCorrespondenceRevertLetterStampRoute: typeof OpsCorrespondenceRevertLetterStampRoute
-  OpsCorrespondenceStamperRoute: typeof OpsCorrespondenceStamperRoute
   OpsActivationIndexRoute: typeof OpsActivationIndexRoute
 }
 
 const OpsRouteChildren: OpsRouteChildren = {
-  OpsRepositoryRoute: OpsRepositoryRoute,
   OpsIndexRoute: OpsIndexRoute,
   OpsActivationAccessCodesRoute: OpsActivationAccessCodesRouteWithChildren,
   OpsActivationAuditLogRoute: OpsActivationAuditLogRoute,
   OpsActivationPeruriExportRoute: OpsActivationPeruriExportRoute,
   OpsActivationSettingsRoute: OpsActivationSettingsRoute,
   OpsActivationSubmissionsRoute: OpsActivationSubmissionsRouteWithChildren,
-  OpsCorrespondenceChangeEmailRoute: OpsCorrespondenceChangeEmailRoute,
-  OpsCorrespondenceLetterheadRoute: OpsCorrespondenceLetterheadRoute,
-  OpsCorrespondenceRevertLetterStampRoute:
-    OpsCorrespondenceRevertLetterStampRoute,
-  OpsCorrespondenceStamperRoute: OpsCorrespondenceStamperRoute,
   OpsActivationIndexRoute: OpsActivationIndexRoute,
 }
 
@@ -1158,7 +1010,6 @@ interface PcRouteChildren {
   PcDaftarkanRoute: typeof PcDaftarkanRoute
   PcProfilRoute: typeof PcProfilRoute
   PcStatusPengajuanRoute: typeof PcStatusPengajuanRouteWithChildren
-  PcSuratTugasRoute: typeof PcSuratTugasRoute
   PcIndexRoute: typeof PcIndexRoute
 }
 
@@ -1166,7 +1017,6 @@ const PcRouteChildren: PcRouteChildren = {
   PcDaftarkanRoute: PcDaftarkanRoute,
   PcProfilRoute: PcProfilRoute,
   PcStatusPengajuanRoute: PcStatusPengajuanRouteWithChildren,
-  PcSuratTugasRoute: PcSuratTugasRoute,
   PcIndexRoute: PcIndexRoute,
 }
 
@@ -1201,7 +1051,6 @@ interface PwRouteChildren {
   PwDaftarkanRoute: typeof PwDaftarkanRoute
   PwProfilRoute: typeof PwProfilRoute
   PwStatusPengajuanRoute: typeof PwStatusPengajuanRouteWithChildren
-  PwSuratTugasRoute: typeof PwSuratTugasRoute
   PwIndexRoute: typeof PwIndexRoute
 }
 
@@ -1209,7 +1058,6 @@ const PwRouteChildren: PwRouteChildren = {
   PwDaftarkanRoute: PwDaftarkanRoute,
   PwProfilRoute: PwProfilRoute,
   PwStatusPengajuanRoute: PwStatusPengajuanRouteWithChildren,
-  PwSuratTugasRoute: PwSuratTugasRoute,
   PwIndexRoute: PwIndexRoute,
 }
 
@@ -1274,3 +1122,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
