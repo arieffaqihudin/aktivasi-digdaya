@@ -262,9 +262,59 @@ export const actions = {
     return this.generateAccessCodes([orgId], tingkat, state.sla.defaultCodeValidDays)[0] ?? null;
   },
 
+  // ===== Eligible orgs for Scoped batch codes =====
+  /**
+   * Untuk Scoped code: kembalikan daftar organisasi master sesuai scope,
+   * berstatus Belum Production, dengan penanda apakah sedang ada pengajuan aktif.
+   */
+  getEligibleOrgsForCode(code: AccessCode): Array<{
+    id: string;
+    nama: string;
+    tingkat: Tingkat;
+    pwName: string;
+    statusOrg: "Belum Production" | "Pending Aktivasi" | "Production";
+    hasActiveSubmission: boolean;
+    activeStatus?: Status;
+  }> {
+    const scopePw = code.scope?.wilayahPwId ?? "Nasional";
+    const whitelist = code.scope?.mode === "whitelist" ? (code.scope.whitelist ?? []) : null;
+
+    const list = code.tingkat === "PC"
+      ? masterPC.map((p) => ({ id: p.id, nama: p.nama, pwId: p.pwId, pwName: p.pw }))
+      : masterPW.map((p) => ({ id: p.id, nama: p.nama, pwId: p.id, pwName: p.nama }));
+
+    const filtered = list.filter((o) => {
+      if (whitelist && !whitelist.includes(o.id)) return false;
+      if (scopePw !== "Nasional" && o.pwId !== scopePw) return false;
+      return true;
+    });
+
+    return filtered
+      .map((o) => {
+        const statusOrg = effectiveStatusOrg(o.id);
+        const activeReg = state.registrations.find(
+          (r) =>
+            ((r.tipeOrg === "PC" && r.accessCode && state.accessCodes.find((c) => c.code === r.accessCode)?.orgId === o.id) ||
+              (r.sumberPengajuan === "PUBLIC" && (r as Registration & { selectedOrgId?: string }).selectedOrgId === o.id)) &&
+            (r.status === "Pending" || r.status === "PerluPerbaikan"),
+        );
+        return {
+          id: o.id,
+          nama: o.nama,
+          tingkat: code.tingkat,
+          pwName: o.pwName,
+          statusOrg,
+          hasActiveSubmission: !!activeReg || statusOrg === "Pending Aktivasi",
+          activeStatus: activeReg?.status,
+        };
+      })
+      .filter((o) => o.statusOrg !== "Production"); // sembunyikan yang sudah Production
+  },
+
   // ===== Submissions =====
   submitPublicActivation(payload: {
     accessCode: string;
+    selectedOrgId?: string;
     namaAdmin: string;
     jabatan: string;
     nik: string;
@@ -274,6 +324,26 @@ export const actions = {
   }): Registration | null {
     const code = state.accessCodes.find((c) => c.code === payload.accessCode);
     if (!code) return null;
+
+    // Tentukan target organisasi: Scoped → pilihan user; Individual → orgId di code.
+    let targetOrgId = code.orgId;
+    let targetOrgName = code.orgName;
+    let targetPw = code.pw;
+    if (code.kind === "Scoped") {
+      if (!payload.selectedOrgId) return null;
+      if (code.tingkat === "PC") {
+        const pc = masterPC.find((p) => p.id === payload.selectedOrgId);
+        if (!pc) return null;
+        targetOrgId = pc.id; targetOrgName = pc.nama; targetPw = pc.pw;
+      } else {
+        const pw = masterPW.find((p) => p.id === payload.selectedOrgId);
+        if (!pw) return null;
+        targetOrgId = pw.id; targetOrgName = pw.nama; targetPw = pw.nama;
+      }
+      // Cegah duplikasi
+      if (effectiveStatusOrg(targetOrgId) !== "Belum Production") return null;
+    }
+
     const { ticketId } = newTicket();
     const reg: Registration = {
       ticketId,
@@ -281,9 +351,10 @@ export const actions = {
       sumberPengajuan: "PUBLIC",
       tingkatPendaftar: code.tingkat,
       tipeOrg: code.tingkat === "PW" ? "PW" : "PC",
-      namaOrg: code.orgName,
-      pw: code.pw,
+      namaOrg: targetOrgName,
+      pw: targetPw,
       accessCode: code.code,
+      selectedOrgId: code.kind === "Scoped" ? targetOrgId : undefined,
       namaAdmin: payload.namaAdmin,
       jabatan: payload.jabatan,
       nik: payload.nik,
@@ -296,17 +367,18 @@ export const actions = {
     };
     setState((s) => ({
       registrations: [reg, ...s.registrations],
-      orgStatus: { ...s.orgStatus, [code.orgId]: "Pending Aktivasi" },
+      orgStatus: { ...s.orgStatus, [targetOrgId]: "Pending Aktivasi" },
     }));
     pushAudit({
       actor: payload.email,
       role: "Publik",
       action: "SUBMIT_PUBLIC_ACTIVATION",
       ticketId,
-      detail: `Submit aktivasi publik untuk ${code.orgName} (${code.tingkat}).`,
+      detail: `Submit aktivasi publik untuk ${targetOrgName} (${code.tingkat})${code.kind === "Scoped" ? ` via batch ${code.batchName ?? code.code}` : ""}.`,
     });
     return reg;
   },
+
 
   submitInternal(payload: {
     tipeOrg: TipeOrg;
