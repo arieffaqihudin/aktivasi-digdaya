@@ -209,7 +209,7 @@ export const masterPW: MasterPW[] = [
 ];
 
 export const masterPC: MasterPC[] = [
-  { id: "pc-jogja",   nama: "PCNU Kota Yogyakarta",    pw: "PWNU DI Yogyakarta", pwId: "pw-jogja",  statusOrg: "Production",       aktif: true  },
+  { id: "pc-jogja",   nama: "PCNU Kota Yogyakarta",    pw: "PWNU DI Yogyakarta", pwId: "pw-jogja",  statusOrg: "Belum Production", aktif: false },
   { id: "pc-sleman",  nama: "PCNU Kabupaten Sleman",   pw: "PWNU DI Yogyakarta", pwId: "pw-jogja",  statusOrg: "Production",       aktif: true  },
   { id: "pc-bantul",  nama: "PCNU Bantul",             pw: "PWNU DI Yogyakarta", pwId: "pw-jogja",  statusOrg: "Belum Production", aktif: false },
   { id: "pc-kp",      nama: "PCNU Kulon Progo",        pw: "PWNU DI Yogyakarta", pwId: "pw-jogja",  statusOrg: "Belum Production", aktif: false },
