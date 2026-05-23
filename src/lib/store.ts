@@ -891,6 +891,30 @@ export const actions = {
       ticketId,
       detail: `Revisi ke-${next.revisionCount} dikirim. Perubahan: ${changed.length ? changed.join(", ") : "tidak ada"}.`,
     });
+    const tgtRS = submitterTarget(next);
+    notifActions.broadcast([
+      {
+        recipientRole: "REVIEWER",
+        type: "REVISION_SUBMITTED",
+        title: "Revisi pengajuan dikirim",
+        description: `${next.namaOrg} mengirim revisi ke-${next.revisionCount}.`,
+        ticketId,
+        route: `/review/inbox/${ticketId}`,
+      },
+      ...(tgtRS
+        ? [
+            {
+              recipientRole: tgtRS.role,
+              recipientOrgId: tgtRS.orgId,
+              type: "REVISION_SUBMITTED" as const,
+              title: "Revisi berhasil dikirim",
+              description: "Pengajuan akan direview kembali oleh Tim Digdaya.",
+              ticketId,
+              route: tgtRS.route,
+            },
+          ]
+        : []),
+    ]);
     return next;
   },
 
