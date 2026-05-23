@@ -205,6 +205,7 @@ export const masterPW: MasterPW[] = [
   { id: "pw-jatim",  nama: "PWNU Jawa Timur",    wilayah: "Jawa Timur",    statusOrg: "Belum Production" },
   { id: "pw-jabar",  nama: "PWNU Jawa Barat",    wilayah: "Jawa Barat",    statusOrg: "Belum Production" },
   { id: "pw-banten", nama: "PWNU Banten",        wilayah: "Banten",        statusOrg: "Belum Production" },
+  { id: "pw-kaltara", nama: "PWNU Kalimantan Utara", wilayah: "Kalimantan Utara", statusOrg: "Belum Production" },
 ];
 
 export const masterPC: MasterPC[] = [
