@@ -31,6 +31,7 @@ export interface SLAConfig {
   yellowMaxDays: number;
   notifyEmails: string;
   defaultCodeValidDays: number;
+  maxRevisions: number;
 }
 export interface NotifConfig {
   emailEnabled: boolean;
