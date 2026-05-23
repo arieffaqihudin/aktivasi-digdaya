@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PublicHeader, PublicFooter } from "@/components/PublicHeader";
-import { Logo } from "@/components/Logo";
 import {
   LogIn,
   KeyRound,
@@ -9,6 +8,7 @@ import {
   Users,
   Eye,
   BadgeCheck,
+  Search,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -32,21 +32,17 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
-      {/* Decorative background elements */}
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-[#F7FBF8]">
       <DecorativeBackground />
 
       <PublicHeader />
 
       <main className="relative z-10 flex flex-1 items-center px-4 py-6 sm:py-10 lg:py-14">
         <div className="mx-auto w-full max-w-[1080px]">
-          {/* Mobile: right column first (CTA above the fold). Desktop: two columns */}
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 lg:items-center">
-            {/* Right column: choice card — shown first on mobile */}
             <div className="order-1 lg:order-2">
               <RightColumn />
             </div>
-            {/* Left column: context */}
             <div className="order-2 lg:order-1">
               <LeftColumn />
             </div>
@@ -62,26 +58,55 @@ function Home() {
 function DecorativeBackground() {
   return (
     <>
-      {/* Soft green blob top-right - hidden on mobile to reduce visual noise */}
+      {/* Soft mint radial wash at top */}
       <div
-        className="pointer-events-none absolute -right-20 -top-20 hidden sm:block h-[380px] w-[380px] rounded-full opacity-[0.04]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[520px]"
         style={{
-          background: "radial-gradient(circle, var(--color-primary) 0%, transparent 70%)",
+          background:
+            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0, 132, 61, 0.10) 0%, rgba(0, 132, 61, 0.04) 40%, transparent 75%)",
         }}
       />
-      {/* Soft green blob bottom-left */}
+      {/* Green blob top-right */}
       <div
-        className="pointer-events-none absolute -bottom-32 -left-24 hidden sm:block h-[440px] w-[440px] rounded-full opacity-[0.035]"
+        className="pointer-events-none absolute -right-24 -top-24 hidden sm:block h-[420px] w-[420px] rounded-full blur-3xl"
         style={{
-          background: "radial-gradient(circle, var(--color-primary) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(18, 160, 92, 0.18) 0%, transparent 70%)",
         }}
       />
-      {/* Subtle dot pattern overlay - lighter on mobile */}
+      {/* Green blob bottom-left */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.15] sm:opacity-[0.25]"
+        className="pointer-events-none absolute -bottom-32 -left-24 hidden sm:block h-[460px] w-[460px] rounded-full blur-3xl"
         style={{
-          backgroundImage: `radial-gradient(var(--color-border) 1px, transparent 1px)`,
-          backgroundSize: "28px 28px",
+          background:
+            "radial-gradient(circle, rgba(0, 132, 61, 0.14) 0%, transparent 70%)",
+        }}
+      />
+      {/* Geometric pattern top-right */}
+      <div
+        className="pointer-events-none absolute right-0 top-20 hidden h-[280px] w-[280px] opacity-[0.06] sm:block"
+        style={{
+          backgroundImage: `
+            linear-gradient(45deg, #00843D 25%, transparent 25%),
+            linear-gradient(-45deg, #00843D 25%, transparent 25%)
+          `,
+          backgroundSize: "16px 16px",
+          maskImage:
+            "radial-gradient(ellipse at top right, black 0%, transparent 70%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at top right, black 0%, transparent 70%)",
+        }}
+      />
+      {/* Subtle dot pattern bottom-left */}
+      <div
+        className="pointer-events-none absolute bottom-0 left-0 hidden h-[260px] w-[260px] opacity-[0.10] sm:block"
+        style={{
+          backgroundImage: `radial-gradient(#00843D 1px, transparent 1px)`,
+          backgroundSize: "18px 18px",
+          maskImage:
+            "radial-gradient(ellipse at bottom left, black 0%, transparent 70%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at bottom left, black 0%, transparent 70%)",
         }}
       />
     </>
@@ -91,26 +116,24 @@ function DecorativeBackground() {
 function LeftColumn() {
   return (
     <div className="flex flex-col">
-      {/* Badge */}
-      <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/15 bg-primary/[0.06] px-3 py-1">
-        <BadgeCheck className="h-3.5 w-3.5 text-primary" />
-        <span className="text-[12px] font-semibold tracking-wide text-primary">
+      <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[#DDEBE3] bg-[#EAF8F0] px-3 py-1 shadow-sm">
+        <BadgeCheck className="h-3.5 w-3.5 text-[#00843D]" />
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-[#005C2E]">
           Portal Resmi Digdaya NU
         </span>
       </div>
 
-      {/* Headline */}
-      <h1 className="mt-5 text-[28px] font-bold leading-tight tracking-tight text-foreground sm:text-[32px]">
-        Portal Aktivasi Digdaya
+      <h1 className="mt-5 text-[28px] font-bold leading-tight tracking-tight text-[#0F2A1A] sm:text-[34px]">
+        Portal{" "}
+        <span className="text-[#00843D]">Aktivasi</span>{" "}
+        Digdaya
       </h1>
 
-      {/* Subheadline */}
-      <p className="mt-3 max-w-[440px] text-[14px] leading-relaxed text-muted-foreground">
+      <p className="mt-3 max-w-[440px] text-[14px] leading-relaxed text-[#6B7280]">
         Pilih cara masuk sesuai status kepengurusan Anda untuk melanjutkan
         proses aktivasi dan onboarding.
       </p>
 
-      {/* 3 benefit points */}
       <ul className="mt-7 space-y-3">
         <BenefitItem icon={<RefreshCw className="h-4 w-4" />}>
           Aktivasi PW/PC belum production
@@ -123,13 +146,12 @@ function LeftColumn() {
         </BenefitItem>
       </ul>
 
-      {/* Info box */}
-      <div className="mt-7 max-w-[420px] rounded-lg border border-border/80 bg-secondary/40 p-3.5">
-        <p className="text-[12px] leading-relaxed text-muted-foreground">
+      <div className="mt-7 max-w-[420px] rounded-2xl border border-[#DDEBE3] bg-white/70 p-4 shadow-[0_1px_2px_rgba(0,132,61,0.04)] backdrop-blur-sm">
+        <p className="text-[12px] leading-relaxed text-[#6B7280]">
           Sudah punya akun Digdaya? Gunakan{" "}
-          <span className="font-medium text-foreground">login</span>. Menerima
+          <span className="font-semibold text-[#005C2E]">login</span>. Menerima
           kode akses dari PBNU? Gunakan{" "}
-          <span className="font-medium text-foreground">kode akses</span>.
+          <span className="font-semibold text-[#005C2E]">kode akses</span>.
         </p>
       </div>
     </div>
@@ -145,10 +167,10 @@ function BenefitItem({
 }) {
   return (
     <li className="flex items-start gap-2.5">
-      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/[0.08] text-primary">
+      <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#EAF8F0] text-[#00843D] ring-1 ring-[#DDEBE3]">
         {icon}
       </span>
-      <span className="text-[13px] text-muted-foreground">{children}</span>
+      <span className="text-[13px] text-[#374151]">{children}</span>
     </li>
   );
 }
@@ -156,13 +178,12 @@ function BenefitItem({
 function RightColumn() {
   return (
     <div className="flex flex-col">
-      <div className="rounded-xl border border-border bg-card p-6 shadow-[0_2px_12px_rgba(0,0,0,0.05)] sm:p-7">
-        {/* Card header */}
+      <div className="rounded-3xl border border-[#DDEBE3] bg-white p-5 shadow-[0_8px_30px_rgba(0,132,61,0.08)] sm:p-7">
         <div className="mb-6">
-          <h2 className="text-[16px] font-semibold text-foreground">
+          <h2 className="text-[16px] font-bold text-[#0F2A1A]">
             Silakan Pilih Akses
           </h2>
-          <p className="mt-1 text-[13px] text-muted-foreground">
+          <p className="mt-1 text-[13px] text-[#6B7280]">
             Gunakan jalur yang sesuai dengan kondisi kepengurusan Anda.
           </p>
         </div>
@@ -171,37 +192,43 @@ function RightColumn() {
         <GatewayOption
           to="/login"
           icon={<LogIn className="h-5 w-5" />}
+          badge="Sudah Production"
+          badgeTone="muted"
           title="Login dengan Email / NU.ID"
-          description="Untuk PW/PC yang sudah production dan memiliki akun Digdaya."
+          description="Masuk untuk mendaftarkan organisasi di bawah kewenangan Anda."
           cta="Masuk ke Dashboard"
+          variant="secondary"
         />
 
-        {/* Divider */}
         <div className="my-5 flex items-center gap-3">
-          <div className="h-px flex-1 bg-border" />
-          <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/60">
+          <div className="h-px flex-1 bg-[#E5EFE9]" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8A97A8]">
             Atau
           </span>
-          <div className="h-px flex-1 bg-border" />
+          <div className="h-px flex-1 bg-[#E5EFE9]" />
         </div>
 
-        {/* Option 2: Kode Akses */}
+        {/* Option 2: Kode Akses - primary path */}
         <GatewayOption
           to="/kode-akses"
           icon={<KeyRound className="h-5 w-5" />}
+          badge="Belum Production"
+          badgeTone="primary"
           title="Masukkan Kode Akses"
-          description="Untuk PW/PC yang belum production dan menerima kode akses dari PBNU."
+          description="Gunakan kode dari PBNU untuk aktivasi awal kepengurusan."
           cta="Mulai Aktivasi"
+          variant="primary"
         />
       </div>
 
-      {/* Cek status link below card */}
       <div className="mt-5 text-center">
         <Link
           to="/cek-status"
-          className="inline-flex items-center gap-1.5 text-[13px] font-medium text-primary transition-colors hover:text-primary-dark hover:underline"
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-semibold text-[#00843D] transition-colors hover:bg-[#EAF8F0] hover:text-[#005C2E]"
         >
+          <Search className="h-3.5 w-3.5" />
           Sudah punya nomor tiket? Cek status pengajuan
+          <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
     </div>
@@ -211,35 +238,56 @@ function RightColumn() {
 function GatewayOption({
   to,
   icon,
+  badge,
+  badgeTone,
   title,
   description,
   cta,
+  variant,
 }: {
   to: string;
   icon: React.ReactNode;
+  badge: string;
+  badgeTone: "primary" | "muted";
   title: string;
   description: string;
   cta: string;
+  variant: "primary" | "secondary";
 }) {
-  return (
-    <Link
-      to={to}
-      className="group flex items-start gap-4 rounded-lg border border-border bg-background p-4 transition-all hover:border-primary/30 hover:bg-primary/[0.02] hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]"
-    >
-      {/* Icon */}
-      <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary/[0.08] text-primary transition-colors group-hover:bg-primary/[0.12]">
-        {icon}
-      </div>
+  const cardClass =
+    variant === "primary"
+      ? "group block rounded-2xl border border-[#DDEBE3] bg-gradient-to-br from-[#F2FBF6] to-white p-5 transition-all hover:border-[#00843D]/40 hover:shadow-[0_6px_20px_rgba(0,132,61,0.12)]"
+      : "group block rounded-2xl border border-[#E5EFE9] bg-white p-5 transition-all hover:border-[#00843D]/30 hover:bg-[#F7FBF8] hover:shadow-[0_4px_14px_rgba(0,132,61,0.06)]";
 
-      {/* Content */}
-      <div className="flex-1">
-        <h3 className="text-[14px] font-semibold text-foreground">{title}</h3>
-        <p className="mt-0.5 text-[12px] leading-relaxed text-muted-foreground">
-          {description}
-        </p>
-        <div className="mt-2.5 flex items-center gap-1.5 text-[13px] font-semibold text-primary">
-          {cta}
-          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+  const iconWrap =
+    variant === "primary"
+      ? "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#00843D] to-[#005C2E] text-white shadow-[0_4px_10px_rgba(0,132,61,0.25)]"
+      : "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EAF8F0] text-[#00843D] ring-1 ring-[#DDEBE3] transition-colors group-hover:bg-[#DDF5E8]";
+
+  const ctaClass =
+    variant === "primary"
+      ? "mt-3 inline-flex h-10 items-center gap-1.5 rounded-full bg-[#00843D] px-4 text-[13px] font-semibold text-white shadow-[0_4px_12px_rgba(0,132,61,0.25)] transition-all group-hover:bg-[#005C2E] group-hover:shadow-[0_6px_16px_rgba(0,132,61,0.32)]"
+      : "mt-3 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#DDEBE3] bg-white px-4 text-[13px] font-semibold text-[#005C2E] transition-all group-hover:border-[#00843D]/40 group-hover:bg-[#EAF8F0]";
+
+  const badgeClass =
+    badgeTone === "primary"
+      ? "inline-flex items-center rounded-full bg-[#00843D]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#00843D]"
+      : "inline-flex items-center rounded-full bg-[#F1F5F2] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#6B7280]";
+
+  return (
+    <Link to={to} className={cardClass}>
+      <div className="flex items-start gap-4">
+        <div className={iconWrap}>{icon}</div>
+        <div className="flex-1 min-w-0">
+          <span className={badgeClass}>{badge}</span>
+          <h3 className="mt-2 text-[15px] font-bold text-[#0F2A1A]">{title}</h3>
+          <p className="mt-1 text-[12.5px] leading-relaxed text-[#6B7280]">
+            {description}
+          </p>
+          <div className={ctaClass}>
+            {cta}
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+          </div>
         </div>
       </div>
     </Link>
