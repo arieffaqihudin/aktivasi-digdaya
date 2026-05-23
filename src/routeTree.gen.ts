@@ -30,10 +30,8 @@ import { Route as ReviewPeruriRouteImport } from './routes/review.peruri'
 import { Route as ReviewInboxRouteImport } from './routes/review.inbox'
 import { Route as ReviewAuditLogRouteImport } from './routes/review.audit-log'
 import { Route as PwStatusPengajuanRouteImport } from './routes/pw.status-pengajuan'
-import { Route as PwProfilRouteImport } from './routes/pw.profil'
 import { Route as PwDaftarkanRouteImport } from './routes/pw.daftarkan'
 import { Route as PcStatusPengajuanRouteImport } from './routes/pc.status-pengajuan'
-import { Route as PcProfilRouteImport } from './routes/pc.profil'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
 import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$accessCode'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -160,11 +158,6 @@ const PwStatusPengajuanRoute = PwStatusPengajuanRouteImport.update({
   path: '/status-pengajuan',
   getParentRoute: () => PwRoute,
 } as any)
-const PwProfilRoute = PwProfilRouteImport.update({
-  id: '/profil',
-  path: '/profil',
-  getParentRoute: () => PwRoute,
-} as any)
 const PwDaftarkanRoute = PwDaftarkanRouteImport.update({
   id: '/daftarkan',
   path: '/daftarkan',
@@ -173,11 +166,6 @@ const PwDaftarkanRoute = PwDaftarkanRouteImport.update({
 const PcStatusPengajuanRoute = PcStatusPengajuanRouteImport.update({
   id: '/status-pengajuan',
   path: '/status-pengajuan',
-  getParentRoute: () => PcRoute,
-} as any)
-const PcProfilRoute = PcProfilRouteImport.update({
-  id: '/profil',
-  path: '/profil',
   getParentRoute: () => PcRoute,
 } as any)
 const PcDaftarkanRoute = PcDaftarkanRouteImport.update({
@@ -306,10 +294,8 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
-  '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRouteWithChildren
   '/pw/daftarkan': typeof PwDaftarkanRoute
-  '/pw/profil': typeof PwProfilRoute
   '/pw/status-pengajuan': typeof PwStatusPengajuanRouteWithChildren
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
@@ -348,10 +334,8 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
-  '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRouteWithChildren
   '/pw/daftarkan': typeof PwDaftarkanRoute
-  '/pw/profil': typeof PwProfilRoute
   '/pw/status-pengajuan': typeof PwStatusPengajuanRouteWithChildren
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
@@ -396,10 +380,8 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
-  '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRouteWithChildren
   '/pw/daftarkan': typeof PwDaftarkanRoute
-  '/pw/profil': typeof PwProfilRoute
   '/pw/status-pengajuan': typeof PwStatusPengajuanRouteWithChildren
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
@@ -445,10 +427,8 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
-    | '/pc/profil'
     | '/pc/status-pengajuan'
     | '/pw/daftarkan'
-    | '/pw/profil'
     | '/pw/status-pengajuan'
     | '/review/audit-log'
     | '/review/inbox'
@@ -487,10 +467,8 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
-    | '/pc/profil'
     | '/pc/status-pengajuan'
     | '/pw/daftarkan'
-    | '/pw/profil'
     | '/pw/status-pengajuan'
     | '/review/audit-log'
     | '/review/inbox'
@@ -534,10 +512,8 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
-    | '/pc/profil'
     | '/pc/status-pengajuan'
     | '/pw/daftarkan'
-    | '/pw/profil'
     | '/pw/status-pengajuan'
     | '/review/audit-log'
     | '/review/inbox'
@@ -729,13 +705,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PwStatusPengajuanRouteImport
       parentRoute: typeof PwRoute
     }
-    '/pw/profil': {
-      id: '/pw/profil'
-      path: '/profil'
-      fullPath: '/pw/profil'
-      preLoaderRoute: typeof PwProfilRouteImport
-      parentRoute: typeof PwRoute
-    }
     '/pw/daftarkan': {
       id: '/pw/daftarkan'
       path: '/daftarkan'
@@ -748,13 +717,6 @@ declare module '@tanstack/react-router' {
       path: '/status-pengajuan'
       fullPath: '/pc/status-pengajuan'
       preLoaderRoute: typeof PcStatusPengajuanRouteImport
-      parentRoute: typeof PcRoute
-    }
-    '/pc/profil': {
-      id: '/pc/profil'
-      path: '/profil'
-      fullPath: '/pc/profil'
-      preLoaderRoute: typeof PcProfilRouteImport
       parentRoute: typeof PcRoute
     }
     '/pc/daftarkan': {
@@ -1008,14 +970,12 @@ const PcStatusPengajuanRouteWithChildren =
 
 interface PcRouteChildren {
   PcDaftarkanRoute: typeof PcDaftarkanRoute
-  PcProfilRoute: typeof PcProfilRoute
   PcStatusPengajuanRoute: typeof PcStatusPengajuanRouteWithChildren
   PcIndexRoute: typeof PcIndexRoute
 }
 
 const PcRouteChildren: PcRouteChildren = {
   PcDaftarkanRoute: PcDaftarkanRoute,
-  PcProfilRoute: PcProfilRoute,
   PcStatusPengajuanRoute: PcStatusPengajuanRouteWithChildren,
   PcIndexRoute: PcIndexRoute,
 }
@@ -1049,14 +1009,12 @@ const PwStatusPengajuanRouteWithChildren =
 
 interface PwRouteChildren {
   PwDaftarkanRoute: typeof PwDaftarkanRoute
-  PwProfilRoute: typeof PwProfilRoute
   PwStatusPengajuanRoute: typeof PwStatusPengajuanRouteWithChildren
   PwIndexRoute: typeof PwIndexRoute
 }
 
 const PwRouteChildren: PwRouteChildren = {
   PwDaftarkanRoute: PwDaftarkanRoute,
-  PwProfilRoute: PwProfilRoute,
   PwStatusPengajuanRoute: PwStatusPengajuanRouteWithChildren,
   PwIndexRoute: PwIndexRoute,
 }
