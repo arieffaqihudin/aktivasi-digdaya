@@ -10,6 +10,9 @@ import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Upload, AlertCircle } from "lucide-react";
 
 export const Route = createFileRoute("/aktivasi/$accessCode")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    org: typeof search.org === "string" ? search.org : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Aktivasi Administrator — Portal Aktivasi Digdaya" },
@@ -21,8 +24,10 @@ export const Route = createFileRoute("/aktivasi/$accessCode")({
 
 function AktivasiPage() {
   const { accessCode } = Route.useParams();
+  const { org: selectedOrgId } = Route.useSearch();
   const navigate = useNavigate();
   const code = useStore((s) => s.accessCodes.find((c) => c.code.toUpperCase() === accessCode.toUpperCase()));
+
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [namaAdmin, setNamaAdmin] = useState("");
@@ -34,13 +39,30 @@ function AktivasiPage() {
   const [submitting, setSubmitting] = useState(false);
   const [ticketId, setTicketId] = useState<string | null>(null);
 
+  // Resolve target org: Scoped → from selectedOrgId; Individual → from code itself
+  const isScoped = code?.kind === "Scoped";
+  const resolvedOrg = useMemo(() => {
+    if (!code) return null;
+    if (!isScoped) {
+      return { id: code.orgId, nama: code.orgName, pw: code.pw, tingkat: code.tingkat };
+    }
+    if (!selectedOrgId) return null;
+    const eligible = actions.getEligibleOrgsForCode(code);
+    const found = eligible.find((o) => o.id === selectedOrgId);
+    if (!found) return null;
+    return { id: found.id, nama: found.nama, pw: found.pwName, tingkat: found.tingkat };
+  }, [code, isScoped, selectedOrgId]);
+
   const codeInvalid = useMemo(() => {
     if (!code) return "Kode akses tidak ditemukan.";
     if (code.status === "Expired") return "Kode akses sudah kedaluwarsa.";
     if (code.status === "Used") return "Kode akses ini sudah digunakan.";
     if (code.status === "Disabled") return "Kode akses ini telah dinonaktifkan.";
+    if (isScoped && !selectedOrgId) return "Belum memilih kepengurusan. Silakan kembali dan pilih dari daftar.";
+    if (isScoped && !resolvedOrg) return "Kepengurusan yang dipilih sudah tidak tersedia atau sudah ada pengajuan aktif.";
     return null;
-  }, [code]);
+  }, [code, isScoped, selectedOrgId, resolvedOrg]);
+
 
   if (!code || codeInvalid) {
     return (
@@ -74,10 +96,12 @@ function AktivasiPage() {
   };
 
   const submit = async () => {
+    if (!resolvedOrg) return toast.error("Kepengurusan belum dipilih.");
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 600));
     const reg = actions.submitPublicActivation({
       accessCode: code.code,
+      selectedOrgId: isScoped ? resolvedOrg.id : undefined,
       namaAdmin, jabatan, nik, hp, email,
       suratTugasFile: file?.name,
     });
@@ -86,6 +110,7 @@ function AktivasiPage() {
     setTicketId(reg.ticketId);
     navigate({ to: "/aktivasi/sukses/$ticketId", params: { ticketId: reg.ticketId } });
   };
+
 
   const maskNik = (n: string) => (n.length === 16 ? n.slice(0, 4) + "********" + n.slice(-4) : n);
 
@@ -111,11 +136,22 @@ function AktivasiPage() {
               <div className="flex items-center gap-2 text-[12px] font-medium text-primary-dark">
                 <CheckCircle2 className="h-4 w-4" /> Kode akses valid
               </div>
-              <p className="mt-2 text-[15px] font-semibold text-foreground">{code.orgName}</p>
+              {isScoped && (
+                <p className="mt-2 text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
+                  {code.batchName ?? code.code}
+                </p>
+              )}
+              <p className="mt-1 text-[15px] font-semibold text-foreground">{resolvedOrg?.nama ?? code.orgName}</p>
               <p className="text-[12px] text-muted-foreground">
-                Tingkat {code.tingkat} · {code.pw}
+                Tingkat {resolvedOrg?.tingkat ?? code.tingkat} · {resolvedOrg?.pw ?? code.pw}
               </p>
+              {isScoped && (
+                <p className="mt-2 text-[11px] text-muted-foreground">
+                  Karena kepengurusan belum aktif di Digdaya, surat tugas wajib diunggah secara manual.
+                </p>
+              )}
             </div>
+
 
             {step === 1 && (
               <form onSubmit={handleStep1} className="mt-5 space-y-4">

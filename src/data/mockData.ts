@@ -105,10 +105,19 @@ export interface MasterLembaga {
   pwId?: string;
 }
 
+export type AccessCodeKind = "Individual" | "Scoped";
+
+export interface AccessCodeScope {
+  /** "Nasional" or specific PW id (e.g. "pw-jogja") */
+  wilayahPwId: string | "Nasional";
+  mode: "auto" | "whitelist";
+  whitelist?: string[];
+}
+
 export interface AccessCode {
   code: string;
   tingkat: Tingkat;
-  /** PC id when tingkat = PC, PW id when tingkat = PW */
+  /** Individual codes: target PC/PW id. Scoped codes: empty string (orgs are picked later). */
   orgId: string;
   orgName: string;
   /** wilayah / PW name for display */
@@ -118,6 +127,12 @@ export interface AccessCode {
   expiredAt: string;
   usedAt?: string;
   ticketId?: string;
+  /** "Scoped" = batch code that lets pendaftar pick org from filtered master list. */
+  kind?: AccessCodeKind;
+  /** Human-readable batch name for Scoped codes. */
+  batchName?: string;
+  /** Scope filter for Scoped codes. */
+  scope?: AccessCodeScope;
   // legacy alias for older code that still uses .pcId / .pcName
   pcId?: string;
   pcName?: string;
@@ -143,6 +158,9 @@ export interface Registration {
 
   // Jalur A
   accessCode?: string;
+  /** Untuk Scoped batch code: organisasi yang dipilih pendaftar dari daftar scope. */
+  selectedOrgId?: string;
+
 
   // Jalur B / Internal source
   sourcePcId?: string;
@@ -205,7 +223,9 @@ export const masterPW: MasterPW[] = [
   { id: "pw-jatim",  nama: "PWNU Jawa Timur",    wilayah: "Jawa Timur",    statusOrg: "Belum Production" },
   { id: "pw-jabar",  nama: "PWNU Jawa Barat",    wilayah: "Jawa Barat",    statusOrg: "Belum Production" },
   { id: "pw-banten", nama: "PWNU Banten",        wilayah: "Banten",        statusOrg: "Belum Production" },
-  { id: "pw-kaltara", nama: "PWNU Kalimantan Utara", wilayah: "Kalimantan Utara", statusOrg: "Belum Production" },
+  { id: "pw-kaltara",    nama: "PWNU Kalimantan Utara", wilayah: "Kalimantan Utara", statusOrg: "Belum Production" },
+  { id: "pw-papuabarat", nama: "PWNU Papua Barat",      wilayah: "Papua Barat",      statusOrg: "Belum Production" },
+  { id: "pw-sulbar",     nama: "PWNU Sulawesi Barat",   wilayah: "Sulawesi Barat",   statusOrg: "Belum Production" },
 ];
 
 export const masterPC: MasterPC[] = [
@@ -316,6 +336,47 @@ export const seedAccessCodes: AccessCode[] = [
   { code: "AKSES-EXP-001",  tingkat: "PC", ...pcMeta("pc-kp"),    status: "Expired",  generatedAt: daysAgo(60), expiredAt: daysAgo(15) },
   { code: "AKSES-DIS-001",  tingkat: "PC", ...pcMeta("pc-bantul"),status: "Disabled", generatedAt: daysAgo(10), expiredAt: daysFromNow(20) },
   { code: "AKSES-USED-001", tingkat: "PC", ...pcMeta("pc-mgl"),   status: "Used",     generatedAt: daysAgo(20), expiredAt: daysFromNow(10), usedAt: daysAgo(2), ticketId: "AKT-2026-000102" },
+
+  // ===== Scoped Batch Codes — pendaftar memilih organisasi sendiri dari daftar scope =====
+  {
+    code: "ONBOARD-PC-DIY-MEI2026",
+    kind: "Scoped",
+    batchName: "Onboarding PC DIY Mei 2026",
+    tingkat: "PC",
+    orgId: "",
+    orgName: "Onboarding PC DIY Mei 2026",
+    pw: "PWNU DI Yogyakarta",
+    scope: { wilayahPwId: "pw-jogja", mode: "auto" },
+    status: "Unused",
+    generatedAt: daysAgo(2),
+    expiredAt: daysFromNow(28),
+  },
+  {
+    code: "ONBOARD-PC-JATENG-01",
+    kind: "Scoped",
+    batchName: "Onboarding PC Jawa Tengah Batch 1",
+    tingkat: "PC",
+    orgId: "",
+    orgName: "Onboarding PC Jawa Tengah Batch 1",
+    pw: "PWNU Jawa Tengah",
+    scope: { wilayahPwId: "pw-jateng", mode: "auto" },
+    status: "Unused",
+    generatedAt: daysAgo(2),
+    expiredAt: daysFromNow(28),
+  },
+  {
+    code: "ONBOARD-PW-NASIONAL",
+    kind: "Scoped",
+    batchName: "Onboarding PW Nasional",
+    tingkat: "PW",
+    orgId: "",
+    orgName: "Onboarding PW Nasional",
+    pw: "Nasional",
+    scope: { wilayahPwId: "Nasional", mode: "auto" },
+    status: "Unused",
+    generatedAt: daysAgo(1),
+    expiredAt: daysFromNow(29),
+  },
 ];
 
 // ============================================================
