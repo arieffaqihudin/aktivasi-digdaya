@@ -30,6 +30,7 @@ import { Route as ReviewPeruriRouteImport } from './routes/review.peruri'
 import { Route as ReviewNotificationsRouteImport } from './routes/review.notifications'
 import { Route as ReviewInboxRouteImport } from './routes/review.inbox'
 import { Route as ReviewAuditLogRouteImport } from './routes/review.audit-log'
+import { Route as PwNotificationsRouteImport } from './routes/pw.notifications'
 import { Route as PwDaftarkanRouteImport } from './routes/pw.daftarkan'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
 import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$accessCode'
@@ -159,6 +160,11 @@ const ReviewAuditLogRoute = ReviewAuditLogRouteImport.update({
   id: '/audit-log',
   path: '/audit-log',
   getParentRoute: () => ReviewRoute,
+} as any)
+const PwNotificationsRoute = PwNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => PwRoute,
 } as any)
 const PwDaftarkanRoute = PwDaftarkanRouteImport.update({
   id: '/daftarkan',
@@ -308,6 +314,7 @@ export interface FileRoutesByFullPath {
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
+  '/pw/notifications': typeof PwNotificationsRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/notifications': typeof ReviewNotificationsRoute
@@ -350,6 +357,7 @@ export interface FileRoutesByTo {
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
+  '/pw/notifications': typeof PwNotificationsRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/notifications': typeof ReviewNotificationsRoute
@@ -398,6 +406,7 @@ export interface FileRoutesById {
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
+  '/pw/notifications': typeof PwNotificationsRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/notifications': typeof ReviewNotificationsRoute
@@ -447,6 +456,7 @@ export interface FileRouteTypes {
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
     | '/pw/daftarkan'
+    | '/pw/notifications'
     | '/review/audit-log'
     | '/review/inbox'
     | '/review/notifications'
@@ -489,6 +499,7 @@ export interface FileRouteTypes {
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
     | '/pw/daftarkan'
+    | '/pw/notifications'
     | '/review/audit-log'
     | '/review/inbox'
     | '/review/notifications'
@@ -536,6 +547,7 @@ export interface FileRouteTypes {
     | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
     | '/pw/daftarkan'
+    | '/pw/notifications'
     | '/review/audit-log'
     | '/review/inbox'
     | '/review/notifications'
@@ -729,6 +741,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/review/audit-log'
       preLoaderRoute: typeof ReviewAuditLogRouteImport
       parentRoute: typeof ReviewRoute
+    }
+    '/pw/notifications': {
+      id: '/pw/notifications'
+      path: '/notifications'
+      fullPath: '/pw/notifications'
+      preLoaderRoute: typeof PwNotificationsRouteImport
+      parentRoute: typeof PwRoute
     }
     '/pw/daftarkan': {
       id: '/pw/daftarkan'
@@ -1030,6 +1049,7 @@ const PwStatusPengajuanTicketIdRouteWithChildren =
 
 interface PwRouteChildren {
   PwDaftarkanRoute: typeof PwDaftarkanRoute
+  PwNotificationsRoute: typeof PwNotificationsRoute
   PwIndexRoute: typeof PwIndexRoute
   PwStatusPengajuanTicketIdRoute: typeof PwStatusPengajuanTicketIdRouteWithChildren
   PwStatusPengajuanIndexRoute: typeof PwStatusPengajuanIndexRoute
@@ -1037,6 +1057,7 @@ interface PwRouteChildren {
 
 const PwRouteChildren: PwRouteChildren = {
   PwDaftarkanRoute: PwDaftarkanRoute,
+  PwNotificationsRoute: PwNotificationsRoute,
   PwIndexRoute: PwIndexRoute,
   PwStatusPengajuanTicketIdRoute: PwStatusPengajuanTicketIdRouteWithChildren,
   PwStatusPengajuanIndexRoute: PwStatusPengajuanIndexRoute,
