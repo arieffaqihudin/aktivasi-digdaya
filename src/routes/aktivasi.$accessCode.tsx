@@ -136,11 +136,22 @@ function AktivasiPage() {
               <div className="flex items-center gap-2 text-[12px] font-medium text-primary-dark">
                 <CheckCircle2 className="h-4 w-4" /> Kode akses valid
               </div>
-              <p className="mt-2 text-[15px] font-semibold text-foreground">{code.orgName}</p>
+              {isScoped && (
+                <p className="mt-2 text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
+                  {code.batchName ?? code.code}
+                </p>
+              )}
+              <p className="mt-1 text-[15px] font-semibold text-foreground">{resolvedOrg?.nama ?? code.orgName}</p>
               <p className="text-[12px] text-muted-foreground">
-                Tingkat {code.tingkat} · {code.pw}
+                Tingkat {resolvedOrg?.tingkat ?? code.tingkat} · {resolvedOrg?.pw ?? code.pw}
               </p>
+              {isScoped && (
+                <p className="mt-2 text-[11px] text-muted-foreground">
+                  Karena kepengurusan belum aktif di Digdaya, surat tugas wajib diunggah secara manual.
+                </p>
+              )}
             </div>
+
 
             {step === 1 && (
               <form onSubmit={handleStep1} className="mt-5 space-y-4">
