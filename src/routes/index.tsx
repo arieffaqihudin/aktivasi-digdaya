@@ -34,15 +34,14 @@ function Home() {
 
       <PublicHeader />
 
-      <main className="relative z-10 flex flex-1 items-center px-4 py-6 sm:py-10 lg:py-14">
-        <div className="mx-auto w-full max-w-[1080px]">
-          <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 lg:items-center">
-            <div>
-              <LeftColumn />
-            </div>
-            <div>
-              <RightColumn />
-            </div>
+      <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-8 sm:py-12 lg:py-16">
+        <div className="mx-auto w-full max-w-[640px]">
+          <Intro />
+          <div className="mt-8">
+            <GatewayCards />
+          </div>
+          <div className="mt-5">
+            <StatusLink />
           </div>
         </div>
       </main>
@@ -55,7 +54,6 @@ function Home() {
 function DecorativeBackground() {
   return (
     <>
-      {/* Soft mint radial wash at top */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[520px]"
         style={{
@@ -63,7 +61,6 @@ function DecorativeBackground() {
             "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0, 132, 61, 0.10) 0%, rgba(0, 132, 61, 0.04) 40%, transparent 75%)",
         }}
       />
-      {/* Green blob top-right */}
       <div
         className="pointer-events-none absolute -right-24 -top-24 hidden sm:block h-[420px] w-[420px] rounded-full blur-3xl"
         style={{
@@ -71,7 +68,6 @@ function DecorativeBackground() {
             "radial-gradient(circle, rgba(18, 160, 92, 0.18) 0%, transparent 70%)",
         }}
       />
-      {/* Green blob bottom-left */}
       <div
         className="pointer-events-none absolute -bottom-32 -left-24 hidden sm:block h-[460px] w-[460px] rounded-full blur-3xl"
         style={{
@@ -79,40 +75,24 @@ function DecorativeBackground() {
             "radial-gradient(circle, rgba(0, 132, 61, 0.14) 0%, transparent 70%)",
         }}
       />
-      {/* Geometric pattern top-right */}
       <div
-        className="pointer-events-none absolute right-0 top-20 hidden h-[280px] w-[280px] opacity-[0.06] sm:block"
-        style={{
-          backgroundImage: `
-            linear-gradient(45deg, #00843D 25%, transparent 25%),
-            linear-gradient(-45deg, #00843D 25%, transparent 25%)
-          `,
-          backgroundSize: "16px 16px",
-          maskImage:
-            "radial-gradient(ellipse at top right, black 0%, transparent 70%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse at top right, black 0%, transparent 70%)",
-        }}
-      />
-      {/* Subtle dot pattern bottom-left */}
-      <div
-        className="pointer-events-none absolute bottom-0 left-0 hidden h-[260px] w-[260px] opacity-[0.10] sm:block"
+        className="pointer-events-none absolute inset-0 opacity-[0.05]"
         style={{
           backgroundImage: `radial-gradient(#00843D 1px, transparent 1px)`,
-          backgroundSize: "18px 18px",
+          backgroundSize: "22px 22px",
           maskImage:
-            "radial-gradient(ellipse at bottom left, black 0%, transparent 70%)",
+            "radial-gradient(ellipse at center, black 0%, transparent 75%)",
           WebkitMaskImage:
-            "radial-gradient(ellipse at bottom left, black 0%, transparent 70%)",
+            "radial-gradient(ellipse at center, black 0%, transparent 75%)",
         }}
       />
     </>
   );
 }
 
-function LeftColumn() {
+function Intro() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col items-center text-center">
       <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[#DDEBE3] bg-[#EAF8F0] px-3 py-1 shadow-sm">
         <BadgeCheck className="h-3.5 w-3.5 text-[#00843D]" />
         <span className="text-[11px] font-semibold uppercase tracking-wider text-[#005C2E]">
@@ -120,82 +100,72 @@ function LeftColumn() {
         </span>
       </div>
 
-      <h1 className="mt-5 text-[28px] font-bold leading-tight tracking-tight text-[#0F2A1A] sm:text-[34px]">
+      <h1 className="mt-5 text-[26px] font-bold leading-tight tracking-tight text-[#0F2A1A] sm:text-[32px]">
         Silakan pilih sesuai{" "}
         <span className="text-[#00843D]">kondisi kepengurusan</span>{" "}
         Anda.
       </h1>
 
-      <p className="mt-3 max-w-[440px] text-[14px] leading-relaxed text-[#6B7280]">
-        Pilih jalur di bawah ini sesuai apakah PW/PC Anda sudah production
-        atau belum.
+      <p className="mt-3 max-w-[480px] text-[14px] leading-relaxed text-[#6B7280]">
+        Portal ini digunakan untuk aktivasi dan pendaftaran administrator Digdaya.
       </p>
     </div>
   );
 }
 
-function RightColumn() {
+function GatewayCards() {
   return (
-    <div className="flex flex-col gap-5">
-      {/* Hero Illustration */}
-      <div className="mx-auto w-full max-w-[520px] rounded-3xl border border-[#DDEBE3] bg-white p-4 shadow-[0_8px_30px_rgba(0,132,61,0.08)] sm:p-6">
-        <img
-          src="https://digdaya.nu.id/kader/images/illustration-digdaya-kader-large2.png"
-          alt="Ilustrasi Kader Digdaya NU"
-          className="mx-auto h-auto w-full max-w-[500px] object-contain max-h-[260px] sm:max-h-[340px] md:max-h-[380px] lg:max-h-[420px]"
-        />
+    <div className="rounded-3xl border border-[#DDEBE3] bg-white p-5 shadow-[0_8px_30px_rgba(0,132,61,0.08)] sm:p-7">
+      <GatewayOption
+        to="/login"
+        icon={<LogIn className="h-5 w-5" />}
+        badge="Sudah Production"
+        badgeTone="muted"
+        title="PW/PC Anda sudah production?"
+        description="Login untuk mendaftarkan kepengurusan di bawah kewenangan Anda, seperti Lembaga, MWC, Ranting, atau struktur lainnya."
+        cta="Login dengan Email / NU.ID"
+        variant="secondary"
+      />
+
+      <div className="my-5 flex items-center gap-3">
+        <div className="h-px flex-1 bg-[#E5EFE9]" />
+        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8A97A8]">
+          Atau
+        </span>
+        <div className="h-px flex-1 bg-[#E5EFE9]" />
       </div>
 
-      <div className="rounded-3xl border border-[#DDEBE3] bg-white p-5 shadow-[0_8px_30px_rgba(0,132,61,0.08)] sm:p-7">
-        {/* Option 1: Login */}
-        <GatewayOption
-          to="/login"
-          icon={<LogIn className="h-5 w-5" />}
-          badge="Sudah Production"
-          badgeTone="muted"
-          title="PW/PC Anda sudah production?"
-          description="Login untuk mendaftarkan kepengurusan di bawah kewenangan Anda, seperti Lembaga, MWC, Ranting, atau struktur lainnya."
-          cta="Login dengan Email / NU.ID"
-          variant="secondary"
-        />
+      <GatewayOption
+        to="/kode-akses"
+        icon={<KeyRound className="h-5 w-5" />}
+        badge="Belum Production"
+        badgeTone="primary"
+        title="PW/PC Anda belum production?"
+        description="Gunakan kode akses dari PBNU untuk mengaktifkan kepengurusan dan mendaftarkan administrator Digdaya."
+        cta="Masukkan Kode Akses"
+        variant="primary"
+      />
+    </div>
+  );
+}
 
-        <div className="my-5 flex items-center gap-3">
-          <div className="h-px flex-1 bg-[#E5EFE9]" />
-          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8A97A8]">
-            Atau
-          </span>
-          <div className="h-px flex-1 bg-[#E5EFE9]" />
-        </div>
-
-        {/* Option 2: Kode Akses - primary path */}
-        <GatewayOption
-          to="/kode-akses"
-          icon={<KeyRound className="h-5 w-5" />}
-          badge="Belum Production"
-          badgeTone="primary"
-          title="PW/PC Anda belum production?"
-          description="Gunakan kode akses dari PBNU untuk mengaktifkan kepengurusan dan mendaftarkan administrator Digdaya."
-          cta="Masukkan Kode Akses"
-          variant="primary"
-        />
-      </div>
-
-      <div className="rounded-2xl border border-[#DDEBE3] bg-white/80 p-5 text-center backdrop-blur-sm">
-        <h3 className="text-[14px] font-semibold text-[#0F2A1A]">
-          Sudah punya nomor tiket?
-        </h3>
-        <p className="mt-1 text-[13px] text-[#6B7280]">
-          Pantau status pengajuan aktivasi Anda di sini.
-        </p>
-        <Link
-          to="/cek-status"
-          className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#EAF8F0] px-4 py-2 text-[13px] font-semibold text-[#00843D] transition-colors hover:bg-[#DDF5E8] hover:text-[#005C2E]"
-        >
-          <Search className="h-3.5 w-3.5" />
-          Cek Status Pengajuan
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
+function StatusLink() {
+  return (
+    <div className="rounded-2xl border border-[#DDEBE3] bg-white/80 p-5 text-center backdrop-blur-sm">
+      <h3 className="text-[14px] font-semibold text-[#0F2A1A]">
+        Sudah punya nomor tiket?
+      </h3>
+      <p className="mt-1 text-[13px] text-[#6B7280]">
+        Pantau status pengajuan aktivasi Anda di sini.
+      </p>
+      <Link
+        to="/cek-status"
+        className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#EAF8F0] px-4 py-2 text-[13px] font-semibold text-[#00843D] transition-colors hover:bg-[#DDF5E8] hover:text-[#005C2E]"
+      >
+        <Search className="h-3.5 w-3.5" />
+        Cek Status Pengajuan
+        <ArrowRight className="h-3.5 w-3.5" />
+      </Link>
     </div>
   );
 }
