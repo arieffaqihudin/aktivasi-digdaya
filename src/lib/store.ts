@@ -672,6 +672,29 @@ export const actions = {
       ticketId,
       detail: `Akun administrator ${reg.namaAdmin} dibuat dengan status menunggu aktivasi.`,
     });
+    const tgt = submitterTarget(reg);
+    const notifs: Parameters<typeof notifActions.broadcast>[0] = [
+      {
+        recipientRole: "OPS",
+        type: "APPROVED",
+        title: "Pengajuan disetujui",
+        description: `${reg.namaOrg} (${ticketId}) telah disetujui reviewer.`,
+        ticketId,
+        route: `/ops/activation/submissions/${ticketId}`,
+      },
+    ];
+    if (tgt) {
+      notifs.push({
+        recipientRole: tgt.role,
+        recipientOrgId: tgt.orgId,
+        type: "APPROVED",
+        title: "Pengajuan disetujui",
+        description: `${reg.namaOrg} sudah production di Digdaya.`,
+        ticketId,
+        route: tgt.route,
+      });
+    }
+    notifActions.broadcast(notifs);
   },
 
   /** Reviewer meminta perbaikan — status berubah jadi PerluPerbaikan. */
