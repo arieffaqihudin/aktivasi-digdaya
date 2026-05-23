@@ -9,7 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { isValidNIK, isValidEmail, normalizePhone, isValidPhone } from "@/utils/validation";
 import { toast } from "sonner";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { SuratTugasPicker, validateSuratTugas, type SuratTugasValue } from "@/components/internal/SuratTugasPicker";
 
 export const Route = createFileRoute("/pc/daftarkan")({
   component: Daftarkan,
@@ -25,7 +26,7 @@ function Daftarkan() {
   const [nik, setNik] = useState("");
   const [hp, setHp] = useState("");
   const [email, setEmail] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [surat, setSurat] = useState<SuratTugasValue>({ sumber: "DIGDAYA_PERSURATAN", dokumen: null, file: null });
   const [busy, setBusy] = useState(false);
 
   const mwcOptions = masterMWC.filter((m) => m.pcId === user?.pcId);
@@ -38,10 +39,15 @@ function Daftarkan() {
     if (!isValidEmail(email)) { toast.error("Email tidak valid."); return; }
     const normHp = normalizePhone(hp);
     if (!isValidPhone(normHp)) { toast.error("Nomor HP tidak valid."); return; }
-    if (!file) { toast.error("Upload surat tugas wajib."); return; }
-    if (file.size > 5 * 1024 * 1024) { toast.error("Max 5MB."); return; }
+    const sErr = validateSuratTugas(surat);
+    if (sErr) { toast.error(sErr); return; }
     setBusy(true); await new Promise((r) => setTimeout(r, 500));
-    const reg = actions.submitInternal({ tipeOrg: tipe, namaOrg, namaAdmin, jabatan, nik, hp: normHp, email, sumberSuratTugas: "MANUAL_UPLOAD", suratTugasFile: file.name });
+    const reg = actions.submitInternal({
+      tipeOrg: tipe, namaOrg, namaAdmin, jabatan, nik, hp: normHp, email,
+      sumberSuratTugas: surat.sumber,
+      suratTugasFile: surat.file?.name,
+      dokumenSistem: surat.dokumen ?? undefined,
+    });
     setBusy(false);
     if (!reg) { toast.error("Gagal mengirim."); return; }
     toast.success(`Pendaftaran dikirim. Tiket: ${reg.ticketId}`);
@@ -50,8 +56,12 @@ function Daftarkan() {
 
   return (
     <div>
-      <PageHeader title="Daftarkan Organisasi Bawahan" subtitle={`Jalur B · diajukan oleh ${user?.pcName ?? "PC"}`} />
+      <PageHeader title="Daftarkan Organisasi Bawahan" subtitle={`Diajukan oleh ${user?.pcName ?? "PC"}`} />
       <form onSubmit={submit} className="mx-auto max-w-2xl space-y-5 p-6">
+        <p className="rounded-md border border-border bg-secondary/40 p-3 text-[12px] text-muted-foreground">
+          Gunakan menu ini untuk mendaftarkan organisasi di bawah kewenangan Anda. Surat tugas dapat diambil dari Digdaya Persuratan atau diunggah secara manual.
+        </p>
+
         <div className="rounded-xl border border-border bg-card p-5 space-y-4">
           <div>
             <Label className="text-xs uppercase tracking-wider text-muted-foreground">Tipe Organisasi</Label>
@@ -97,14 +107,11 @@ function Daftarkan() {
           <Field label="NIK (16 digit)" value={nik} onChange={(v) => setNik(v.replace(/\D/g, "").slice(0,16))} />
           <Field label="Nomor HP WhatsApp" value={hp} onChange={setHp} placeholder="08xxxxxxxxxx" />
           <Field label="Email" value={email} onChange={setEmail} type="email" />
-          <div>
-            <Label className="text-xs uppercase tracking-wider text-muted-foreground">Scan Surat Tugas (PDF/JPG/PNG, max 5MB)</Label>
-            <div className="mt-1.5 flex items-center gap-2 rounded-md border border-dashed border-border bg-secondary/30 p-3">
-              <Upload className="h-4 w-4 text-muted-foreground" />
-              <Input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="border-0 bg-transparent p-0 file:mr-3" />
-            </div>
-            {file && <p className="mt-1 text-xs text-muted-foreground">{file.name}</p>}
-          </div>
+        </div>
+
+        <div className="rounded-xl border border-border bg-card p-5 space-y-3">
+          <p className="text-sm font-semibold">Surat Tugas</p>
+          <SuratTugasPicker value={surat} onChange={setSurat} />
         </div>
 
         <Button type="submit" disabled={busy} className="w-full sm:w-auto">

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ReviewRouteImport } from './routes/review'
+import { Route as PwRouteImport } from './routes/pw'
 import { Route as PcRouteImport } from './routes/pc'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CekStatusRouteImport } from './routes/cek-status'
@@ -17,6 +18,7 @@ import { Route as AktivasiRouteImport } from './routes/aktivasi'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReviewIndexRouteImport } from './routes/review.index'
+import { Route as PwIndexRouteImport } from './routes/pw.index'
 import { Route as PcIndexRouteImport } from './routes/pc.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as StatusTicketIdRouteImport } from './routes/status.$ticketId'
@@ -24,6 +26,9 @@ import { Route as ReviewSlaRouteImport } from './routes/review.sla'
 import { Route as ReviewPeruriRouteImport } from './routes/review.peruri'
 import { Route as ReviewInboxRouteImport } from './routes/review.inbox'
 import { Route as ReviewAuditLogRouteImport } from './routes/review.audit-log'
+import { Route as PwStatusPengajuanRouteImport } from './routes/pw.status-pengajuan'
+import { Route as PwProfilRouteImport } from './routes/pw.profil'
+import { Route as PwDaftarkanRouteImport } from './routes/pw.daftarkan'
 import { Route as PcStatusPengajuanRouteImport } from './routes/pc.status-pengajuan'
 import { Route as PcProfilRouteImport } from './routes/pc.profil'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
@@ -35,6 +40,11 @@ import { Route as ReviewInboxTicketIdRouteImport } from './routes/review.inbox.$
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
   path: '/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PwRoute = PwRouteImport.update({
+  id: '/pw',
+  path: '/pw',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PcRoute = PcRouteImport.update({
@@ -72,6 +82,11 @@ const ReviewIndexRoute = ReviewIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ReviewRoute,
 } as any)
+const PwIndexRoute = PwIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PwRoute,
+} as any)
 const PcIndexRoute = PcIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -106,6 +121,21 @@ const ReviewAuditLogRoute = ReviewAuditLogRouteImport.update({
   id: '/audit-log',
   path: '/audit-log',
   getParentRoute: () => ReviewRoute,
+} as any)
+const PwStatusPengajuanRoute = PwStatusPengajuanRouteImport.update({
+  id: '/status-pengajuan',
+  path: '/status-pengajuan',
+  getParentRoute: () => PwRoute,
+} as any)
+const PwProfilRoute = PwProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => PwRoute,
+} as any)
+const PwDaftarkanRoute = PwDaftarkanRouteImport.update({
+  id: '/daftarkan',
+  path: '/daftarkan',
+  getParentRoute: () => PwRoute,
 } as any)
 const PcStatusPengajuanRoute = PcStatusPengajuanRouteImport.update({
   id: '/status-pengajuan',
@@ -150,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/cek-status': typeof CekStatusRoute
   '/login': typeof LoginRoute
   '/pc': typeof PcRouteWithChildren
+  '/pw': typeof PwRouteWithChildren
   '/review': typeof ReviewRouteWithChildren
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
@@ -157,6 +188,9 @@ export interface FileRoutesByFullPath {
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/pw/daftarkan': typeof PwDaftarkanRoute
+  '/pw/profil': typeof PwProfilRoute
+  '/pw/status-pengajuan': typeof PwStatusPengajuanRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
@@ -164,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/status/$ticketId': typeof StatusTicketIdRoute
   '/admin/': typeof AdminIndexRoute
   '/pc/': typeof PcIndexRoute
+  '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
 }
@@ -178,6 +213,9 @@ export interface FileRoutesByTo {
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/pw/daftarkan': typeof PwDaftarkanRoute
+  '/pw/profil': typeof PwProfilRoute
+  '/pw/status-pengajuan': typeof PwStatusPengajuanRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
@@ -185,6 +223,7 @@ export interface FileRoutesByTo {
   '/status/$ticketId': typeof StatusTicketIdRoute
   '/admin': typeof AdminIndexRoute
   '/pc': typeof PcIndexRoute
+  '/pw': typeof PwIndexRoute
   '/review': typeof ReviewIndexRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
 }
@@ -196,6 +235,7 @@ export interface FileRoutesById {
   '/cek-status': typeof CekStatusRoute
   '/login': typeof LoginRoute
   '/pc': typeof PcRouteWithChildren
+  '/pw': typeof PwRouteWithChildren
   '/review': typeof ReviewRouteWithChildren
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
@@ -203,6 +243,9 @@ export interface FileRoutesById {
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/pw/daftarkan': typeof PwDaftarkanRoute
+  '/pw/profil': typeof PwProfilRoute
+  '/pw/status-pengajuan': typeof PwStatusPengajuanRoute
   '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
@@ -210,6 +253,7 @@ export interface FileRoutesById {
   '/status/$ticketId': typeof StatusTicketIdRoute
   '/admin/': typeof AdminIndexRoute
   '/pc/': typeof PcIndexRoute
+  '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
 }
@@ -222,6 +266,7 @@ export interface FileRouteTypes {
     | '/cek-status'
     | '/login'
     | '/pc'
+    | '/pw'
     | '/review'
     | '/admin/access-codes'
     | '/admin/audit-log'
@@ -229,6 +274,9 @@ export interface FileRouteTypes {
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
+    | '/pw/daftarkan'
+    | '/pw/profil'
+    | '/pw/status-pengajuan'
     | '/review/audit-log'
     | '/review/inbox'
     | '/review/peruri'
@@ -236,6 +284,7 @@ export interface FileRouteTypes {
     | '/status/$ticketId'
     | '/admin/'
     | '/pc/'
+    | '/pw/'
     | '/review/'
     | '/review/inbox/$ticketId'
   fileRoutesByTo: FileRoutesByTo
@@ -250,6 +299,9 @@ export interface FileRouteTypes {
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
+    | '/pw/daftarkan'
+    | '/pw/profil'
+    | '/pw/status-pengajuan'
     | '/review/audit-log'
     | '/review/inbox'
     | '/review/peruri'
@@ -257,6 +309,7 @@ export interface FileRouteTypes {
     | '/status/$ticketId'
     | '/admin'
     | '/pc'
+    | '/pw'
     | '/review'
     | '/review/inbox/$ticketId'
   id:
@@ -267,6 +320,7 @@ export interface FileRouteTypes {
     | '/cek-status'
     | '/login'
     | '/pc'
+    | '/pw'
     | '/review'
     | '/admin/access-codes'
     | '/admin/audit-log'
@@ -274,6 +328,9 @@ export interface FileRouteTypes {
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
+    | '/pw/daftarkan'
+    | '/pw/profil'
+    | '/pw/status-pengajuan'
     | '/review/audit-log'
     | '/review/inbox'
     | '/review/peruri'
@@ -281,6 +338,7 @@ export interface FileRouteTypes {
     | '/status/$ticketId'
     | '/admin/'
     | '/pc/'
+    | '/pw/'
     | '/review/'
     | '/review/inbox/$ticketId'
   fileRoutesById: FileRoutesById
@@ -292,6 +350,7 @@ export interface RootRouteChildren {
   CekStatusRoute: typeof CekStatusRoute
   LoginRoute: typeof LoginRoute
   PcRoute: typeof PcRouteWithChildren
+  PwRoute: typeof PwRouteWithChildren
   ReviewRoute: typeof ReviewRouteWithChildren
   StatusTicketIdRoute: typeof StatusTicketIdRoute
 }
@@ -303,6 +362,13 @@ declare module '@tanstack/react-router' {
       path: '/review'
       fullPath: '/review'
       preLoaderRoute: typeof ReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pw': {
+      id: '/pw'
+      path: '/pw'
+      fullPath: '/pw'
+      preLoaderRoute: typeof PwRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pc': {
@@ -354,6 +420,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewIndexRouteImport
       parentRoute: typeof ReviewRoute
     }
+    '/pw/': {
+      id: '/pw/'
+      path: '/'
+      fullPath: '/pw/'
+      preLoaderRoute: typeof PwIndexRouteImport
+      parentRoute: typeof PwRoute
+    }
     '/pc/': {
       id: '/pc/'
       path: '/'
@@ -402,6 +475,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/review/audit-log'
       preLoaderRoute: typeof ReviewAuditLogRouteImport
       parentRoute: typeof ReviewRoute
+    }
+    '/pw/status-pengajuan': {
+      id: '/pw/status-pengajuan'
+      path: '/status-pengajuan'
+      fullPath: '/pw/status-pengajuan'
+      preLoaderRoute: typeof PwStatusPengajuanRouteImport
+      parentRoute: typeof PwRoute
+    }
+    '/pw/profil': {
+      id: '/pw/profil'
+      path: '/profil'
+      fullPath: '/pw/profil'
+      preLoaderRoute: typeof PwProfilRouteImport
+      parentRoute: typeof PwRoute
+    }
+    '/pw/daftarkan': {
+      id: '/pw/daftarkan'
+      path: '/daftarkan'
+      fullPath: '/pw/daftarkan'
+      preLoaderRoute: typeof PwDaftarkanRouteImport
+      parentRoute: typeof PwRoute
     }
     '/pc/status-pengajuan': {
       id: '/pc/status-pengajuan'
@@ -487,6 +581,22 @@ const PcRouteChildren: PcRouteChildren = {
 
 const PcRouteWithChildren = PcRoute._addFileChildren(PcRouteChildren)
 
+interface PwRouteChildren {
+  PwDaftarkanRoute: typeof PwDaftarkanRoute
+  PwProfilRoute: typeof PwProfilRoute
+  PwStatusPengajuanRoute: typeof PwStatusPengajuanRoute
+  PwIndexRoute: typeof PwIndexRoute
+}
+
+const PwRouteChildren: PwRouteChildren = {
+  PwDaftarkanRoute: PwDaftarkanRoute,
+  PwProfilRoute: PwProfilRoute,
+  PwStatusPengajuanRoute: PwStatusPengajuanRoute,
+  PwIndexRoute: PwIndexRoute,
+}
+
+const PwRouteWithChildren = PwRoute._addFileChildren(PwRouteChildren)
+
 interface ReviewInboxRouteChildren {
   ReviewInboxTicketIdRoute: typeof ReviewInboxTicketIdRoute
 }
@@ -525,6 +635,7 @@ const rootRouteChildren: RootRouteChildren = {
   CekStatusRoute: CekStatusRoute,
   LoginRoute: LoginRoute,
   PcRoute: PcRouteWithChildren,
+  PwRoute: PwRouteWithChildren,
   ReviewRoute: ReviewRouteWithChildren,
   StatusTicketIdRoute: StatusTicketIdRoute,
 }
