@@ -969,6 +969,22 @@ export const actions = {
       action: "GENERATE_PERURI_BATCH",
       detail: `Batch ${id} dibuat (${eligible.length} record).`,
     });
+    notifActions.broadcast([
+      {
+        recipientRole: "OPS",
+        type: "PERURI_EXPORT_READY",
+        title: "Export Peruri siap",
+        description: `Batch ${id} berhasil dibuat dan berisi ${eligible.length} record yang sudah disetujui.`,
+        route: "/ops/activation/peruri-export",
+      },
+      {
+        recipientRole: "REVIEWER",
+        type: "PERURI_EXPORT_READY",
+        title: "Export Peruri siap",
+        description: `Batch ${id} berhasil dibuat (${eligible.length} record).`,
+        route: "/review/peruri",
+      },
+    ]);
     return batch;
   },
 
