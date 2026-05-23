@@ -41,7 +41,7 @@ function Daftarkan() {
     if (!file) { toast.error("Upload surat tugas wajib."); return; }
     if (file.size > 5 * 1024 * 1024) { toast.error("Max 5MB."); return; }
     setBusy(true); await new Promise((r) => setTimeout(r, 500));
-    const reg = actions.submitJalurB({ tipeOrg: tipe, namaOrg, namaAdmin, jabatan, nik, hp: normHp, email, suratTugasFile: file.name });
+    const reg = actions.submitInternal({ tipeOrg: tipe, namaOrg, namaAdmin, jabatan, nik, hp: normHp, email, sumberSuratTugas: "MANUAL_UPLOAD", suratTugasFile: file.name });
     setBusy(false);
     if (!reg) { toast.error("Gagal mengirim."); return; }
     toast.success(`Pendaftaran dikirim. Tiket: ${reg.ticketId}`);
