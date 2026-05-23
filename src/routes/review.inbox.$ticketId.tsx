@@ -165,18 +165,11 @@ function ReviewDetail() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Tolak Pendaftaran</DialogTitle>
-            <DialogDescription>Alasan akan dikirim ke pendaftar agar bisa memperbaiki data.</DialogDescription>
-          </DialogHeader>
-          <Textarea placeholder="Tuliskan alasan penolakan yang jelas dan actionable…" value={reason} onChange={(e) => setReason(e.target.value)} rows={4} />
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setRejectOpen(false)}>Batal</Button>
-            <Button onClick={doReject} disabled={busy} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Tolak</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <RevisionRequestDialog
+        open={revisionOpen}
+        onOpenChange={setRevisionOpen}
+        ticketId={reg.ticketId}
+      />
     </div>
   );
 }
