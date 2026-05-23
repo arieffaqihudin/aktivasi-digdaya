@@ -7,7 +7,8 @@ export type LogoVariant =
   | "form"
   | "sidebar"
   | "sidebar-collapsed"
-  | "mobile";
+  | "mobile"
+  | "footer";
 
 const variantClasses: Record<LogoVariant, string> = {
   header: "h-[32px] max-w-[150px]",
