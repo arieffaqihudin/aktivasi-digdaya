@@ -33,7 +33,7 @@ export function AppLayout({
   useEffect(() => {
     if (!user) navigate({ to: "/login" });
     else if (!allowedRoles.includes(user.role)) {
-      if (user.role === "Super Admin") navigate({ to: "/admin" });
+      if (user.role === "Super Admin") navigate({ to: "/ops/activation" });
       else if (user.role === "Reviewer") navigate({ to: "/review" });
       else if (user.role === "PW") navigate({ to: "/pw" });
       else navigate({ to: "/pc" });
