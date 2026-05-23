@@ -1,4 +1,5 @@
 import { useEffect, useSyncExternalStore } from "react";
+import { notifActions } from "./notifications";
 import {
   seedRegistrations,
   seedPeruriBatches,
