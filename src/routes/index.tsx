@@ -184,7 +184,6 @@ function RightColumn() {
           src="https://digdaya.nu.id/kader/images/illustration-digdaya-kader-large2.png"
           alt="Ilustrasi Kader Digdaya NU"
           className="mx-auto h-auto w-full max-w-[500px] object-contain max-h-[260px] sm:max-h-[340px] md:max-h-[380px] lg:max-h-[420px]"
-          loading="eager"
         />
       </div>
 
