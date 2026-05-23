@@ -31,8 +31,13 @@ export function AppLayout({
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
-    if (!user) navigate({ to: "/login" });
-    else if (!allowedRoles.includes(user.role)) {
+    if (!user) {
+      const fallbackRole = allowedRoles[0];
+      if (fallbackRole === "PW") actions.loginAs("pw@digdaya.nu.id");
+      else if (fallbackRole === "PC") actions.loginAs("pc.kraksaan@digdaya.nu.id");
+      return;
+    }
+    if (!allowedRoles.includes(user.role)) {
       if (user.role === "Super Admin") navigate({ to: "/ops/activation" });
       else if (user.role === "Reviewer") navigate({ to: "/review" });
       else if (user.role === "PW") navigate({ to: "/pw" });
@@ -42,7 +47,13 @@ export function AppLayout({
 
   useEffect(() => { setMobileOpen(false); }, [path]);
 
-  if (!user) return null;
+  if (!user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <p className="text-sm text-muted-foreground">Memuat dashboard…</p>
+      </div>
+    );
+  }
 
   const displayOrg = orgName ?? user.pcName ?? user.pwName ?? "Pengurus Besar Nahdlatul Ulama";
 

@@ -1,124 +1,169 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { PageHeader } from "@/components/dashboard/PageHeader";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { actions, useStore } from "@/lib/store";
-import { masterMWC, masterLembaga, type TipeOrg } from "@/data/mockData";
+import { type TipeOrg } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
 import { isValidNIK, isValidEmail, normalizePhone, isValidPhone } from "@/utils/validation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { SuratTugasPicker, validateSuratTugas, type SuratTugasValue } from "@/components/internal/SuratTugasPicker";
+import { findPcDemoTarget, pcDemoTargets } from "@/lib/demo-scope-data";
 
 export const Route = createFileRoute("/pc/daftarkan")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    targetId: typeof search.targetId === "string" ? search.targetId : undefined,
+  }),
   component: Daftarkan,
 });
 
 function Daftarkan() {
-  const user = useStore((s) => s.user);
+  const search = Route.useSearch();
   const navigate = useNavigate();
-  const [tipe, setTipe] = useState<TipeOrg>("MWC");
-  const [namaOrg, setNamaOrg] = useState("");
+  const registrations = useStore((s) => s.registrations);
+  const [tipeSurat, setTipeSurat] = useState<"DIGDAYA_PERSURATAN" | "MANUAL_UPLOAD">("DIGDAYA_PERSURATAN");
   const [namaAdmin, setNamaAdmin] = useState("");
   const [jabatan, setJabatan] = useState("");
   const [nik, setNik] = useState("");
   const [hp, setHp] = useState("");
   const [email, setEmail] = useState("");
-  const [surat, setSurat] = useState<SuratTugasValue>({ sumber: "DIGDAYA_PERSURATAN", dokumen: null, file: null });
+  const [suratValue, setSuratValue] = useState("");
   const [busy, setBusy] = useState(false);
 
-  const mwcOptions = masterMWC.filter((m) => m.pcId === user?.pcId);
-  const lembagaOptions = masterLembaga.filter((m) => m.pcId === user?.pcId);
+  const target = findPcDemoTarget(search.targetId);
+  const history = useMemo(
+    () => registrations.filter((r) => r.sumberPengajuan === "PC_DASHBOARD").slice(0, 5),
+    [registrations],
+  );
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!namaOrg.trim()) { toast.error("Nama organisasi wajib."); return; }
+    if (!target) { toast.error("Pilih organisasi terlebih dahulu."); return; }
+    if (!namaAdmin.trim() || !jabatan.trim()) { toast.error("Lengkapi data administrator."); return; }
     if (!isValidNIK(nik)) { toast.error("NIK harus 16 digit."); return; }
     if (!isValidEmail(email)) { toast.error("Email tidak valid."); return; }
     const normHp = normalizePhone(hp);
     if (!isValidPhone(normHp)) { toast.error("Nomor HP tidak valid."); return; }
-    const sErr = validateSuratTugas(surat);
-    if (sErr) { toast.error(sErr); return; }
+    if (!suratValue.trim()) { toast.error("Lengkapi surat tugas."); return; }
     setBusy(true); await new Promise((r) => setTimeout(r, 500));
     const reg = actions.submitInternal({
-      tipeOrg: tipe, namaOrg, namaAdmin, jabatan, nik, hp: normHp, email,
-      sumberSuratTugas: surat.sumber,
-      suratTugasFile: surat.file?.name,
-      dokumenSistem: surat.dokumen ?? undefined,
+      tipeOrg: target.type as TipeOrg,
+      namaOrg: target.name,
+      namaAdmin,
+      jabatan,
+      nik,
+      hp: normHp,
+      email,
+      sumberSuratTugas: tipeSurat,
+      suratTugasFile: tipeSurat === "MANUAL_UPLOAD" ? suratValue : undefined,
+      dokumenSistem: tipeSurat === "DIGDAYA_PERSURATAN" ? {
+        documentId: `DOC-${target.id}`,
+        nomorSurat: suratValue,
+        namaDokumen: `Surat Tugas ${target.name}`,
+        tanggalSurat: new Date().toISOString().slice(0, 10),
+        penandatangan: "Ketua PCNU Kraksaan",
+        status: "Tertandatangani",
+      } : undefined,
     });
     setBusy(false);
     if (!reg) { toast.error("Gagal mengirim."); return; }
-    toast.success(`Pendaftaran dikirim. Tiket: ${reg.ticketId}`);
+    toast.success(`Pengajuan dikirim. Tiket: ${reg.ticketId}`);
     navigate({ to: "/pc/status-pengajuan" });
   };
 
   return (
-    <div>
-      <PageHeader title="Daftarkan Organisasi Bawahan" subtitle={`Diajukan oleh ${user?.pcName ?? "PC"}`} />
-      <form onSubmit={submit} className="mx-auto max-w-2xl space-y-5 p-6">
-        <p className="rounded-md border border-border bg-secondary/40 p-3 text-[12px] text-muted-foreground">
-          Gunakan menu ini untuk mendaftarkan organisasi di bawah kewenangan Anda. Surat tugas dapat diambil dari Digdaya Persuratan atau diunggah secara manual.
-        </p>
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-5xl space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold text-foreground">Daftarkan Organisasi Bawahan</h1>
+          <p className="text-sm text-muted-foreground">Lengkapi data administrator dan surat tugas untuk target yang dipilih.</p>
+        </div>
 
-        <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-          <div>
-            <Label className="text-xs uppercase tracking-wider text-muted-foreground">Tipe Organisasi</Label>
-            <Select value={tipe} onValueChange={(v) => { setTipe(v as TipeOrg); setNamaOrg(""); }}>
-              <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="MWC">MWC</SelectItem>
-                <SelectItem value="Lembaga PC">Lembaga PC</SelectItem>
-                <SelectItem value="Ranting">Ranting</SelectItem>
-              </SelectContent>
-            </Select>
+        {!target ? (
+          <div className="space-y-4 rounded-xl border border-border bg-card p-5">
+            <div>
+              <h2 className="text-base font-semibold text-foreground">Pilih organisasi</h2>
+              <p className="text-sm text-muted-foreground">Pilih salah satu target di bawah ini.</p>
+            </div>
+            <div className="space-y-3">
+              {pcDemoTargets.map((item) => (
+                <div key={item.id} className="flex flex-col gap-3 rounded-lg border border-border p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="font-medium text-foreground">{item.name}</p>
+                    <p className="text-sm text-muted-foreground">{item.type}</p>
+                  </div>
+                  <Link to="/pc/daftarkan" search={{ targetId: item.id }} className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+                    Pilih
+                  </Link>
+                </div>
+              ))}
+            </div>
           </div>
+        ) : (
+          <form onSubmit={submit} className="space-y-5">
+            <div className="rounded-xl border border-border bg-card p-5">
+              <p className="text-sm font-semibold text-foreground">Data organisasi</p>
+              <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+                <ReadOnlyField label="Organisasi" value={target.name} />
+                <ReadOnlyField label="Tipe" value={target.type} />
+              </dl>
+            </div>
 
-          <div>
-            <Label className="text-xs uppercase tracking-wider text-muted-foreground">Nama Organisasi</Label>
-            {tipe === "MWC" && (
-              <Select value={namaOrg} onValueChange={setNamaOrg}>
-                <SelectTrigger className="mt-1.5"><SelectValue placeholder="Pilih MWC…" /></SelectTrigger>
-                <SelectContent>
-                  {mwcOptions.map((m) => <SelectItem key={m.id} value={m.nama}>{m.nama}</SelectItem>)}
-                </SelectContent>
-              </Select>
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+              <p className="text-sm font-semibold text-foreground">Data administrator</p>
+              <Field label="Nama Administrator" value={namaAdmin} onChange={setNamaAdmin} />
+              <Field label="Jabatan Administrator" value={jabatan} onChange={setJabatan} />
+              <Field label="NIK" value={nik} onChange={(v) => setNik(v.replace(/\D/g, "").slice(0,16))} />
+              <Field label="Nomor HP WhatsApp" value={hp} onChange={setHp} placeholder="08xxxxxxxxxx" />
+              <Field label="Email" value={email} onChange={setEmail} type="email" />
+            </div>
+
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+              <p className="text-sm font-semibold text-foreground">Surat Tugas</p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <button type="button" onClick={() => { setTipeSurat("DIGDAYA_PERSURATAN"); setSuratValue(""); }} className={tipeSurat === "DIGDAYA_PERSURATAN" ? "rounded-md border border-primary bg-secondary px-3 py-2 text-sm font-medium text-foreground" : "rounded-md border border-border px-3 py-2 text-sm text-muted-foreground"}>
+                  Ambil dari Digdaya Persuratan
+                </button>
+                <button type="button" onClick={() => { setTipeSurat("MANUAL_UPLOAD"); setSuratValue(""); }} className={tipeSurat === "MANUAL_UPLOAD" ? "rounded-md border border-primary bg-secondary px-3 py-2 text-sm font-medium text-foreground" : "rounded-md border border-border px-3 py-2 text-sm text-muted-foreground"}>
+                  Upload Manual
+                </button>
+              </div>
+              <Field
+                label={tipeSurat === "DIGDAYA_PERSURATAN" ? "Nomor surat" : "Nama file surat tugas"}
+                value={suratValue}
+                onChange={setSuratValue}
+                placeholder={tipeSurat === "DIGDAYA_PERSURATAN" ? "Contoh: 014/PC-KRK/ST/2026" : "Contoh: surat-tugas-mwc-banyuanyar.pdf"}
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <Button type="submit" disabled={busy}>
+                {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Kirim Pengajuan
+              </Button>
+              <Link to="/pc/status-pengajuan" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground">
+                Lihat Status Pengajuan
+              </Link>
+            </div>
+          </form>
+        )}
+
+        <div className="rounded-xl border border-border bg-card p-5">
+          <h2 className="text-base font-semibold text-foreground">Pengajuan terbaru</h2>
+          <div className="mt-4 space-y-3">
+            {history.length === 0 ? (
+              <p className="text-sm text-muted-foreground">Belum ada pengajuan.</p>
+            ) : (
+              history.map((item) => (
+                <div key={item.ticketId} className="rounded-lg border border-border p-4">
+                  <p className="font-medium text-foreground">{item.namaOrg}</p>
+                  <p className="text-sm text-muted-foreground">{item.ticketId} · {item.status}</p>
+                </div>
+              ))
             )}
-            {tipe === "Lembaga PC" && (
-              <Select value={namaOrg} onValueChange={setNamaOrg}>
-                <SelectTrigger className="mt-1.5"><SelectValue placeholder="Pilih Lembaga…" /></SelectTrigger>
-                <SelectContent>
-                  {lembagaOptions.map((m) => <SelectItem key={m.id} value={m.nama}>{m.nama}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            )}
-            {tipe === "Ranting" && (
-              <Input className="mt-1.5" value={namaOrg} onChange={(e) => setNamaOrg(e.target.value)} placeholder="Contoh: Ranting NU Condongcatur" />
-            )}
-            {tipe === "Ranting" && <p className="mt-1 text-xs text-muted-foreground">Ranting diisi manual karena belum ada master data terpusat.</p>}
           </div>
         </div>
-
-        <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-          <p className="text-sm font-semibold">Data Administrator</p>
-          <Field label="Nama Administrator" value={namaAdmin} onChange={setNamaAdmin} />
-          <Field label="Jabatan" value={jabatan} onChange={setJabatan} />
-          <Field label="NIK (16 digit)" value={nik} onChange={(v) => setNik(v.replace(/\D/g, "").slice(0,16))} />
-          <Field label="Nomor HP WhatsApp" value={hp} onChange={setHp} placeholder="08xxxxxxxxxx" />
-          <Field label="Email" value={email} onChange={setEmail} type="email" />
-        </div>
-
-        <div className="rounded-xl border border-border bg-card p-5 space-y-3">
-          <p className="text-sm font-semibold">Surat Tugas</p>
-          <SuratTugasPicker value={surat} onChange={setSurat} />
-        </div>
-
-        <Button type="submit" disabled={busy} className="w-full sm:w-auto">
-          {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Kirim Pendaftaran
-        </Button>
-      </form>
+      </div>
     </div>
   );
 }
@@ -128,6 +173,15 @@ function Field({ label, value, onChange, type = "text", placeholder }: { label: 
     <div>
       <Label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</Label>
       <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="mt-1.5" required />
+    </div>
+  );
+}
+
+function ReadOnlyField({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <Label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</Label>
+      <div className="mt-1.5 rounded-md border border-border bg-secondary/40 px-3 py-2 text-sm text-foreground">{value}</div>
     </div>
   );
 }

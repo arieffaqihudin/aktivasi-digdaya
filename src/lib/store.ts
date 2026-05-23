@@ -115,13 +115,13 @@ function setState(next: Partial<State> | ((s: State) => Partial<State>)) {
 }
 function subscribe(l: () => void) { listeners.add(l); return () => listeners.delete(l); }
 export function useStore<T>(selector: (s: State) => T): T {
-  const selected = useSyncExternalStore(
+  const snapshot = useSyncExternalStore(
     subscribe,
-    () => selector(state),
-    () => selector(serverSnapshot),
+    () => state,
+    () => serverSnapshot,
   );
   useEffect(() => { hydrateStateFromStorage(); }, []);
-  return selected;
+  return selector(snapshot);
 }
 export function getState() { return state; }
 
@@ -731,6 +731,9 @@ export const actions = {
     } else if (e === "pw@digdaya.nu.id") {
       const pw = masterPW.find((p) => p.id === demoPwUserPwId)!;
       user = { email: e, name: "Administrator " + pw.nama, role: "PW", pwId: pw.id, pwName: pw.nama };
+    } else if (e === "pc.kraksaan@digdaya.nu.id" || e === "pc@digdaya.nu.id") {
+      const pc = masterPC.find((p) => p.id === demoPcUserPcId)!;
+      user = { email: e, name: "Administrator " + pc.nama, role: "PC", pcId: pc.id, pcName: pc.nama };
     } else {
       const pc = masterPC.find((p) => p.id === demoPcUserPcId)!;
       user = { email: e, name: "Administrator " + pc.nama, role: "PC", pcId: pc.id, pcName: pc.nama };
