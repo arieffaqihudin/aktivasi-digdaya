@@ -38,6 +38,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
 import { Route as AdminAccessCodesRouteImport } from './routes/admin.access-codes'
 import { Route as ReviewInboxTicketIdRouteImport } from './routes/review.inbox.$ticketId'
+import { Route as AktivasiSuksesTicketIdRouteImport } from './routes/aktivasi.sukses.$ticketId'
 
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
@@ -184,6 +185,11 @@ const ReviewInboxTicketIdRoute = ReviewInboxTicketIdRouteImport.update({
   path: '/$ticketId',
   getParentRoute: () => ReviewInboxRoute,
 } as any)
+const AktivasiSuksesTicketIdRoute = AktivasiSuksesTicketIdRouteImport.update({
+  id: '/sukses/$ticketId',
+  path: '/sukses/$ticketId',
+  getParentRoute: () => AktivasiRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/pc/': typeof PcIndexRoute
   '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
+  '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
 }
 export interface FileRoutesByTo {
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   '/pc': typeof PcIndexRoute
   '/pw': typeof PwIndexRoute
   '/review': typeof ReviewIndexRoute
+  '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
 }
 export interface FileRoutesById {
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/pc/': typeof PcIndexRoute
   '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
+  '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
 }
 export interface FileRouteTypes {
@@ -306,6 +315,7 @@ export interface FileRouteTypes {
     | '/pc/'
     | '/pw/'
     | '/review/'
+    | '/aktivasi/sukses/$ticketId'
     | '/review/inbox/$ticketId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -333,6 +343,7 @@ export interface FileRouteTypes {
     | '/pc'
     | '/pw'
     | '/review'
+    | '/aktivasi/sukses/$ticketId'
     | '/review/inbox/$ticketId'
   id:
     | '__root__'
@@ -364,6 +375,7 @@ export interface FileRouteTypes {
     | '/pc/'
     | '/pw/'
     | '/review/'
+    | '/aktivasi/sukses/$ticketId'
     | '/review/inbox/$ticketId'
   fileRoutesById: FileRoutesById
 }
@@ -585,6 +597,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewInboxTicketIdRouteImport
       parentRoute: typeof ReviewInboxRoute
     }
+    '/aktivasi/sukses/$ticketId': {
+      id: '/aktivasi/sukses/$ticketId'
+      path: '/sukses/$ticketId'
+      fullPath: '/aktivasi/sukses/$ticketId'
+      preLoaderRoute: typeof AktivasiSuksesTicketIdRouteImport
+      parentRoute: typeof AktivasiRoute
+    }
   }
 }
 
@@ -606,10 +625,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AktivasiRouteChildren {
   AktivasiAccessCodeRoute: typeof AktivasiAccessCodeRoute
+  AktivasiSuksesTicketIdRoute: typeof AktivasiSuksesTicketIdRoute
 }
 
 const AktivasiRouteChildren: AktivasiRouteChildren = {
   AktivasiAccessCodeRoute: AktivasiAccessCodeRoute,
+  AktivasiSuksesTicketIdRoute: AktivasiSuksesTicketIdRoute,
 }
 
 const AktivasiRouteWithChildren = AktivasiRoute._addFileChildren(
