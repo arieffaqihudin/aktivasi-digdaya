@@ -198,7 +198,7 @@ function KodeAksesPage() {
                             disabled={disabled}
                             onClick={() => setSelectedOrgId(o.id)}
                             className={[
-                              "flex w-full items-center justify-between gap-3 px-3.5 py-3 text-left text-[13px] transition",
+                              "flex w-full items-start gap-3 px-3.5 py-3 text-left text-[13px] transition",
                               disabled
                                 ? "cursor-not-allowed bg-muted/30 text-muted-foreground"
                                 : selected
@@ -206,23 +206,23 @@ function KodeAksesPage() {
                                   : "bg-card hover:bg-secondary/60",
                             ].join(" ")}
                           >
-                            <div className="flex min-w-0 items-center gap-2.5">
-                              <Building2 className="h-4 w-4 shrink-0 text-muted-foreground" />
-                              <div className="min-w-0">
-                                <p className="truncate font-medium text-foreground">{o.nama}</p>
-                                <p className="truncate text-[11px] text-muted-foreground">
-                                  Tingkat {o.tingkat} · {o.pwName}
-                                </p>
-                              </div>
+                            <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                            <div className="min-w-0 flex-1">
+                              <p className="font-medium text-foreground break-words [overflow-wrap:anywhere]">{o.nama}</p>
+                              <p className="text-[11px] text-muted-foreground break-words [overflow-wrap:anywhere]">
+                                Tingkat {o.tingkat} · {o.pwName}
+                              </p>
+                              {disabled && (
+                                <span className="mt-1.5 inline-block rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                                  Sudah ada pengajuan
+                                </span>
+                              )}
                             </div>
-                            {disabled ? (
-                              <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                                Sudah ada pengajuan
-                              </span>
-                            ) : selected ? (
-                              <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
-                            ) : null}
+                            {selected && !disabled && (
+                              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                            )}
                           </button>
+
                         );
                       })}
                     </div>
