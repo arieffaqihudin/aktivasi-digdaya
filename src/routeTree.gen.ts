@@ -33,6 +33,7 @@ import { Route as PwDaftarkanRouteImport } from './routes/pw.daftarkan'
 import { Route as PcStatusPengajuanRouteImport } from './routes/pc.status-pengajuan'
 import { Route as PcProfilRouteImport } from './routes/pc.profil'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
+import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$accessCode'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
 import { Route as AdminAccessCodesRouteImport } from './routes/admin.access-codes'
@@ -158,6 +159,11 @@ const PcDaftarkanRoute = PcDaftarkanRouteImport.update({
   path: '/daftarkan',
   getParentRoute: () => PcRoute,
 } as any)
+const AktivasiAccessCodeRoute = AktivasiAccessCodeRouteImport.update({
+  id: '/$accessCode',
+  path: '/$accessCode',
+  getParentRoute: () => AktivasiRoute,
+} as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -182,7 +188,7 @@ const ReviewInboxTicketIdRoute = ReviewInboxTicketIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/aktivasi': typeof AktivasiRoute
+  '/aktivasi': typeof AktivasiRouteWithChildren
   '/cek-status': typeof CekStatusRoute
   '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
@@ -192,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
@@ -211,13 +218,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/aktivasi': typeof AktivasiRoute
+  '/aktivasi': typeof AktivasiRouteWithChildren
   '/cek-status': typeof CekStatusRoute
   '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
@@ -239,7 +247,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/aktivasi': typeof AktivasiRoute
+  '/aktivasi': typeof AktivasiRouteWithChildren
   '/cek-status': typeof CekStatusRoute
   '/kode-akses': typeof KodeAksesRoute
   '/login': typeof LoginRoute
@@ -249,6 +257,7 @@ export interface FileRoutesById {
   '/admin/access-codes': typeof AdminAccessCodesRoute
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
@@ -281,6 +290,7 @@ export interface FileRouteTypes {
     | '/admin/access-codes'
     | '/admin/audit-log'
     | '/admin/settings'
+    | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
@@ -307,6 +317,7 @@ export interface FileRouteTypes {
     | '/admin/access-codes'
     | '/admin/audit-log'
     | '/admin/settings'
+    | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/admin/access-codes'
     | '/admin/audit-log'
     | '/admin/settings'
+    | '/aktivasi/$accessCode'
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
@@ -358,7 +370,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AktivasiRoute: typeof AktivasiRoute
+  AktivasiRoute: typeof AktivasiRouteWithChildren
   CekStatusRoute: typeof CekStatusRoute
   KodeAksesRoute: typeof KodeAksesRoute
   LoginRoute: typeof LoginRoute
@@ -538,6 +550,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PcDaftarkanRouteImport
       parentRoute: typeof PcRoute
     }
+    '/aktivasi/$accessCode': {
+      id: '/aktivasi/$accessCode'
+      path: '/$accessCode'
+      fullPath: '/aktivasi/$accessCode'
+      preLoaderRoute: typeof AktivasiAccessCodeRouteImport
+      parentRoute: typeof AktivasiRoute
+    }
     '/admin/settings': {
       id: '/admin/settings'
       path: '/settings'
@@ -584,6 +603,18 @@ const AdminRouteChildren: AdminRouteChildren = {
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface AktivasiRouteChildren {
+  AktivasiAccessCodeRoute: typeof AktivasiAccessCodeRoute
+}
+
+const AktivasiRouteChildren: AktivasiRouteChildren = {
+  AktivasiAccessCodeRoute: AktivasiAccessCodeRoute,
+}
+
+const AktivasiRouteWithChildren = AktivasiRoute._addFileChildren(
+  AktivasiRouteChildren,
+)
 
 interface PcRouteChildren {
   PcDaftarkanRoute: typeof PcDaftarkanRoute
@@ -651,7 +682,7 @@ const ReviewRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  AktivasiRoute: AktivasiRoute,
+  AktivasiRoute: AktivasiRouteWithChildren,
   CekStatusRoute: CekStatusRoute,
   KodeAksesRoute: KodeAksesRoute,
   LoginRoute: LoginRoute,
@@ -663,3 +694,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
