@@ -42,9 +42,10 @@ function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-dark via-primary to-primary-dark p-4">
       <div className="w-full max-w-md">
-        <div className="mb-6 flex justify-center">
-          <Logo variant="light" />
+        <div className="mb-6 flex justify-center [&_*]:!text-white">
+          <Logo />
         </div>
+
         <div className="rounded-xl border border-border bg-card p-7 shadow-xl">
           <h1 className="text-xl font-bold text-foreground">Masuk ke Portal Aktivasi Digdaya</h1>
           <p className="mt-1 text-sm text-muted-foreground">

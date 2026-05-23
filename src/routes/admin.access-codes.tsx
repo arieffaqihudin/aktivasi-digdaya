@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader } from "@/components/dashboard/PageHeader";
-import { KPI } from "@/components/dashboard/KPI";
+import { PageHeader, ListControls, FilterBar } from "@/components/dashboard/PageHeader";
+import { DataTable, THead, TH, TR, TD, RowAction, EmptyRow } from "@/components/dashboard/DataTable";
 import { actions, useStore } from "@/lib/store";
 import { masterPC } from "@/data/mockData";
 import { AccessCodeStatusBadge } from "@/components/JalurBadge";
@@ -10,9 +10,9 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Copy, KeyRound, Download, Plus, Ban, RotateCcw } from "lucide-react";
+import { Copy, Download, Plus, Ban, RotateCcw, Search } from "lucide-react";
 import { formatDate } from "@/utils/status";
 
 export const Route = createFileRoute("/admin/access-codes")({
@@ -23,16 +23,20 @@ function AccessCodes() {
   const codes = useStore((s) => s.accessCodes);
   const sla = useStore((s) => s.sla);
   const [open, setOpen] = useState(false);
-  const [pw, setPw] = useState<string>("all");
+  const [pwFilterModal, setPwFilterModal] = useState<string>("all");
   const [pickedPcs, setPickedPcs] = useState<string[]>([]);
   const [validDays, setValidDays] = useState(sla.defaultCodeValidDays);
   const [generating, setGenerating] = useState(false);
-  const [filter, setFilter] = useState("");
 
-  const stat = (s: string) => codes.filter((c) => c.status === s).length;
+  const [pwFilter, setPwFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [validityFilter, setValidityFilter] = useState("all");
+  const [q, setQ] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
 
   const pws = Array.from(new Set(masterPC.map((p) => p.pw)));
-  const pcOptions = masterPC.filter((p) => pw === "all" || p.pw === pw);
+  const pcOptions = masterPC.filter((p) => pwFilterModal === "all" || p.pw === pwFilterModal);
 
   const togglePc = (id: string) =>
     setPickedPcs((cur) => cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]);
@@ -47,10 +51,24 @@ function AccessCodes() {
     setOpen(false); setPickedPcs([]);
   };
 
-  const filtered = codes.filter((c) =>
-    !filter || c.code.toLowerCase().includes(filter.toLowerCase()) ||
-    c.pcName.toLowerCase().includes(filter.toLowerCase())
+  const filtered = useMemo(() => codes
+    .filter((c) => pwFilter === "all" || c.pw === pwFilter)
+    .filter((c) => statusFilter === "all" || c.status === statusFilter)
+    .filter((c) => {
+      if (validityFilter === "all") return true;
+      const days = (new Date(c.expiredAt).getTime() - Date.now()) / 86400000;
+      if (validityFilter === "soon") return days >= 0 && days <= 7;
+      if (validityFilter === "expired") return days < 0;
+      return true;
+    })
+    .filter((c) => !q || c.code.toLowerCase().includes(q.toLowerCase()) || c.pcName.toLowerCase().includes(q.toLowerCase())),
+    [codes, pwFilter, statusFilter, validityFilter, q]
   );
+
+  const total = filtered.length;
+  const start = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const end = Math.min(page * pageSize, total);
+  const paged = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   const exportCsv = () => {
     const rows = [["Kode","PC","PW","Status","Generated","Expired","Used At","Ticket"]];
@@ -65,79 +83,96 @@ function AccessCodes() {
   return (
     <div>
       <PageHeader
-        title="Kode Akses PC"
-        subtitle="Generate dan kelola kode akses one-time untuk aktivasi PC."
-        action={
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={exportCsv}><Download className="mr-1 h-4 w-4" /> Export</Button>
-            <Button onClick={() => setOpen(true)}><Plus className="mr-1 h-4 w-4" /> Generate Kode</Button>
-          </div>
+        title="Kode Akses Aktivasi"
+        count={total}
+        breadcrumb={[{ label: "Admin", to: "/admin" }, { label: "Kode Akses PC" }]}
+        subtitle="Generate dan kelola kode akses one-time untuk aktivasi Pengurus Cabang."
+      />
+
+      <ListControls
+        pageSize={pageSize}
+        onPageSize={(n) => { setPageSize(n); setPage(1); }}
+        rangeText={`${start}–${end} dari ${total}`}
+        right={
+          <>
+            <Button variant="outline" size="sm" className="h-10" onClick={exportCsv}>
+              <Download className="mr-1.5 h-4 w-4" /> Export Kode
+            </Button>
+            <Button size="sm" className="h-10" onClick={() => setOpen(true)}>
+              <Plus className="mr-1.5 h-4 w-4" /> Generate Kode Akses
+            </Button>
+          </>
         }
       />
-      <div className="space-y-5 p-6">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          <KPI label="Total Kode" value={codes.length} icon={KeyRound} />
-          <KPI label="Belum Digunakan" value={stat("Unused")} tone="info" />
-          <KPI label="Sudah Digunakan" value={stat("Used")} tone="success" />
-          <KPI label="Kedaluwarsa" value={stat("Expired")} />
-          <KPI label="Dinonaktifkan" value={stat("Disabled")} tone="destructive" />
-        </div>
 
-        <div className="rounded-xl border border-border bg-card">
-          <div className="border-b border-border p-3">
-            <Input placeholder="Cari kode atau nama PC…" value={filter} onChange={(e) => setFilter(e.target.value)} className="max-w-md" />
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-secondary/40 text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-3">Kode</th>
-                  <th className="px-4 py-3">PC</th>
-                  <th className="px-4 py-3">PW</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Generated</th>
-                  <th className="px-4 py-3">Expired</th>
-                  <th className="px-4 py-3">Tiket</th>
-                  <th className="px-4 py-3 text-right">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((c) => (
-                  <tr key={c.code} className="border-t border-border">
-                    <td className="px-4 py-3 font-mono text-xs">{c.code}</td>
-                    <td className="px-4 py-3">{c.pcName}</td>
-                    <td className="px-4 py-3 text-xs text-muted-foreground">{c.pw}</td>
-                    <td className="px-4 py-3"><AccessCodeStatusBadge status={c.status} /></td>
-                    <td className="px-4 py-3 text-xs">{formatDate(c.generatedAt)}</td>
-                    <td className="px-4 py-3 text-xs">{formatDate(c.expiredAt)}</td>
-                    <td className="px-4 py-3 font-mono text-xs">{c.ticketId ?? "—"}</td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex justify-end gap-1">
-                        <button title="Copy" className="rounded p-1 hover:bg-secondary" onClick={() => { navigator.clipboard.writeText(c.code); toast.success("Kode disalin."); }}>
-                          <Copy className="h-3.5 w-3.5" />
-                        </button>
-                        {c.status === "Unused" && (
-                          <button title="Disable" className="rounded p-1 text-destructive hover:bg-destructive/10" onClick={() => actions.disableAccessCode(c.code)}>
-                            <Ban className="h-3.5 w-3.5" />
-                          </button>
-                        )}
-                        {(c.status === "Disabled" || c.status === "Expired") && (
-                          <button title="Regenerate" className="rounded p-1 hover:bg-secondary" onClick={() => { actions.regenerateAccessCode(c.pcId); toast.success("Kode baru digenerate."); }}>
-                            <RotateCcw className="h-3.5 w-3.5" />
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {filtered.length === 0 && (
-                  <tr><td colSpan={8} className="px-4 py-12 text-center text-sm text-muted-foreground">Tidak ada kode akses.</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+      <FilterBar>
+        <SelectFilter value={pwFilter} onChange={setPwFilter} placeholder="Wilayah PW" options={[["all","Semua PW"], ...pws.map((p) => [p, p.replace("PWNU ","")] as [string,string])]} />
+        <SelectFilter value={statusFilter} onChange={setStatusFilter} placeholder="Status kode" options={[["all","Semua Status"],["Unused","Belum Digunakan"],["Used","Sudah Digunakan"],["Expired","Kedaluwarsa"],["Disabled","Dinonaktifkan"]]} />
+        <SelectFilter value={validityFilter} onChange={setValidityFilter} placeholder="Masa berlaku" options={[["all","Semua Periode"],["soon","Segera Kedaluwarsa (7 hari)"],["expired","Sudah Kedaluwarsa"]]} />
+        <div className="relative ml-auto">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Cari PC / kode akses"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            className="h-10 w-[260px] pl-9"
+          />
         </div>
-      </div>
+      </FilterBar>
+
+      <DataTable>
+        <THead>
+          <tr>
+            <TH>Kode Akses</TH>
+            <TH>Nama PC</TH>
+            <TH>Wilayah PW</TH>
+            <TH>Status</TH>
+            <TH>Generated At</TH>
+            <TH>Expired At</TH>
+            <TH>Used At</TH>
+            <TH className="text-right pr-6">Aksi</TH>
+          </tr>
+        </THead>
+        <tbody>
+          {paged.map((c) => (
+            <TR key={c.code}>
+              <TD className="font-mono text-[12px] text-primary-dark">{c.code}</TD>
+              <TD className="font-medium">{c.pcName}</TD>
+              <TD className="text-[12px] text-muted-foreground">{c.pw.replace("PWNU ","")}</TD>
+              <TD><AccessCodeStatusBadge status={c.status} /></TD>
+              <TD className="text-[12px]">{formatDate(c.generatedAt)}</TD>
+              <TD className="text-[12px]">{formatDate(c.expiredAt)}</TD>
+              <TD className="text-[12px]">{c.usedAt ? formatDate(c.usedAt) : "—"}</TD>
+              <TD className="text-right pr-6">
+                <div className="flex justify-end gap-1">
+                  <RowAction title="Salin kode" onClick={() => { navigator.clipboard.writeText(c.code); toast.success("Kode disalin."); }}>
+                    <Copy className="h-4 w-4" />
+                  </RowAction>
+                  {c.status === "Unused" && (
+                    <RowAction title="Nonaktifkan" tone="danger" onClick={() => actions.disableAccessCode(c.code)}>
+                      <Ban className="h-4 w-4" />
+                    </RowAction>
+                  )}
+                  {(c.status === "Disabled" || c.status === "Expired") && (
+                    <RowAction title="Regenerate" onClick={() => { actions.regenerateAccessCode(c.pcId); toast.success("Kode baru digenerate."); }}>
+                      <RotateCcw className="h-4 w-4" />
+                    </RowAction>
+                  )}
+                </div>
+              </TD>
+            </TR>
+          ))}
+          {paged.length === 0 && <EmptyRow colSpan={8}>Tidak ada kode akses sesuai filter.</EmptyRow>}
+        </tbody>
+      </DataTable>
+
+      {total > pageSize && (
+        <div className="flex items-center justify-end gap-2 px-6 pb-8 lg:px-8">
+          <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage((p) => p - 1)}>Sebelumnya</Button>
+          <span className="text-[12px] text-muted-foreground">Halaman {page} dari {Math.ceil(total / pageSize)}</span>
+          <Button variant="outline" size="sm" disabled={end >= total} onClick={() => setPage((p) => p + 1)}>Berikutnya</Button>
+        </div>
+      )}
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-lg">
@@ -145,7 +180,7 @@ function AccessCodes() {
           <div className="space-y-4">
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Filter Wilayah PW</Label>
-              <Select value={pw} onValueChange={setPw}>
+              <Select value={pwFilterModal} onValueChange={setPwFilterModal}>
                 <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Semua PW</SelectItem>
@@ -178,5 +213,16 @@ function AccessCodes() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+function SelectFilter({ value, onChange, options, placeholder }: { value: string; onChange: (v: string) => void; options: [string, string][]; placeholder?: string }) {
+  return (
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger className="h-10 w-[200px]"><SelectValue placeholder={placeholder} /></SelectTrigger>
+      <SelectContent>
+        {options.map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}
+      </SelectContent>
+    </Select>
   );
 }
