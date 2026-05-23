@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PublicHeader, PublicFooter } from "@/components/PublicHeader";
-import heroIllustration from "@/assets/illustration-digdaya-kader.png";
 import {
   LogIn,
   KeyRound,
