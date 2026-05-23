@@ -23,6 +23,7 @@ import { Route as StatusTicketIdRouteImport } from './routes/status.$ticketId'
 import { Route as ReviewSlaRouteImport } from './routes/review.sla'
 import { Route as ReviewPeruriRouteImport } from './routes/review.peruri'
 import { Route as ReviewInboxRouteImport } from './routes/review.inbox'
+import { Route as ReviewAuditLogRouteImport } from './routes/review.audit-log'
 import { Route as PcStatusPengajuanRouteImport } from './routes/pc.status-pengajuan'
 import { Route as PcProfilRouteImport } from './routes/pc.profil'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
@@ -101,6 +102,11 @@ const ReviewInboxRoute = ReviewInboxRouteImport.update({
   path: '/inbox',
   getParentRoute: () => ReviewRoute,
 } as any)
+const ReviewAuditLogRoute = ReviewAuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => ReviewRoute,
+} as any)
 const PcStatusPengajuanRoute = PcStatusPengajuanRouteImport.update({
   id: '/status-pengajuan',
   path: '/status-pengajuan',
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
   '/review/sla': typeof ReviewSlaRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
   '/review/sla': typeof ReviewSlaRoute
@@ -195,6 +203,7 @@ export interface FileRoutesById {
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/profil': typeof PcProfilRoute
   '/pc/status-pengajuan': typeof PcStatusPengajuanRoute
+  '/review/audit-log': typeof ReviewAuditLogRoute
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/peruri': typeof ReviewPeruriRoute
   '/review/sla': typeof ReviewSlaRoute
@@ -220,6 +229,7 @@ export interface FileRouteTypes {
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
+    | '/review/audit-log'
     | '/review/inbox'
     | '/review/peruri'
     | '/review/sla'
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
+    | '/review/audit-log'
     | '/review/inbox'
     | '/review/peruri'
     | '/review/sla'
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/pc/daftarkan'
     | '/pc/profil'
     | '/pc/status-pengajuan'
+    | '/review/audit-log'
     | '/review/inbox'
     | '/review/peruri'
     | '/review/sla'
@@ -384,6 +396,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewInboxRouteImport
       parentRoute: typeof ReviewRoute
     }
+    '/review/audit-log': {
+      id: '/review/audit-log'
+      path: '/audit-log'
+      fullPath: '/review/audit-log'
+      preLoaderRoute: typeof ReviewAuditLogRouteImport
+      parentRoute: typeof ReviewRoute
+    }
     '/pc/status-pengajuan': {
       id: '/pc/status-pengajuan'
       path: '/status-pengajuan'
@@ -481,6 +500,7 @@ const ReviewInboxRouteWithChildren = ReviewInboxRoute._addFileChildren(
 )
 
 interface ReviewRouteChildren {
+  ReviewAuditLogRoute: typeof ReviewAuditLogRoute
   ReviewInboxRoute: typeof ReviewInboxRouteWithChildren
   ReviewPeruriRoute: typeof ReviewPeruriRoute
   ReviewSlaRoute: typeof ReviewSlaRoute
@@ -488,6 +508,7 @@ interface ReviewRouteChildren {
 }
 
 const ReviewRouteChildren: ReviewRouteChildren = {
+  ReviewAuditLogRoute: ReviewAuditLogRoute,
   ReviewInboxRoute: ReviewInboxRouteWithChildren,
   ReviewPeruriRoute: ReviewPeruriRoute,
   ReviewSlaRoute: ReviewSlaRoute,
@@ -510,3 +531,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
