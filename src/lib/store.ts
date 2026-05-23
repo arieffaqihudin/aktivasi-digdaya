@@ -9,6 +9,7 @@ import {
   demoPcUserPcId,
   demoPwUserPwId,
   mockSuratTugasDigdaya,
+  SURAT_TUGAS_CATEGORIES,
   type Registration,
   type PeruriBatch,
   type AuditEntry,
@@ -19,6 +20,9 @@ import {
   type Tingkat,
   type SumberSuratTugas,
   type DokumenSistem,
+  type RejectionCategory,
+  type RevisionRequestEntry,
+  type ResubmitEntry,
 } from "@/data/mockData";
 
 export interface SLAConfig {
