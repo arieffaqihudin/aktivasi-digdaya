@@ -61,7 +61,10 @@ function ReviewDetail() {
             </div>
             <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
               {reg.jalur === "A" && <Info label="Kode Akses" value={reg.accessCode ?? "—"} mono />}
-              {reg.jalur === "B" && <Info label="Didaftarkan oleh" value={reg.sourcePcName ?? "—"} />}
+              {reg.jalur === "B" && <Info label="Didaftarkan oleh" value={reg.sourcePcName ?? reg.sourcePwName ?? "—"} />}
+              {reg.tipeOrg === "Ranting" && reg.parentMwcName && <Info label="MWC Induk" value={reg.parentMwcName} />}
+              {reg.tipeOrg === "Ranting" && reg.sourcePcName && <Info label="PC Induk" value={reg.sourcePcName} />}
+              {reg.tipeOrg === "Ranting" && reg.village && <Info label="Wilayah / Desa" value={reg.village} />}
               <Info label="Nama Administrator" value={reg.namaAdmin} />
               <Info label="Jabatan" value={reg.jabatan} />
               <Info label="NIK" value={reg.nik} mono />
@@ -69,7 +72,14 @@ function ReviewDetail() {
               <Info label="Email" value={reg.email} />
               <Info label="Submit" value={formatDateTime(reg.submittedAt)} />
             </dl>
+            {reg.tipeOrg === "Ranting" && (
+              <div className="mt-4 rounded-md border border-warning/40 bg-warning/10 p-3 text-[12px] text-foreground">
+                Data Ranting diinput manual karena belum tersedia master data terpusat. Pastikan nama Ranting dan MWC induk sesuai dengan surat tugas.
+                {reg.locationNote && <div className="mt-1 text-muted-foreground">Catatan lokasi: {reg.locationNote}</div>}
+              </div>
+            )}
           </div>
+
 
           <div className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-center justify-between">
