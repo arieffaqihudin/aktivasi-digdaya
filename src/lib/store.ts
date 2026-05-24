@@ -73,7 +73,7 @@ interface State {
   nextTicketSeq: number;
 }
 
-const STORAGE_KEY = "digdaya-portal-state-v7";
+const STORAGE_KEY = "digdaya-portal-state-v8";
 
 function initial(): State {
   return {
@@ -1232,18 +1232,64 @@ export const actions = {
   updateRolePermissions(roleId: string, patch: { name?: RoleName; description?: string; permissions: PermissionKey[] }) {
     const r = state.roles.find((x) => x.id === roleId);
     if (!r) return;
+    const newName = patch.name && !r.isSystem ? patch.name : r.name;
     setState((s) => ({
       roles: s.roles.map((x) =>
         x.id === roleId
-          ? { ...x, ...(patch.description !== undefined ? { description: patch.description } : {}), permissions: patch.permissions }
+          ? { ...x, name: newName, ...(patch.description !== undefined ? { description: patch.description } : {}), permissions: patch.permissions }
           : x,
       ),
+      // Cascade rename ke pengguna yang memakai role lama.
+      users: r.name !== newName ? s.users.map((u) => (u.role === r.name ? { ...u, role: newName } : u)) : s.users,
     }));
     pushAudit({
       actor: state.user?.email ?? "system",
       role: state.user?.role ?? "Super Admin",
       action: "UPDATE_ROLE_PERMISSION",
-      detail: `Memperbarui hak akses role ${r.name} (${patch.permissions.length} menu).`,
+      detail: `Memperbarui hak akses role ${newName} (${patch.permissions.length} menu).`,
+    });
+  },
+
+  createRole(input: { name: RoleName; description: string; permissions: PermissionKey[] }): RoleDef {
+    const role: RoleDef = {
+      id: "role-" + Math.random().toString(36).slice(2, 10),
+      name: input.name,
+      description: input.description,
+      permissions: input.permissions,
+    };
+    setState((s) => ({ roles: [...s.roles, role] }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: "CREATE_ROLE_PERMISSION",
+      detail: `Menambahkan hak akses ${role.name} (${role.permissions.length} menu).`,
+    });
+    return role;
+  },
+
+  /** Hapus role custom. Role sistem tidak dapat dihapus. Return true bila berhasil. */
+  deleteRole(roleId: string): boolean {
+    const r = state.roles.find((x) => x.id === roleId);
+    if (!r || r.isSystem) return false;
+    setState((s) => ({ roles: s.roles.filter((x) => x.id !== roleId) }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: "DELETE_ROLE_PERMISSION",
+      detail: `Menghapus hak akses ${r.name}.`,
+    });
+    return true;
+  },
+
+  deleteUser(id: string) {
+    const u = state.users.find((x) => x.id === id);
+    if (!u) return;
+    setState((s) => ({ users: s.users.filter((x) => x.id !== id) }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: "DELETE_USER",
+      detail: `Menghapus pengguna ${u.name} (${u.email}).`,
     });
   },
 };
