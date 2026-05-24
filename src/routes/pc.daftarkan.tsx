@@ -133,7 +133,7 @@ function useLatestRegByName() {
     for (const r of regs) {
       if (r.sumberPengajuan !== "PC_DASHBOARD") continue;
       const prev = map.get(r.namaOrg);
-      if (!prev || new Date(r.createdAt) > new Date(prev.createdAt)) map.set(r.namaOrg, r);
+      if (!prev || new Date(r.submittedAt) > new Date(prev.submittedAt)) map.set(r.namaOrg, r);
     }
     return map;
   }, [regs]);
