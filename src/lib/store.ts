@@ -63,6 +63,8 @@ interface State {
   batches: PeruriBatch[];
   audit: AuditEntry[];
   accessCodes: AccessCode[];
+  users: UserAccount[];
+  roles: RoleDef[];
   /** runtime statusOrg overrides (id → status) — applied on top of masterPC/PW seeds */
   orgStatus: Record<string, "Production" | "Pending Aktivasi" | "Belum Production">;
   sla: SLAConfig;
@@ -71,7 +73,7 @@ interface State {
   nextTicketSeq: number;
 }
 
-const STORAGE_KEY = "digdaya-portal-state-v6";
+const STORAGE_KEY = "digdaya-portal-state-v7";
 
 function initial(): State {
   return {
@@ -79,6 +81,8 @@ function initial(): State {
     batches: seedPeruriBatches,
     audit: seedAudit,
     accessCodes: seedAccessCodes,
+    users: seedUsers,
+    roles: seedRoles,
     orgStatus: {},
     sla: { defaultDays: 3, greenMaxDays: 1, yellowMaxDays: 3, notifyEmails: "ops@digdaya.nu.id", defaultCodeValidDays: 30, maxRevisions: 3 },
     notif: { emailEnabled: true, whatsappEnabled: false },
