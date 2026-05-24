@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Plus, Download, Search, MoreHorizontal } from "lucide-react";
+import { Plus, Search, MoreHorizontal } from "lucide-react";
 import { OpsPageHeader, OpsPageBody, OpsCard } from "@/components/ops/OpsPageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,32 +21,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PermissionChecklist } from "@/components/ops/PermissionChecklist";
 import { actions, useStore } from "@/lib/store";
-import {
-  effectivePermissions,
-  PERMISSION_LABELS,
-  type OrgLevel,
-  type PermissionKey,
-  type RoleName,
-  type UserAccount,
-  type UserStatus,
-} from "@/data/usersData";
+import type { PermissionKey, RoleName, UserAccount, UserStatus } from "@/data/usersData";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/ops/users")({
   component: UsersPage,
 });
 
-const ROLES: RoleName[] = ["Super Admin", "Reviewer Aktivasi", "Admin Ops Persuratan", "Admin PW", "Admin PC"];
-const LEVELS: OrgLevel[] = ["PB", "PW", "PC", "MWC", "Ranting", "Lembaga"];
-const STATUSES: UserStatus[] = ["Aktif", "Nonaktif", "Menunggu Aktivasi"];
+const STATUSES: UserStatus[] = ["Aktif", "Nonaktif"];
 
-function statusVariant(s: UserStatus): "default" | "secondary" | "outline" | "destructive" {
-  if (s === "Aktif") return "default";
-  if (s === "Menunggu Aktivasi") return "secondary";
-  return "outline";
+function statusVariant(s: UserStatus): "default" | "outline" {
+  return s === "Aktif" ? "default" : "outline";
 }
 
 function formatDate(iso?: string) {
@@ -63,72 +60,48 @@ function UsersPage() {
   const [q, setQ] = useState("");
   const [fRole, setFRole] = useState<string>("ALL");
   const [fStatus, setFStatus] = useState<string>("ALL");
-  const [fLevel, setFLevel] = useState<string>("ALL");
-  const [fOrg, setFOrg] = useState<string>("ALL");
 
   const [editing, setEditing] = useState<UserAccount | null>(null);
   const [creating, setCreating] = useState(false);
-  const [viewing, setViewing] = useState<UserAccount | null>(null);
+  const [confirmDisable, setConfirmDisable] = useState<UserAccount | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<UserAccount | null>(null);
 
-  const orgOptions = useMemo(() => Array.from(new Set(users.map((u) => u.orgName))).sort(), [users]);
+  const roleOptions = useMemo(() => roles.map((r) => r.name), [roles]);
 
   const filtered = useMemo(() => {
     const qq = q.trim().toLowerCase();
     return users.filter((u) => {
-      if (qq && !(u.name.toLowerCase().includes(qq) || u.email.toLowerCase().includes(qq) || u.orgName.toLowerCase().includes(qq))) return false;
+      if (qq && !(u.name.toLowerCase().includes(qq) || u.email.toLowerCase().includes(qq))) return false;
       if (fRole !== "ALL" && u.role !== fRole) return false;
       if (fStatus !== "ALL" && u.status !== fStatus) return false;
-      if (fLevel !== "ALL" && u.orgLevel !== fLevel) return false;
-      if (fOrg !== "ALL" && u.orgName !== fOrg) return false;
       return true;
     });
-  }, [users, q, fRole, fStatus, fLevel, fOrg]);
-
-  const exportCsv = () => {
-    const header = ["Nama", "Email", "Organisasi", "Level", "Role", "Status", "Terakhir Login"];
-    const rows = filtered.map((u) => [u.name, u.email, u.orgName, u.orgLevel, u.role, u.status, formatDate(u.lastLoginAt)]);
-    const csv = [header, ...rows].map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `pengguna-digdaya-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast.success(`Mengekspor ${filtered.length} pengguna.`);
-  };
+  }, [users, q, fRole, fStatus]);
 
   return (
     <div>
       <OpsPageHeader
-        title="Master Data Pengguna"
-        subtitle="Kelola pengguna, organisasi, role, dan hak akses di Digdaya Ops."
-        breadcrumb={[{ label: "Master Data Pengguna" }]}
+        title="Pengguna"
+        subtitle="Kelola pengguna internal Digdaya Ops dan hak aksesnya."
+        breadcrumb={[{ label: "Pengguna" }]}
         action={
-          <>
-            <Button variant="outline" onClick={exportCsv}>
-              <Download className="mr-1.5 h-4 w-4" /> Export Pengguna
-            </Button>
-            <Button onClick={() => setCreating(true)}>
-              <Plus className="mr-1.5 h-4 w-4" /> Tambah Pengguna
-            </Button>
-          </>
+          <Button onClick={() => setCreating(true)}>
+            <Plus className="mr-1.5 h-4 w-4" /> Tambah Pengguna
+          </Button>
         }
       />
       <OpsPageBody>
         <OpsCard>
           <div className="grid gap-3 md:grid-cols-12">
-            <div className="md:col-span-4">
+            <div className="md:col-span-6">
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Pencarian</Label>
               <div className="relative mt-1.5">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari nama, email, atau organisasi" className="pl-9" />
+                <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari nama atau email" className="pl-9" />
               </div>
             </div>
-            <FilterSelect label="Role" value={fRole} onChange={setFRole} options={["ALL", ...ROLES]} className="md:col-span-2" />
-            <FilterSelect label="Status" value={fStatus} onChange={setFStatus} options={["ALL", ...STATUSES]} className="md:col-span-2" />
-            <FilterSelect label="Level" value={fLevel} onChange={setFLevel} options={["ALL", ...LEVELS]} className="md:col-span-2" />
-            <FilterSelect label="Organisasi" value={fOrg} onChange={setFOrg} options={["ALL", ...orgOptions]} className="md:col-span-2" />
+            <FilterSelect label="Hak Akses" value={fRole} onChange={setFRole} options={["ALL", ...roleOptions]} className="md:col-span-3" />
+            <FilterSelect label="Status" value={fStatus} onChange={setFStatus} options={["ALL", ...STATUSES]} className="md:col-span-3" />
           </div>
           <div className="mt-3 text-[12px] text-muted-foreground">
             Menampilkan {filtered.length} dari {users.length} pengguna.
@@ -147,18 +120,18 @@ function UsersPage() {
                 <Badge variant={statusVariant(u.status)}>{u.status}</Badge>
               </div>
               <div className="mt-2 grid grid-cols-2 gap-y-1 text-[12px]">
-                <span className="text-muted-foreground">Organisasi</span>
-                <span className="text-right truncate">{u.orgName}</span>
-                <span className="text-muted-foreground">Level</span>
-                <span className="text-right">{u.orgLevel}</span>
-                <span className="text-muted-foreground">Role</span>
+                <span className="text-muted-foreground">Hak Akses</span>
                 <span className="text-right">{u.role}</span>
                 <span className="text-muted-foreground">Terakhir Login</span>
                 <span className="text-right">{formatDate(u.lastLoginAt)}</span>
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
-                <Button size="sm" variant="outline" className="flex-1" onClick={() => setViewing(u)}>Detail</Button>
                 <Button size="sm" variant="outline" className="flex-1" onClick={() => setEditing(u)}>Edit</Button>
+                {u.status === "Aktif" ? (
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => setConfirmDisable(u)}>Nonaktifkan</Button>
+                ) : (
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => { actions.setUserStatus(u.id, "Aktif"); toast.success("Pengguna berhasil diaktifkan."); }}>Aktifkan</Button>
+                )}
               </div>
             </div>
           ))}
@@ -175,9 +148,7 @@ function UsersPage() {
                 <TableRow>
                   <TableHead>Nama</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Organisasi</TableHead>
-                  <TableHead>Level</TableHead>
-                  <TableHead>Role</TableHead>
+                  <TableHead>Hak Akses</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Terakhir Login</TableHead>
                   <TableHead className="w-10" />
@@ -188,8 +159,6 @@ function UsersPage() {
                   <TableRow key={u.id}>
                     <TableCell className="font-medium">{u.name}</TableCell>
                     <TableCell className="text-muted-foreground">{u.email}</TableCell>
-                    <TableCell>{u.orgName}</TableCell>
-                    <TableCell>{u.orgLevel}</TableCell>
                     <TableCell>{u.role}</TableCell>
                     <TableCell><Badge variant={statusVariant(u.status)}>{u.status}</Badge></TableCell>
                     <TableCell className="text-muted-foreground">{formatDate(u.lastLoginAt)}</TableCell>
@@ -201,21 +170,14 @@ function UsersPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-44">
-                          <DropdownMenuItem onSelect={() => setViewing(u)}>Detail</DropdownMenuItem>
                           <DropdownMenuItem onSelect={() => setEditing(u)}>Edit</DropdownMenuItem>
-                          <DropdownMenuSeparator />
                           {u.status === "Aktif" ? (
-                            <DropdownMenuItem onSelect={() => { actions.setUserStatus(u.id, "Nonaktif"); toast.success(`${u.name} dinonaktifkan.`); }}>
-                              Nonaktifkan
-                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => setConfirmDisable(u)}>Nonaktifkan</DropdownMenuItem>
                           ) : (
-                            <DropdownMenuItem onSelect={() => { actions.setUserStatus(u.id, "Aktif"); toast.success(`${u.name} diaktifkan.`); }}>
-                              Aktifkan
-                            </DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => { actions.setUserStatus(u.id, "Aktif"); toast.success("Pengguna berhasil diaktifkan."); }}>Aktifkan</DropdownMenuItem>
                           )}
-                          <DropdownMenuItem onSelect={() => { actions.resetUserAccess(u.id); toast.success(`Hak akses ${u.name} di-reset ke preset role.`); }}>
-                            Reset Akses
-                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className="text-destructive" onSelect={() => setConfirmDelete(u)}>Hapus</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -223,7 +185,7 @@ function UsersPage() {
                 ))}
                 {filtered.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={8} className="py-10 text-center text-sm text-muted-foreground">
+                    <TableCell colSpan={6} className="py-10 text-center text-sm text-muted-foreground">
                       Tidak ada pengguna yang cocok dengan filter.
                     </TableCell>
                   </TableRow>
@@ -234,20 +196,64 @@ function UsersPage() {
         </div>
       </OpsPageBody>
 
-      {/* Detail drawer */}
-      <UserDetailSheet
-        user={viewing}
-        onClose={() => setViewing(null)}
-        onEdit={(u) => { setViewing(null); setEditing(u); }}
-      />
-
       {/* Create / Edit drawer */}
       <UserFormSheet
         open={creating || !!editing}
         initial={editing}
-        roles={roles.map((r) => r.name)}
         onClose={() => { setCreating(false); setEditing(null); }}
       />
+
+      {/* Confirm Disable */}
+      <AlertDialog open={!!confirmDisable} onOpenChange={(o) => !o && setConfirmDisable(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Nonaktifkan pengguna?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Pengguna <strong>{confirmDisable?.name}</strong> tidak akan dapat mengakses Digdaya Ops sampai diaktifkan kembali.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (confirmDisable) {
+                  actions.setUserStatus(confirmDisable.id, "Nonaktif");
+                  toast.success("Pengguna berhasil dinonaktifkan.");
+                }
+                setConfirmDisable(null);
+              }}
+            >
+              Nonaktifkan
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Confirm Delete */}
+      <AlertDialog open={!!confirmDelete} onOpenChange={(o) => !o && setConfirmDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Hapus pengguna?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Pengguna <strong>{confirmDelete?.name}</strong> akan dihapus permanen dari Digdaya Ops.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (confirmDelete) {
+                  actions.deleteUser(confirmDelete.id);
+                  toast.success("Pengguna dihapus.");
+                }
+                setConfirmDelete(null);
+              }}
+            >
+              Hapus
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -282,298 +288,119 @@ function FilterSelect({
   );
 }
 
-function UserDetailSheet({
-  user,
-  onClose,
-  onEdit,
-}: {
-  user: UserAccount | null;
-  onClose: () => void;
-  onEdit: (u: UserAccount) => void;
-}) {
-  const roles = useStore((s) => s.roles);
-  const audit = useStore((s) => s.audit);
-  if (!user) return null;
-  const perms = effectivePermissions(user, roles);
-  const userAudit = audit.filter((a) => a.detail?.toLowerCase().includes(user.name.toLowerCase()) || a.detail?.toLowerCase().includes(user.email.toLowerCase())).slice(0, 8);
-
-  return (
-    <Sheet open={!!user} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>Detail Pengguna</SheetTitle>
-          <SheetDescription>{user.name}</SheetDescription>
-        </SheetHeader>
-        <div className="mt-5 space-y-4">
-          <DetailCard title="Informasi Pengguna">
-            <DetailRow label="Nama" value={user.name} />
-            <DetailRow label="Email" value={user.email} />
-            <DetailRow label="Nomor HP" value={user.phone ?? "—"} />
-            <DetailRow label="Status" value={<Badge variant={statusVariant(user.status)}>{user.status}</Badge>} />
-            <DetailRow label="Terakhir Login" value={formatDate(user.lastLoginAt)} />
-          </DetailCard>
-          <DetailCard title="Organisasi">
-            <DetailRow label="Organisasi" value={user.orgName} />
-            <DetailRow label="Level" value={user.orgLevel} />
-            {user.parentOrgName && <DetailRow label="Induk Organisasi" value={user.parentOrgName} />}
-          </DetailCard>
-          <DetailCard title="Role & Hak Akses">
-            <DetailRow label="Role" value={user.role} />
-            <div className="mt-2">
-              <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Menu yang dapat diakses</p>
-              {perms.length === 0 ? (
-                <p className="text-[12px] text-muted-foreground">Tidak ada akses ke menu Digdaya Ops (gunakan dashboard {user.role.replace("Admin ", "")}).</p>
-              ) : (
-                <ul className="grid grid-cols-1 gap-1 text-[12px]">
-                  {perms.map((p) => (
-                    <li key={p} className="rounded bg-secondary/60 px-2 py-1">• {PERMISSION_LABELS[p]}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </DetailCard>
-          <DetailCard title="Riwayat Aktivitas">
-            {userAudit.length === 0 ? (
-              <p className="text-[12px] text-muted-foreground">Belum ada aktivitas tercatat.</p>
-            ) : (
-              <ul className="space-y-2 text-[12.5px]">
-                {userAudit.map((a) => (
-                  <li key={a.id} className="border-l-2 border-primary/40 pl-3">
-                    <p className="font-medium text-foreground">{a.action}</p>
-                    <p className="text-muted-foreground">{a.detail}</p>
-                    <p className="text-[10.5px] text-muted-foreground">{new Date(a.timestamp).toLocaleString("id-ID")}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </DetailCard>
-        </div>
-        <div className="mt-5 flex flex-wrap gap-2">
-          <Button onClick={() => onEdit(user)}>Edit Pengguna</Button>
-          {user.status === "Aktif" ? (
-            <Button variant="outline" onClick={() => { actions.setUserStatus(user.id, "Nonaktif"); toast.success(`${user.name} dinonaktifkan.`); onClose(); }}>Nonaktifkan</Button>
-          ) : (
-            <Button variant="outline" onClick={() => { actions.setUserStatus(user.id, "Aktif"); toast.success(`${user.name} diaktifkan.`); onClose(); }}>Aktifkan</Button>
-          )}
-          <Button variant="ghost" onClick={onClose}>Kembali</Button>
-        </div>
-      </SheetContent>
-    </Sheet>
-  );
-}
-
-function DetailCard({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-lg border border-border bg-card p-4">
-      <p className="mb-2 text-[12px] font-semibold uppercase tracking-wider text-muted-foreground">{title}</p>
-      <div className="space-y-1.5 text-[13px]">{children}</div>
-    </div>
-  );
-}
-function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex items-start justify-between gap-3">
-      <span className="text-muted-foreground">{label}</span>
-      <span className="text-right font-medium text-foreground">{value}</span>
-    </div>
-  );
-}
+const CUSTOM_VALUE = "__custom__";
 
 function UserFormSheet({
   open,
   initial,
-  roles,
   onClose,
 }: {
   open: boolean;
   initial: UserAccount | null;
-  roles: RoleName[];
   onClose: () => void;
 }) {
-  const allRoles = useStore((s) => s.roles);
-  const [form, setForm] = useState<{
-    name: string;
-    email: string;
-    phone: string;
-    orgName: string;
-    parentOrgName: string;
-    orgLevel: OrgLevel;
-    role: RoleName;
-    status: UserStatus;
-    permissions: PermissionKey[];
-    permissionsOverridden: boolean;
-  }>(() => buildForm(initial, allRoles));
+  const users = useStore((s) => s.users);
+  const roles = useStore((s) => s.roles);
 
-  // Reset form whenever target user (or create mode) changes.
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [roleSelection, setRoleSelection] = useState<string>("");
+  const [customPerms, setCustomPerms] = useState<PermissionKey[]>([]);
+
   useEffect(() => {
-    if (open) setForm(buildForm(initial, allRoles));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, initial?.id]);
+    if (!open) return;
+    if (initial) {
+      setName(initial.name);
+      setEmail(initial.email);
+      setRoleSelection(initial.role);
+      setCustomPerms([]);
+    } else {
+      setName("");
+      setEmail("");
+      setRoleSelection(roles[0]?.name ?? "");
+      setCustomPerms([]);
+    }
+  }, [open, initial?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!open) return null;
 
+  const isCustom = roleSelection === CUSTOM_VALUE;
+
+  const handleSave = () => {
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!trimmedName) return toast.error("Nama wajib diisi.");
+    if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) return toast.error("Email tidak valid.");
+    if (!roleSelection) return toast.error("Hak akses wajib dipilih.");
+
+    const dup = users.find((u) => u.email.toLowerCase() === trimmedEmail && u.id !== initial?.id);
+    if (dup) return toast.error("Email sudah digunakan oleh pengguna lain.");
+
+    let roleName: RoleName = roleSelection;
+    if (isCustom) {
+      if (customPerms.length === 0) return toast.error("Pilih minimal satu menu untuk hak akses custom.");
+      // Buat role custom baru per pengguna.
+      const customRole = actions.createRole({
+        name: `Custom — ${trimmedName}`,
+        description: `Hak akses khusus untuk ${trimmedName}.`,
+        permissions: customPerms,
+      });
+      roleName = customRole.name;
+    }
+
+    if (initial) {
+      actions.updateUser(initial.id, { name: trimmedName, email: trimmedEmail, role: roleName });
+      toast.success("Pengguna berhasil diperbarui.");
+    } else {
+      actions.createUser({ name: trimmedName, email: trimmedEmail, role: roleName, status: "Aktif" });
+      toast.success("Pengguna berhasil ditambahkan.");
+    }
+    onClose();
+  };
+
   return (
     <Sheet open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
-      <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>
           <SheetTitle>{initial ? "Edit Pengguna" : "Tambah Pengguna"}</SheetTitle>
           <SheetDescription>
-            {initial ? "Perbarui data pengguna dan hak akses." : "Lengkapi data pengguna baru dan tentukan hak akses menu."}
+            {initial ? "Perbarui nama, email, atau hak akses pengguna." : "Tambahkan pengguna internal Digdaya Ops."}
           </SheetDescription>
         </SheetHeader>
 
-        <Tabs defaultValue="profil" className="mt-4">
-          <TabsList className="w-full">
-            <TabsTrigger value="profil" className="flex-1">Profil</TabsTrigger>
-            <TabsTrigger value="akses" className="flex-1">Hak Akses</TabsTrigger>
-          </TabsList>
+        <div className="mt-5 space-y-4">
+          <Field label="Nama">
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Masukkan nama pengguna" />
+          </Field>
+          <Field label="Email">
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Masukkan email pengguna" />
+          </Field>
+          <Field label="Hak Akses">
+            <Select value={roleSelection} onValueChange={setRoleSelection}>
+              <SelectTrigger><SelectValue placeholder="Pilih hak akses" /></SelectTrigger>
+              <SelectContent>
+                {roles.map((r) => (
+                  <SelectItem key={r.id} value={r.name}>{r.name}</SelectItem>
+                ))}
+                <SelectItem value={CUSTOM_VALUE}>Custom</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
 
-          <TabsContent value="profil" className="mt-4 space-y-3">
-            <Field label="Nama Lengkap">
-              <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-            </Field>
-            <Field label="Email">
-              <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            </Field>
-            <Field label="Nomor HP">
-              <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+62…" />
-            </Field>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="Organisasi">
-                <Input value={form.orgName} onChange={(e) => setForm({ ...form, orgName: e.target.value })} />
-              </Field>
-              <Field label="Induk Organisasi (opsional)">
-                <Input value={form.parentOrgName} onChange={(e) => setForm({ ...form, parentOrgName: e.target.value })} />
-              </Field>
-              <Field label="Level Organisasi">
-                <Select value={form.orgLevel} onValueChange={(v) => setForm({ ...form, orgLevel: v as OrgLevel })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {LEVELS.map((l) => <SelectItem key={l} value={l}>{l}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="Role">
-                <Select
-                  value={form.role}
-                  onValueChange={(v) => {
-                    const role = v as RoleName;
-                    const preset = allRoles.find((r) => r.name === role);
-                    setForm({
-                      ...form,
-                      role,
-                      permissions: form.permissionsOverridden ? form.permissions : (preset?.permissions ?? []),
-                    });
-                  }}
-                >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {roles.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </Field>
-              <Field label="Status">
-                <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as UserStatus })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </Field>
-            </div>
-          </TabsContent>
+          {isCustom && (
+            <PermissionChecklist value={customPerms} onChange={setCustomPerms} />
+          )}
+        </div>
 
-          <TabsContent value="akses" className="mt-4">
-            <PermissionChecklist
-              value={form.permissions}
-              onChange={(next) => setForm({ ...form, permissions: next, permissionsOverridden: true })}
-            />
-            {form.permissionsOverridden && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-3"
-                onClick={() => {
-                  const preset = allRoles.find((r) => r.name === form.role);
-                  setForm({ ...form, permissions: preset?.permissions ?? [], permissionsOverridden: false });
-                }}
-              >
-                Reset ke preset role {form.role}
-              </Button>
-            )}
-          </TabsContent>
-        </Tabs>
-
-        <div className="mt-6 flex flex-wrap justify-end gap-2 border-t border-border pt-4">
-          <Button variant="outline" onClick={onClose}>Batal</Button>
-          <Button
-            onClick={() => {
-              if (!form.name.trim() || !form.email.trim() || !form.orgName.trim()) {
-                toast.error("Nama, email, dan organisasi wajib diisi.");
-                return;
-              }
-              const payload = {
-                name: form.name.trim(),
-                email: form.email.trim().toLowerCase(),
-                phone: form.phone.trim() || undefined,
-                orgName: form.orgName.trim(),
-                parentOrgName: form.parentOrgName.trim() || undefined,
-                orgLevel: form.orgLevel,
-                role: form.role,
-                status: form.status,
-                permissions: form.permissionsOverridden ? form.permissions : undefined,
-              };
-              if (initial) {
-                actions.updateUser(initial.id, payload);
-                if (form.permissionsOverridden) {
-                  actions.updateUserPermissions(initial.id, form.permissions);
-                }
-                toast.success("Pengguna berhasil diperbarui.");
-              } else {
-                actions.createUser(payload);
-                toast.success("Pengguna baru ditambahkan.");
-              }
-              onClose();
-            }}
-          >
-            {initial ? "Simpan Perubahan" : "Tambah Pengguna"}
+        <div className="mt-6 flex flex-col-reverse gap-2 border-t border-border pt-4 sm:flex-row sm:justify-end">
+          <Button variant="outline" onClick={onClose} className="sm:w-auto">Batal</Button>
+          <Button onClick={handleSave} className="sm:w-auto">
+            {initial ? "Simpan Perubahan" : "Simpan Pengguna"}
           </Button>
         </div>
       </SheetContent>
     </Sheet>
   );
-}
-
-function buildForm(initial: UserAccount | null, roles: { name: RoleName; permissions: PermissionKey[] }[]) {
-  if (initial) {
-    const preset = roles.find((r) => r.name === initial.role);
-    const overridden = !!initial.permissions && initial.permissions.length > 0;
-    return {
-      name: initial.name,
-      email: initial.email,
-      phone: initial.phone ?? "",
-      orgName: initial.orgName,
-      parentOrgName: initial.parentOrgName ?? "",
-      orgLevel: initial.orgLevel,
-      role: initial.role,
-      status: initial.status,
-      permissions: overridden ? initial.permissions! : (preset?.permissions ?? []),
-      permissionsOverridden: overridden,
-    };
-  }
-  const preset = roles.find((r) => r.name === "Admin PC");
-  return {
-    name: "",
-    email: "",
-    phone: "",
-    orgName: "",
-    parentOrgName: "",
-    orgLevel: "PC" as OrgLevel,
-    role: "Admin PC" as RoleName,
-    status: "Menunggu Aktivasi" as UserStatus,
-    permissions: preset?.permissions ?? [],
-    permissionsOverridden: false,
-  };
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
