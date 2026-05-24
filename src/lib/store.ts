@@ -25,6 +25,15 @@ import {
   type RevisionRequestEntry,
   type ResubmitEntry,
 } from "@/data/mockData";
+import {
+  seedUsers,
+  seedRoles,
+  type UserAccount,
+  type RoleDef,
+  type RoleName,
+  type PermissionKey,
+  type UserStatus,
+} from "@/data/usersData";
 
 export interface SLAConfig {
   defaultDays: number;
@@ -54,6 +63,8 @@ interface State {
   batches: PeruriBatch[];
   audit: AuditEntry[];
   accessCodes: AccessCode[];
+  users: UserAccount[];
+  roles: RoleDef[];
   /** runtime statusOrg overrides (id → status) — applied on top of masterPC/PW seeds */
   orgStatus: Record<string, "Production" | "Pending Aktivasi" | "Belum Production">;
   sla: SLAConfig;
@@ -62,7 +73,7 @@ interface State {
   nextTicketSeq: number;
 }
 
-const STORAGE_KEY = "digdaya-portal-state-v6";
+const STORAGE_KEY = "digdaya-portal-state-v7";
 
 function initial(): State {
   return {
@@ -70,6 +81,8 @@ function initial(): State {
     batches: seedPeruriBatches,
     audit: seedAudit,
     accessCodes: seedAccessCodes,
+    users: seedUsers,
+    roles: seedRoles,
     orgStatus: {},
     sla: { defaultDays: 3, greenMaxDays: 1, yellowMaxDays: 3, notifyEmails: "ops@digdaya.nu.id", defaultCodeValidDays: 30, maxRevisions: 3 },
     notif: { emailEnabled: true, whatsappEnabled: false },
@@ -1139,4 +1152,98 @@ export const actions = {
     });
   },
   updateNotif(cfg: Partial<NotifConfig>) { setState((s) => ({ notif: { ...s.notif, ...cfg } })); },
+
+  // ===== Users & Roles =====
+  createUser(input: Omit<UserAccount, "id" | "createdAt" | "lastLoginAt">): UserAccount {
+    const user: UserAccount = {
+      ...input,
+      id: "u-" + Math.random().toString(36).slice(2, 10),
+      createdAt: new Date().toISOString(),
+    };
+    setState((s) => ({ users: [user, ...s.users] }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: "CREATE_USER",
+      detail: `Menambahkan pengguna ${user.name} (${user.email}) sebagai ${user.role}.`,
+    });
+    return user;
+  },
+
+  updateUser(id: string, patch: Partial<UserAccount>) {
+    let updated: UserAccount | undefined;
+    setState((s) => ({
+      users: s.users.map((u) => {
+        if (u.id !== id) return u;
+        updated = { ...u, ...patch };
+        return updated;
+      }),
+    }));
+    if (updated) {
+      pushAudit({
+        actor: state.user?.email ?? "system",
+        role: state.user?.role ?? "Super Admin",
+        action: "UPDATE_USER",
+        detail: `Memperbarui pengguna ${updated.name} (${updated.email}).`,
+      });
+    }
+  },
+
+  setUserStatus(id: string, status: UserStatus) {
+    const u = state.users.find((x) => x.id === id);
+    if (!u) return;
+    setState((s) => ({ users: s.users.map((x) => (x.id === id ? { ...x, status } : x)) }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: status === "Aktif" ? "ENABLE_USER" : "DISABLE_USER",
+      detail: `${status === "Aktif" ? "Mengaktifkan" : "Menonaktifkan"} pengguna ${u.name}.`,
+    });
+  },
+
+  resetUserAccess(id: string) {
+    const u = state.users.find((x) => x.id === id);
+    if (!u) return;
+    setState((s) => ({
+      users: s.users.map((x) => (x.id === id ? { ...x, permissions: undefined } : x)),
+    }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: "RESET_USER_ACCESS",
+      detail: `Reset hak akses pengguna ${u.name} ke preset role ${u.role}.`,
+    });
+  },
+
+  updateUserPermissions(id: string, permissions: PermissionKey[]) {
+    const u = state.users.find((x) => x.id === id);
+    if (!u) return;
+    setState((s) => ({
+      users: s.users.map((x) => (x.id === id ? { ...x, permissions } : x)),
+    }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: "UPDATE_USER_PERMISSION",
+      detail: `Memperbarui hak akses pengguna ${u.name} (${permissions.length} menu).`,
+    });
+  },
+
+  updateRolePermissions(roleId: string, patch: { name?: RoleName; description?: string; permissions: PermissionKey[] }) {
+    const r = state.roles.find((x) => x.id === roleId);
+    if (!r) return;
+    setState((s) => ({
+      roles: s.roles.map((x) =>
+        x.id === roleId
+          ? { ...x, ...(patch.description !== undefined ? { description: patch.description } : {}), permissions: patch.permissions }
+          : x,
+      ),
+    }));
+    pushAudit({
+      actor: state.user?.email ?? "system",
+      role: state.user?.role ?? "Super Admin",
+      action: "UPDATE_ROLE_PERMISSION",
+      detail: `Memperbarui hak akses role ${r.name} (${patch.permissions.length} menu).`,
+    });
+  },
 };
