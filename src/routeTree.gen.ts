@@ -34,6 +34,7 @@ import { Route as PwNotificationsRouteImport } from './routes/pw.notifications'
 import { Route as PwDaftarkanRouteImport } from './routes/pw.daftarkan'
 import { Route as PcNotificationsRouteImport } from './routes/pc.notifications'
 import { Route as PcDaftarkanRouteImport } from './routes/pc.daftarkan'
+import { Route as OpsUsersRouteImport } from './routes/ops.users'
 import { Route as OpsRepositoryRouteImport } from './routes/ops.repository'
 import { Route as AktivasiAccessCodeRouteImport } from './routes/aktivasi.$accessCode'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -186,6 +187,11 @@ const PcDaftarkanRoute = PcDaftarkanRouteImport.update({
   id: '/daftarkan',
   path: '/daftarkan',
   getParentRoute: () => PcRoute,
+} as any)
+const OpsUsersRoute = OpsUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => OpsRoute,
 } as any)
 const OpsRepositoryRoute = OpsRepositoryRouteImport.update({
   id: '/repository',
@@ -350,6 +356,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/ops/repository': typeof OpsRepositoryRoute
+  '/ops/users': typeof OpsUsersRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
@@ -399,6 +406,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/ops/repository': typeof OpsRepositoryRoute
+  '/ops/users': typeof OpsUsersRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
@@ -454,6 +462,7 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/aktivasi/$accessCode': typeof AktivasiAccessCodeRoute
   '/ops/repository': typeof OpsRepositoryRoute
+  '/ops/users': typeof OpsUsersRoute
   '/pc/daftarkan': typeof PcDaftarkanRoute
   '/pc/notifications': typeof PcNotificationsRoute
   '/pw/daftarkan': typeof PwDaftarkanRoute
@@ -510,6 +519,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/ops/repository'
+    | '/ops/users'
     | '/pc/daftarkan'
     | '/pc/notifications'
     | '/pw/daftarkan'
@@ -559,6 +569,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/ops/repository'
+    | '/ops/users'
     | '/pc/daftarkan'
     | '/pc/notifications'
     | '/pw/daftarkan'
@@ -613,6 +624,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/aktivasi/$accessCode'
     | '/ops/repository'
+    | '/ops/users'
     | '/pc/daftarkan'
     | '/pc/notifications'
     | '/pw/daftarkan'
@@ -842,6 +854,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/pc/daftarkan'
       preLoaderRoute: typeof PcDaftarkanRouteImport
       parentRoute: typeof PcRoute
+    }
+    '/ops/users': {
+      id: '/ops/users'
+      path: '/users'
+      fullPath: '/ops/users'
+      preLoaderRoute: typeof OpsUsersRouteImport
+      parentRoute: typeof OpsRoute
     }
     '/ops/repository': {
       id: '/ops/repository'
@@ -1096,6 +1115,7 @@ const OpsActivationSubmissionsRouteWithChildren =
 
 interface OpsRouteChildren {
   OpsRepositoryRoute: typeof OpsRepositoryRoute
+  OpsUsersRoute: typeof OpsUsersRoute
   OpsIndexRoute: typeof OpsIndexRoute
   OpsActivationAccessCodesRoute: typeof OpsActivationAccessCodesRouteWithChildren
   OpsActivationAuditLogRoute: typeof OpsActivationAuditLogRoute
@@ -1112,6 +1132,7 @@ interface OpsRouteChildren {
 
 const OpsRouteChildren: OpsRouteChildren = {
   OpsRepositoryRoute: OpsRepositoryRoute,
+  OpsUsersRoute: OpsUsersRoute,
   OpsIndexRoute: OpsIndexRoute,
   OpsActivationAccessCodesRoute: OpsActivationAccessCodesRouteWithChildren,
   OpsActivationAuditLogRoute: OpsActivationAuditLogRoute,
