@@ -404,20 +404,16 @@ function UserFormSheet({
     permissionsOverridden: boolean;
   }>(() => buildForm(initial, allRoles));
 
-  // Reset when opening with a new target
-  useState(() => undefined); // placate
-  // We use the open/initial as dependency via a key approach below
+  // Reset form whenever target user (or create mode) changes.
+  useEffect(() => {
+    if (open) setForm(buildForm(initial, allRoles));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, initial?.id]);
 
   if (!open) return null;
 
   return (
-    <Sheet
-      open={open}
-      onOpenChange={(o) => {
-        if (!o) onClose();
-        else setForm(buildForm(initial, allRoles));
-      }}
-    >
+    <Sheet open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
       <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
         <SheetHeader>
           <SheetTitle>{initial ? "Edit Pengguna" : "Tambah Pengguna"}</SheetTitle>
