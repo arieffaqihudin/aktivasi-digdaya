@@ -158,9 +158,15 @@ export interface Registration {
 
   // Jalur A
   accessCode?: string;
-  /** Untuk Scoped batch code: organisasi yang dipilih pendaftar dari daftar scope. */
+  /** Untuk Scoped batch code: organisasi yang dipilih pendaftar dari daftar scope.
+   *  Untuk Ranting: id Ranting yang baru dibuat. */
   selectedOrgId?: string;
 
+  // Ranting-only fields
+  parentMwcId?: string;
+  parentMwcName?: string;
+  village?: string;
+  locationNote?: string;
 
   // Jalur B / Internal source
   sourcePcId?: string;
