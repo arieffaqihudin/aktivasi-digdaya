@@ -1,5 +1,5 @@
 // ============================================================
-// Master Data Pengguna & Hak Akses
+// Master Data Pengguna Internal Digdaya Ops & Hak Akses
 // ============================================================
 
 export type PermissionKey =
@@ -17,30 +17,19 @@ export type PermissionKey =
   | "access.roles"
   | "repository";
 
-export type UserStatus = "Aktif" | "Nonaktif" | "Menunggu Aktivasi";
+export type UserStatus = "Aktif" | "Nonaktif";
 
-export type OrgLevel = "PB" | "PW" | "PC" | "MWC" | "Ranting" | "Lembaga";
-
-export type RoleName =
-  | "Super Admin"
-  | "Reviewer Aktivasi"
-  | "Admin Ops Persuratan"
-  | "Admin PW"
-  | "Admin PC";
+/** Free string — bisa preset bawaan maupun custom yang dibuat Super Admin. */
+export type RoleName = string;
 
 export interface UserAccount {
   id: string;
   name: string;
   email: string;
-  phone?: string;
+  /** Nama hak akses (role) yang dipilih. */
   role: RoleName;
-  orgName: string;
-  orgLevel: OrgLevel;
-  parentOrgName?: string;
   status: UserStatus;
   lastLoginAt?: string;
-  /** Optional override; if undefined uses role preset */
-  permissions?: PermissionKey[];
   createdAt: string;
 }
 
@@ -48,10 +37,9 @@ export interface RoleDef {
   id: string;
   name: RoleName;
   description: string;
-  /** Empty array = no Ops sidebar access (uses dashboard PW/PC instead) */
   permissions: PermissionKey[];
-  /** Helper label for the Akses Utama column */
-  primaryAccess: string;
+  /** Role bawaan sistem — tidak dapat dihapus. */
+  isSystem?: boolean;
 }
 
 export const PERMISSION_LABELS: Record<PermissionKey, string> = {
@@ -103,7 +91,7 @@ export const seedRoles: RoleDef[] = [
     name: "Super Admin",
     description: "Akses penuh ke seluruh modul Digdaya Ops.",
     permissions: [...ALL_PERMISSIONS],
-    primaryAccess: "Semua menu",
+    isSystem: true,
   },
   {
     id: "role-reviewer",
@@ -115,35 +103,27 @@ export const seedRoles: RoleDef[] = [
       "activation.peruri_export",
       "activation.audit_log",
     ],
-    primaryAccess: "Portal Aktivasi (Review)",
+    isSystem: true,
   },
   {
     id: "role-ops-persuratan",
     name: "Admin Ops Persuratan",
-    description: "Mengelola modul persuratan dan repository.",
+    description: "Mengelola modul persuratan Digdaya.",
     permissions: [
       "overview",
       "persuratan.change_email",
       "persuratan.check_order_id",
       "persuratan.kop_surat",
       "persuratan.stamper",
-      "repository",
     ],
-    primaryAccess: "Persuratan, Repository",
+    isSystem: true,
   },
   {
-    id: "role-admin-pw",
-    name: "Admin PW",
-    description: "Mengelola dashboard PW dan mendaftarkan organisasi bawahan.",
-    permissions: [],
-    primaryAccess: "Dashboard PW",
-  },
-  {
-    id: "role-admin-pc",
-    name: "Admin PC",
-    description: "Mengelola dashboard PC dan mendaftarkan organisasi bawahan.",
-    permissions: [],
-    primaryAccess: "Dashboard PC",
+    id: "role-repository",
+    name: "Admin Repository",
+    description: "Mengelola repository dokumen Digdaya.",
+    permissions: ["overview", "repository"],
+    isSystem: true,
   },
 ];
 
@@ -156,10 +136,7 @@ export const seedUsers: UserAccount[] = [
     id: "u-admin",
     name: "Admin",
     email: "admin@digdaya.nu.id",
-    phone: "+628110000001",
     role: "Super Admin",
-    orgName: "PBNU",
-    orgLevel: "PB",
     status: "Aktif",
     lastLoginAt: hoursAgo(2),
     createdAt: daysAgo(180),
@@ -168,70 +145,33 @@ export const seedUsers: UserAccount[] = [
     id: "u-reviewer",
     name: "Reviewer Tim Digdaya",
     email: "reviewer@digdaya.nu.id",
-    phone: "+628110000002",
     role: "Reviewer Aktivasi",
-    orgName: "PBNU",
-    orgLevel: "PB",
     status: "Aktif",
     lastLoginAt: hoursAgo(5),
     createdAt: daysAgo(150),
   },
   {
-    id: "u-pw-diy",
-    name: "Admin PW DIY",
-    email: "pw@digdaya.nu.id",
-    phone: "+628110000003",
-    role: "Admin PW",
-    orgName: "PWNU DI Yogyakarta",
-    orgLevel: "PW",
-    parentOrgName: "PBNU",
+    id: "u-ops-persuratan",
+    name: "Admin Ops Persuratan",
+    email: "ops.persuratan@digdaya.nu.id",
+    role: "Admin Ops Persuratan",
     status: "Aktif",
     lastLoginAt: daysAgo(1),
     createdAt: daysAgo(120),
   },
   {
-    id: "u-pc-sleman",
-    name: "Admin PC Sleman",
-    email: "pc@digdaya.nu.id",
-    phone: "+628110000004",
-    role: "Admin PC",
-    orgName: "PCNU Kabupaten Sleman",
-    orgLevel: "PC",
-    parentOrgName: "PWNU DI Yogyakarta",
+    id: "u-repository",
+    name: "Admin Repository",
+    email: "repository@digdaya.nu.id",
+    role: "Admin Repository",
     status: "Aktif",
     lastLoginAt: daysAgo(2),
-    createdAt: daysAgo(110),
-  },
-  {
-    id: "u-pc-kraksaan",
-    name: "Admin PCNU Kraksaan",
-    email: "pc.kraksaan@digdaya.nu.id",
-    phone: "+628110000005",
-    role: "Admin PC",
-    orgName: "PCNU Kraksaan",
-    orgLevel: "PC",
-    parentOrgName: "PWNU Jawa Timur",
-    status: "Aktif",
-    lastLoginAt: hoursAgo(20),
     createdAt: daysAgo(90),
-  },
-  {
-    id: "u-pc-yogya",
-    name: "Admin PCNU Kota Yogyakarta",
-    email: "pc.yogyakarta@digdaya.nu.id",
-    phone: "+628110000006",
-    role: "Admin PC",
-    orgName: "PCNU Kota Yogyakarta",
-    orgLevel: "PC",
-    parentOrgName: "PWNU DI Yogyakarta",
-    status: "Menunggu Aktivasi",
-    createdAt: daysAgo(3),
   },
 ];
 
-/** Return the effective permission set for a user (override > role preset). */
+/** Return the effective permission set for a user (role-based). */
 export function effectivePermissions(user: UserAccount, roles: RoleDef[]): PermissionKey[] {
-  if (user.permissions && user.permissions.length > 0) return user.permissions;
   const role = roles.find((r) => r.name === user.role);
   return role ? role.permissions : [];
 }
