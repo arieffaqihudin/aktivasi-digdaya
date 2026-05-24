@@ -5,19 +5,171 @@ import { type TipeOrg } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { isValidNIK, isValidEmail, normalizePhone, isValidPhone } from "@/utils/validation";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-import { findPcDemoTarget, pcDemoTargets } from "@/lib/demo-scope-data";
+import { Loader2, Info as InfoIcon } from "lucide-react";
+import { findPcDemoTarget, pcDemoTargets, kraksaanMwcOptions, findKraksaanMwc } from "@/lib/demo-scope-data";
+import { SuratTugasPicker, validateSuratTugas, type SuratTugasValue } from "@/components/internal/SuratTugasPicker";
 
 export const Route = createFileRoute("/pc/daftarkan")({
   validateSearch: (search: Record<string, unknown>) => ({
     targetId: typeof search.targetId === "string" ? search.targetId : undefined,
+    type: search.type === "ranting" ? ("ranting" as const) : undefined,
   }),
   component: Daftarkan,
 });
 
 function Daftarkan() {
+  const search = Route.useSearch();
+  if (search.type === "ranting") return <RantingForm />;
+  return <StandardForm />;
+}
+
+// ============= Ranting form =============
+function RantingForm() {
+  const navigate = useNavigate();
+  const user = useStore((s) => s.user);
+  const [parentMwcId, setParentMwcId] = useState("");
+  const [namaRanting, setNamaRanting] = useState("");
+  const [village, setVillage] = useState("");
+  const [locationNote, setLocationNote] = useState("");
+  const [namaAdmin, setNamaAdmin] = useState("");
+  const [jabatan, setJabatan] = useState("");
+  const [nik, setNik] = useState("");
+  const [hp, setHp] = useState("");
+  const [email, setEmail] = useState("");
+  const [surat, setSurat] = useState<SuratTugasValue>({ sumber: "DIGDAYA_PERSURATAN", dokumen: null, file: null });
+  const [busy, setBusy] = useState(false);
+
+  const parent = findKraksaanMwc(parentMwcId);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!parent) return toast.error("Pilih MWC induk terlebih dahulu.");
+    if (!namaRanting.trim()) return toast.error("Nama Ranting wajib diisi.");
+    if (!namaAdmin.trim() || !jabatan.trim()) return toast.error("Lengkapi data administrator.");
+    if (!isValidNIK(nik)) return toast.error("NIK harus 16 digit.");
+    if (!isValidEmail(email)) return toast.error("Email tidak valid.");
+    const normHp = normalizePhone(hp);
+    if (!isValidPhone(normHp)) return toast.error("Nomor HP tidak valid.");
+    const sErr = validateSuratTugas(surat);
+    if (sErr) return toast.error(sErr);
+
+    setBusy(true);
+    await new Promise((r) => setTimeout(r, 400));
+    const reg = actions.submitRanting({
+      namaRanting: namaRanting.trim(),
+      parentMwcId: parent.id,
+      parentMwcName: parent.name,
+      village: village.trim() || undefined,
+      locationNote: locationNote.trim() || undefined,
+      namaAdmin,
+      jabatan,
+      nik,
+      hp: normHp,
+      email,
+      sumberSuratTugas: surat.sumber,
+      suratTugasFile: surat.file?.name,
+      dokumenSistem: surat.dokumen ?? undefined,
+    });
+    setBusy(false);
+    if (!reg) return toast.error("Gagal mengirim pengajuan.");
+    toast.success("Pengajuan aktivasi Ranting berhasil dikirim.");
+    navigate({ to: "/pc/status-pengajuan" });
+  };
+
+  return (
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-3xl space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold text-foreground">Daftarkan Ranting</h1>
+          <p className="text-sm text-muted-foreground">
+            Input data Ranting di bawah {user?.pcName ?? "PCNU Kraksaan"}, lalu lengkapi data administrator untuk proses aktivasi.
+          </p>
+        </div>
+
+        <div className="flex items-start gap-3 rounded-md border border-info/30 bg-info/5 p-4 text-sm text-foreground">
+          <InfoIcon className="mt-0.5 h-4 w-4 shrink-0 text-info" />
+          <p>
+            Data Ranting belum tersedia di master data terpusat. Input ini akan menjadi cikal-bakal master data Ranting di Digdaya setelah diverifikasi.
+          </p>
+        </div>
+
+        <form onSubmit={submit} className="space-y-5">
+          <section className="rounded-xl border border-border bg-card p-5 space-y-4">
+            <p className="text-sm font-semibold text-foreground">Data Ranting</p>
+
+            <div>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">MWC Induk</Label>
+              <Select value={parentMwcId} onValueChange={setParentMwcId}>
+                <SelectTrigger className="mt-1.5 w-full"><SelectValue placeholder="Pilih MWC induk" /></SelectTrigger>
+                <SelectContent>
+                  {kraksaanMwcOptions.map((m) => (
+                    <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Field label="Nama Ranting" value={namaRanting} onChange={setNamaRanting} placeholder="Contoh: Ranting NU Desa A" />
+            <Field label="Wilayah / Desa / Kelurahan (opsional)" value={village} onChange={setVillage} required={false} placeholder="Contoh: Desa Banyuanyar Tengah" />
+            <div>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Catatan Lokasi (opsional)</Label>
+              <Textarea value={locationNote} onChange={(e) => setLocationNote(e.target.value)} className="mt-1.5" rows={2} />
+            </div>
+          </section>
+
+          <section className="rounded-xl border border-border bg-card p-5 space-y-4">
+            <p className="text-sm font-semibold text-foreground">Data Administrator</p>
+            <Field label="Nama Administrator" value={namaAdmin} onChange={setNamaAdmin} />
+            <Field label="Jabatan Administrator" value={jabatan} onChange={setJabatan} />
+            <Field label="NIK (16 digit)" value={nik} onChange={(v) => setNik(v.replace(/\D/g, "").slice(0, 16))} />
+            <Field label="Nomor HP WhatsApp" value={hp} onChange={setHp} placeholder="08xxxxxxxxxx" />
+            <Field label="Email" value={email} onChange={setEmail} type="email" />
+          </section>
+
+          <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+            <p className="text-sm font-semibold text-foreground">Surat Tugas</p>
+            <SuratTugasPicker value={surat} onChange={setSurat} />
+          </section>
+
+          {parent && namaRanting && (
+            <section className="rounded-xl border border-border bg-card p-5">
+              <p className="text-sm font-semibold text-foreground">Konfirmasi</p>
+              <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
+                <Info label="Nama Ranting" value={namaRanting} />
+                <Info label="MWC Induk" value={parent.name} />
+                <Info label="PC Induk" value={user?.pcName ?? "PCNU Kraksaan"} />
+                {village && <Info label="Wilayah / Desa" value={village} />}
+                <Info label="Nama Administrator" value={namaAdmin || "—"} />
+                <Info label="Jabatan" value={jabatan || "—"} />
+                <Info label="NIK" value={nik ? `${nik.slice(0, 4)}••••••••${nik.slice(-2)}` : "—"} />
+                <Info label="Nomor HP" value={hp || "—"} />
+                <Info label="Email" value={email || "—"} />
+                <Info label="Sumber Surat Tugas" value={surat.sumber === "DIGDAYA_PERSURATAN" ? "Digdaya Persuratan" : "Upload Manual"} />
+              </dl>
+            </section>
+          )}
+
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <Link to="/pc" className="inline-flex w-full items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground sm:w-auto">
+              Kembali
+            </Link>
+            <Button type="submit" disabled={busy} className="w-full sm:w-auto">
+              {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Kirim Pengajuan
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ============= Standard form (MWC / Lembaga PC) =============
+function StandardForm() {
   const search = Route.useSearch();
   const navigate = useNavigate();
   const registrations = useStore((s) => s.registrations);
@@ -49,11 +201,7 @@ function Daftarkan() {
     const reg = actions.submitInternal({
       tipeOrg: target.type as TipeOrg,
       namaOrg: target.name,
-      namaAdmin,
-      jabatan,
-      nik,
-      hp: normHp,
-      email,
+      namaAdmin, jabatan, nik, hp: normHp, email,
       sumberSuratTugas: tipeSurat,
       suratTugasFile: tipeSurat === "MANUAL_UPLOAD" ? suratValue : undefined,
       dokumenSistem: tipeSurat === "DIGDAYA_PERSURATAN" ? {
@@ -104,8 +252,8 @@ function Daftarkan() {
             <div className="rounded-xl border border-border bg-card p-5">
               <p className="text-sm font-semibold text-foreground">Data organisasi</p>
               <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-                <ReadOnlyField label="Organisasi" value={target.name} />
-                <ReadOnlyField label="Tipe" value={target.type} />
+                <Info label="Organisasi" value={target.name} />
+                <Info label="Tipe" value={target.type} />
               </dl>
             </div>
 
@@ -168,16 +316,16 @@ function Daftarkan() {
   );
 }
 
-function Field({ label, value, onChange, type = "text", placeholder }: { label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string }) {
+function Field({ label, value, onChange, type = "text", placeholder, required = true }: { label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string; required?: boolean }) {
   return (
     <div>
       <Label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</Label>
-      <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="mt-1.5" required />
+      <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="mt-1.5" required={required} />
     </div>
   );
 }
 
-function ReadOnlyField({ label, value }: { label: string; value: string }) {
+function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <Label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</Label>
