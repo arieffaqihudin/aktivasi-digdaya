@@ -25,6 +25,15 @@ import {
   type RevisionRequestEntry,
   type ResubmitEntry,
 } from "@/data/mockData";
+import {
+  seedUsers,
+  seedRoles,
+  type UserAccount,
+  type RoleDef,
+  type RoleName,
+  type PermissionKey,
+  type UserStatus,
+} from "@/data/usersData";
 
 export interface SLAConfig {
   defaultDays: number;
