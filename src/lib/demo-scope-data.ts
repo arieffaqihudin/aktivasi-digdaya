@@ -50,6 +50,15 @@ export const pwDemoTargets: DemoTarget[] = [
   { id: "lpw-maarif", name: "LP Ma'arif PWNU DIY", type: "Lembaga PW" },
 ];
 
+/** MWC induk pilihan saat PCNU Kraksaan mendaftarkan Ranting. */
+export const kraksaanMwcOptions: { id: string; name: string }[] = pcDemoTargets
+  .filter((t) => t.type === "MWC")
+  .map((t) => ({ id: t.id, name: t.name }));
+
+export function findKraksaanMwc(id?: string | null) {
+  return kraksaanMwcOptions.find((m) => m.id === id);
+}
+
 export function findPcDemoTarget(targetId?: string | null) {
   return pcDemoTargets.find((item) => item.id === targetId);
 }

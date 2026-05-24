@@ -637,14 +637,106 @@ export const actions = {
     return reg;
   },
 
+  /** Khusus PC mendaftarkan Ranting — input nama Ranting manual karena belum ada master data. */
+  submitRanting(payload: {
+    namaRanting: string;
+    parentMwcId: string;
+    parentMwcName: string;
+    village?: string;
+    locationNote?: string;
+    namaAdmin: string;
+    jabatan: string;
+    nik: string;
+    hp: string;
+    email: string;
+    sumberSuratTugas: SumberSuratTugas;
+    suratTugasFile?: string;
+    dokumenSistem?: DokumenSistem;
+  }): Registration | null {
+    const user = state.user;
+    if (!user || user.role !== "PC") return null;
+    const pc = masterPC.find((p) => p.id === user.pcId);
+    if (!pc) return null;
+    const { ticketId } = newTicket();
+    const slug = payload.namaRanting.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const rantingId = `ranting-${slug}-${ticketId.slice(-6)}`;
+    const reg: Registration = {
+      ticketId,
+      jalur: "B",
+      sumberPengajuan: "PC_DASHBOARD",
+      tingkatPendaftar: "PC",
+      tipeOrg: "Ranting",
+      namaOrg: payload.namaRanting,
+      pw: pc.pw,
+      sourcePcId: pc.id,
+      sourcePcName: user.pcName ?? pc.nama,
+      selectedOrgId: rantingId,
+      parentMwcId: payload.parentMwcId,
+      parentMwcName: payload.parentMwcName,
+      village: payload.village,
+      locationNote: payload.locationNote,
+      namaAdmin: payload.namaAdmin,
+      jabatan: payload.jabatan,
+      nik: payload.nik,
+      hp: payload.hp,
+      email: payload.email,
+      sumberSuratTugas: payload.sumberSuratTugas,
+      suratTugasFile: payload.sumberSuratTugas === "MANUAL_UPLOAD" ? (payload.suratTugasFile ?? "surat-tugas.pdf") : undefined,
+      dokumenSistem: payload.sumberSuratTugas === "DIGDAYA_PERSURATAN" ? payload.dokumenSistem : undefined,
+      status: "Pending",
+      submittedAt: new Date().toISOString(),
+    };
+    setState((s) => ({
+      registrations: [reg, ...s.registrations],
+      orgStatus: { ...s.orgStatus, [rantingId]: "Pending Aktivasi" },
+    }));
+    pushAudit({
+      actor: user.email,
+      role: user.role,
+      action: "SUBMIT_RANTING",
+      ticketId,
+      detail: `${user.pcName ?? pc.nama} mendaftarkan ${payload.namaRanting} (Ranting, induk ${payload.parentMwcName}).`,
+    });
+    notifActions.broadcast([
+      {
+        recipientRole: "REVIEWER",
+        type: "NEW_SUBMISSION",
+        title: `Pengajuan Ranting baru`,
+        description: `${payload.namaRanting} (di bawah ${payload.parentMwcName}) menunggu review.`,
+        ticketId,
+        route: `/review/inbox/${ticketId}`,
+      },
+      {
+        recipientRole: "PC",
+        recipientOrgId: pc.id,
+        type: "NEW_SUBMISSION",
+        title: "Pengajuan Ranting dikirim",
+        description: `${payload.namaRanting} sedang menunggu review Tim Digdaya.`,
+        ticketId,
+        route: `/pc/status-pengajuan/${ticketId}`,
+      },
+      {
+        recipientRole: "OPS",
+        type: "NEW_SUBMISSION",
+        title: "Pengajuan Ranting baru",
+        description: `${payload.namaRanting} didaftarkan oleh ${user.pcName ?? pc.nama}.`,
+        ticketId,
+        route: `/ops/activation/submissions/${ticketId}`,
+      },
+    ]);
+    return reg;
+  },
+
   // ===== Review =====
+
   approve(ticketId: string) {
     const user = state.user;
     const reg = state.registrations.find((r) => r.ticketId === ticketId);
     if (!reg) return;
 
-    // Tentukan org yang harus diubah jadi production (jika ini aktivasi publik).
-    // Scoped code → pakai selectedOrgId; Individual code → pakai code.orgId.
+    // Tentukan org yang harus diubah jadi production.
+    // - Aktivasi publik: Scoped → selectedOrgId; Individual → code.orgId.
+    // - Ranting dari PC dashboard: selectedOrgId = ranting id (baru).
     let setOrgProduction: string | null = null;
     if (reg.sumberPengajuan === "PUBLIC" && reg.accessCode) {
       if (reg.selectedOrgId) {
@@ -653,7 +745,10 @@ export const actions = {
         const code = state.accessCodes.find((c) => c.code === reg.accessCode);
         if (code && code.orgId) setOrgProduction = code.orgId;
       }
+    } else if (reg.tipeOrg === "Ranting" && reg.selectedOrgId) {
+      setOrgProduction = reg.selectedOrgId;
     }
+
 
     // Scoped batch codes tetap reusable setelah approve (status tidak diubah ke "Used").
     const codeForReg = reg.accessCode ? state.accessCodes.find((c) => c.code === reg.accessCode) : null;
