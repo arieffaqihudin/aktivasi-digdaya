@@ -77,13 +77,17 @@ export function InternalStatusDetail({ ticketId, scope }: { ticketId: string; sc
               <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
                 <Info label="Nama Organisasi" value={reg.namaOrg} />
                 <Info label="Tipe Organisasi" value={reg.tipeOrg} />
-                <Info label="Wilayah PW" value={reg.pw} />
-                {reg.sourcePcName && <Info label="Didaftarkan oleh" value={reg.sourcePcName} />}
+                {reg.tipeOrg === "Ranting" && reg.parentMwcName && <Info label="MWC Induk" value={reg.parentMwcName} />}
+                {reg.tipeOrg === "Ranting" && reg.sourcePcName && <Info label="PC Induk" value={reg.sourcePcName} />}
+                {reg.tipeOrg === "Ranting" && reg.village && <Info label="Wilayah / Desa" value={reg.village} />}
+                {reg.tipeOrg !== "Ranting" && <Info label="Wilayah PW" value={reg.pw} />}
+                {reg.sourcePcName && reg.tipeOrg !== "Ranting" && <Info label="Didaftarkan oleh" value={reg.sourcePcName} />}
                 <Info label="Nama Administrator" value={reg.namaAdmin} />
                 <Info label="Jabatan" value={reg.jabatan} />
                 <Info label="Email" value={reg.email} />
                 <Info label="Tanggal Submit" value={formatDateTime(reg.submittedAt)} />
               </dl>
+
             </div>
 
             {reg.status === "PerluPerbaikan" && (
