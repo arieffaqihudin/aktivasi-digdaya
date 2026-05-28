@@ -528,7 +528,7 @@ function StandardForm() {
 
           <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:static sm:z-auto sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none sm:supports-[backdrop-filter]:bg-transparent flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <Link to="/pc/daftarkan" search={{ type: backType }} className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground active:bg-accent/40 sm:h-10 sm:w-auto sm:rounded-md">
-              Kembali ke Pilihan
+              Kembali ke {target.type === "MWC" ? "Pilih MWC" : "Pilih Lembaga PC"}
             </Link>
             <Button type="submit" disabled={busy} className="h-11 w-full text-sm sm:h-10 sm:w-auto">
               {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
