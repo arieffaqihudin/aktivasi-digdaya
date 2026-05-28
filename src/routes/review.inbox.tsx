@@ -17,7 +17,6 @@ export const Route = createFileRoute("/review/inbox")({
 
 function Inbox() {
   const regs = useStore((s) => s.registrations);
-  const sla = useStore((s) => s.sla);
   const [sumber, setSumber] = useState("all");
   const [tingkat, setTingkat] = useState("all");
   const [sumberSurat, setSumberSurat] = useState("all");
