@@ -204,6 +204,13 @@ export interface Registration {
   revisionHistory?: RevisionRequestEntry[];
   resubmitHistory?: ResubmitEntry[];
   peruriBatchId?: string;
+
+  // Ranting management ID (Super Admin generates after approval)
+  idManagementStatus?: "Belum Dibuat" | "ID Terbuat" | "Siap Aktivasi Sistem" | "Aktif di Digdaya";
+  managementId?: string;
+  managementGeneratedAt?: string;
+  managementGeneratedBy?: string;
+  activatedSystems?: Array<"Digdaya Kepengurusan" | "Digdaya Persuratan">;
 }
 
 export interface PeruriBatch {
@@ -468,7 +475,10 @@ export const seedRegistrations: Registration[] = [
     parentMwcId: "mwc-gading", parentMwcName: "MWCNU Gading", village: "Gading Wetan",
     namaAdmin: "Siti Aminah", jabatan: "Sekretaris", nik: "3513150000000153", hp: "+6281234500135", email: "siti.aminah@example.com",
     sumberSuratTugas: "DIGDAYA_PERSURATAN", dokumenSistem: mockSuratTugasDigdaya[mockSuratTugasDigdaya.length - 1],
-    status: "Approved", submittedAt: daysAgo(1, 9), reviewedAt: daysAgo(0, 12), reviewedBy: "reviewer@digdaya.nu.id" } as Registration,
+    status: "Approved", submittedAt: daysAgo(1, 9), reviewedAt: daysAgo(0, 12), reviewedBy: "reviewer@digdaya.nu.id",
+    idManagementStatus: "Aktif di Digdaya", managementId: "NU-RTG-2026-000002",
+    managementGeneratedAt: daysAgo(0, 13), managementGeneratedBy: "admin@digdaya.nu.id",
+    activatedSystems: ["Digdaya Kepengurusan", "Digdaya Persuratan"] } as Registration,
   { jalur: "B", sumberPengajuan: "PC_DASHBOARD", tingkatPendaftar: "PC", ticketId: "AKT-2026-000140", tipeOrg: "Ranting",
     namaOrg: "Ranting NU Mlati Lor", pw: "PWNU DI Yogyakarta",
     sourcePcId: "pc-sleman", sourcePcName: "PCNU Kabupaten Sleman",
@@ -494,9 +504,22 @@ export const seedRegistrations: Registration[] = [
     sourcePcId: "pc-sleman", sourcePcName: "PCNU Kraksaan",
     selectedOrgId: "ranting-paiton-kulon",
     parentMwcId: "mwc-paiton", parentMwcName: "MWCNU Paiton", village: "Paiton Kulon",
-    namaAdmin: "Mahmud Yunus", jabatan: "Ketua", nik: "3513150000000152", hp: "+6281234500152", email: "mahmud@example.com",
+    namaAdmin: "Mahmud Yunus", jabatan: "Ketua", nik: "3513150000000152", hp: "+6281234500127", email: "ahmad.subhan@example.com",
     sumberSuratTugas: "DIGDAYA_PERSURATAN", dokumenSistem: mockSuratTugasDigdaya[mockSuratTugasDigdaya.length - 1],
     status: "Approved", submittedAt: daysAgo(8, 9), reviewedAt: daysAgo(7, 14), reviewedBy: "reviewer@digdaya.nu.id", peruriBatchId: "BATCH-2026-001",
+    idManagementStatus: "ID Terbuat", managementId: "NU-RTG-2026-000001",
+    managementGeneratedAt: daysAgo(6, 10), managementGeneratedBy: "admin@digdaya.nu.id",
+    activatedSystems: ["Digdaya Kepengurusan"],
+  } as Registration,
+  // Duplikasi contoh — Banyuanyar Tengah lagi, MWC sama
+  { jalur: "B", sumberPengajuan: "PC_DASHBOARD", tingkatPendaftar: "PC", ticketId: "AKT-2026-000141", tipeOrg: "Ranting",
+    namaOrg: "Ranting NU Banyuanyar Tengah", pw: "PWNU Jawa Timur",
+    sourcePcId: "pc-sleman", sourcePcName: "PCNU Kraksaan",
+    selectedOrgId: "ranting-banyuanyar-tengah-dup",
+    parentMwcId: "mwc-banyuanyar", parentMwcName: "MWCNU Banyuanyar", village: "Banyuanyar Tengah",
+    namaAdmin: "Hasan Basri", jabatan: "Ketua", nik: "3513150000000141", hp: "+6281234500141", email: "hasan.dup@example.com",
+    sumberSuratTugas: "MANUAL_UPLOAD", suratTugasFile: "surat-tugas-dup.pdf",
+    status: "Approved", submittedAt: daysAgo(0, 8), reviewedAt: daysAgo(0, 10), reviewedBy: "reviewer@digdaya.nu.id",
   } as Registration,
 
   regJalurB({ ticketId: "AKT-2026-000127", tipeOrg: "Lembaga PC", namaOrg: "LAZISNU PCNU Sleman", pw: "PWNU DI Yogyakarta", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kabupaten Sleman", namaAdmin: "Halimah Yusuf", jabatan: "Bendahara", nik: "3404272727870027", hp: "+6281234567027", email: "halimah@lazis-sleman.id", status: "Pending", submittedAt: daysAgo(1),
@@ -505,7 +528,7 @@ export const seedRegistrations: Registration[] = [
   }),
   regJalurB({ ticketId: "AKT-2026-000128", tipeOrg: "Lembaga PC", namaOrg: "RMINU PCNU Sleman",   pw: "PWNU DI Yogyakarta", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kabupaten Sleman", namaAdmin: "Anisa Putri",   jabatan: "Sekretaris", nik: "3404282828920028", hp: "+6281234567028", email: "anisa@rmi-sleman.id", status: "Pending", submittedAt: daysAgo(0, 7) }),
   regJalurB({ ticketId: "AKT-2026-000105", tipeOrg: "Ranting", namaOrg: "Ranting NU Condongcatur",  pw: "PWNU DI Yogyakarta", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kabupaten Sleman", namaAdmin: "Nurul Hasanah", jabatan: "Sekretaris", nik: "3404050505920005", hp: "+6281234567005", email: "nurul@ranting-condongcatur.id", status: "Approved", submittedAt: daysAgo(6), reviewedAt: daysAgo(5), reviewedBy: "reviewer@digdaya.nu.id", peruriBatchId: "BATCH-2026-001" }),
-  regJalurB({ ticketId: "AKT-2026-000130", tipeOrg: "Ranting", namaOrg: "Ranting NU Banyuanyar Tengah", pw: "PWNU Jawa Timur", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kraksaan", namaAdmin: "Muhammad Rafi", jabatan: "Sekretaris", nik: "3507000000001300", hp: "+6281234500130", email: "muhammad.rafi@example.com", status: "Pending", submittedAt: "2026-05-29T02:30:00.000Z",
+  regJalurB({ ticketId: "AKT-2026-000130", tipeOrg: "Ranting", namaOrg: "Ranting NU Banyuanyar Tengah", pw: "PWNU Jawa Timur", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kraksaan", parentMwcId: "mwc-banyuanyar", parentMwcName: "MWCNU Banyuanyar", village: "Banyuanyar Tengah", selectedOrgId: "ranting-banyuanyar-tengah-130", namaAdmin: "Muhammad Rafi", jabatan: "Sekretaris", nik: "3507000000001300", hp: "+6281234500130", email: "muhammad.rafi@example.com", status: "Approved", submittedAt: "2026-05-29T02:30:00.000Z", reviewedAt: "2026-05-29T08:30:00.000Z", reviewedBy: "reviewer@digdaya.nu.id",
     sumberSuratTugas: "MANUAL_UPLOAD", suratTugasFile: "surat-tugas-ranting-banyuanyar-tengah.pdf",
   }),
 

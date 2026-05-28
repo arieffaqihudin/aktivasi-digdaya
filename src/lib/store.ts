@@ -73,6 +73,7 @@ interface State {
   notif: NotifConfig;
   user: User | null;
   nextTicketSeq: number;
+  nextRantingMgmtSeq: number;
 }
 
 const STORAGE_KEY = "digdaya-portal-state-v9";
@@ -90,6 +91,7 @@ function initial(): State {
     notif: { emailEnabled: true, whatsappEnabled: false },
     user: null,
     nextTicketSeq: 200,
+    nextRantingMgmtSeq: 3,
   };
 }
 
@@ -1295,6 +1297,114 @@ export const actions = {
       role: state.user?.role ?? "Super Admin",
       action: "DELETE_USER",
       detail: `Menghapus pengguna ${u.name} (${u.email}).`,
+    });
+  },
+
+  // ===== Data Ranting — Management ID =====
+  /** Cek apakah Ranting `reg` adalah duplikat (nama + parentMwc) terhadap Ranting approved lain. */
+  isRantingDuplicate(reg: Registration): boolean {
+    if (reg.tipeOrg !== "Ranting") return false;
+    const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
+    const name = norm(reg.namaOrg);
+    const mwc = reg.parentMwcId ?? reg.parentMwcName ?? "";
+    return state.registrations.some(
+      (r) =>
+        r.ticketId !== reg.ticketId &&
+        r.tipeOrg === "Ranting" &&
+        r.status === "Approved" &&
+        norm(r.namaOrg) === name &&
+        (r.parentMwcId ?? r.parentMwcName ?? "") === mwc,
+    );
+  },
+
+  generateRantingManagementId(ticketId: string): string | null {
+    const reg = state.registrations.find((r) => r.ticketId === ticketId);
+    if (!reg || reg.tipeOrg !== "Ranting" || reg.status !== "Approved") return null;
+    if (reg.managementId) return reg.managementId;
+    if (this.isRantingDuplicate(reg)) return null;
+    const seq = state.nextRantingMgmtSeq;
+    const id = `NU-RTG-2026-${String(seq).padStart(6, "0")}`;
+    const now = new Date().toISOString();
+    const by = state.user?.email ?? "admin@digdaya.nu.id";
+    setState((s) => ({
+      nextRantingMgmtSeq: s.nextRantingMgmtSeq + 1,
+      registrations: s.registrations.map((r) =>
+        r.ticketId === ticketId
+          ? {
+              ...r,
+              managementId: id,
+              idManagementStatus: "ID Terbuat",
+              managementGeneratedAt: now,
+              managementGeneratedBy: by,
+              activatedSystems: r.activatedSystems ?? [],
+            }
+          : r,
+      ),
+    }));
+    pushAudit({
+      actor: by,
+      role: state.user?.role ?? "Super Admin",
+      action: "GENERATE_RANTING_MANAGEMENT_ID",
+      ticketId,
+      detail: `ID Manajemen ${id} dibuat untuk ${reg.namaOrg} (${reg.parentMwcName ?? "-"}).`,
+    });
+    return id;
+  },
+
+  bulkGenerateRantingManagementIds(ticketIds: string[]): { created: number; skipped: number } {
+    let created = 0;
+    let skipped = 0;
+    for (const t of ticketIds) {
+      const result = this.generateRantingManagementId(t);
+      if (result) created += 1;
+      else skipped += 1;
+    }
+    return { created, skipped };
+  },
+
+  activateRantingSystem(ticketId: string, system: "Digdaya Kepengurusan" | "Digdaya Persuratan") {
+    const reg = state.registrations.find((r) => r.ticketId === ticketId);
+    if (!reg || !reg.managementId) return;
+    const current = reg.activatedSystems ?? [];
+    if (current.includes(system)) return;
+    const next = [...current, system];
+    const hasBoth = next.includes("Digdaya Kepengurusan") && next.includes("Digdaya Persuratan");
+    setState((s) => ({
+      registrations: s.registrations.map((r) =>
+        r.ticketId === ticketId
+          ? {
+              ...r,
+              activatedSystems: next,
+              idManagementStatus: hasBoth ? "Aktif di Digdaya" : "Siap Aktivasi Sistem",
+            }
+          : r,
+      ),
+    }));
+    pushAudit({
+      actor: state.user?.email ?? "admin@digdaya.nu.id",
+      role: state.user?.role ?? "Super Admin",
+      action: system === "Digdaya Kepengurusan" ? "ACTIVATE_RANTING_KEPENGURUSAN" : "ACTIVATE_RANTING_PERSURATAN",
+      ticketId,
+      detail: `${reg.namaOrg} diaktifkan di ${system}.`,
+    });
+  },
+
+  renameRanting(ticketId: string, newName: string) {
+    const reg = state.registrations.find((r) => r.ticketId === ticketId);
+    if (!reg || reg.tipeOrg !== "Ranting") return;
+    const name = newName.trim();
+    if (!name) return;
+    setState((s) => ({
+      registrations: s.registrations.map((r) =>
+        r.ticketId === ticketId ? { ...r, namaOrg: name } : r,
+      ),
+    }));
+    pushAudit({
+      actor: state.user?.email ?? "admin@digdaya.nu.id",
+      role: state.user?.role ?? "Super Admin",
+      action: "RENAME_RANTING",
+      ticketId,
+      detail: `Nama Ranting ${reg.namaOrg} diubah menjadi ${name}.`,
     });
   },
 };
