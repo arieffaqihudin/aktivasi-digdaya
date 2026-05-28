@@ -11,7 +11,6 @@ export const Route = createFileRoute("/review/")({
 
 function ReviewSummary() {
   const regs = useStore((s) => s.registrations);
-  const sla = useStore((s) => s.sla);
 
   const today = new Date().toDateString();
   const pending = regs.filter((r) => r.status === "Pending");
@@ -19,7 +18,6 @@ function ReviewSummary() {
   const pendingB = pending.filter((r) => r.jalur === "B").length;
   const approvedToday = regs.filter((r) => r.status === "Approved" && r.reviewedAt && new Date(r.reviewedAt).toDateString() === today).length;
   const rejectedToday = regs.filter((r) => r.status === "PerluPerbaikan" || r.status === "RejectedFinal" && r.reviewedAt && new Date(r.reviewedAt).toDateString() === today).length;
-  const overSla = pending.filter((r) => slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === "Lewat").length;
   const inBatch = regs.filter((r) => r.peruriBatchId).length;
 
   const last7 = Array.from({ length: 7 }, (_, i) => {
