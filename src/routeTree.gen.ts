@@ -25,7 +25,6 @@ import { Route as PcIndexRouteImport } from './routes/pc.index'
 import { Route as OpsIndexRouteImport } from './routes/ops.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as StatusTicketIdRouteImport } from './routes/status.$ticketId'
-import { Route as ReviewSlaRouteImport } from './routes/review.sla'
 import { Route as ReviewPeruriRouteImport } from './routes/review.peruri'
 import { Route as ReviewNotificationsRouteImport } from './routes/review.notifications'
 import { Route as ReviewInboxRouteImport } from './routes/review.inbox'
@@ -53,7 +52,6 @@ import { Route as OpsPersuratanPengajuanUbahEmailRouteImport } from './routes/op
 import { Route as OpsPersuratanKopSuratRouteImport } from './routes/ops.persuratan.kop-surat'
 import { Route as OpsPersuratanCekOrderIdRouteImport } from './routes/ops.persuratan.cek-order-id'
 import { Route as OpsActivationSubmissionsRouteImport } from './routes/ops.activation.submissions'
-import { Route as OpsActivationSettingsRouteImport } from './routes/ops.activation.settings'
 import { Route as OpsActivationPeruriExportRouteImport } from './routes/ops.activation.peruri-export'
 import { Route as OpsActivationNotificationsRouteImport } from './routes/ops.activation.notifications'
 import { Route as OpsActivationAuditLogRouteImport } from './routes/ops.activation.audit-log'
@@ -143,11 +141,6 @@ const StatusTicketIdRoute = StatusTicketIdRouteImport.update({
   id: '/status/$ticketId',
   path: '/status/$ticketId',
   getParentRoute: () => rootRouteImport,
-} as any)
-const ReviewSlaRoute = ReviewSlaRouteImport.update({
-  id: '/sla',
-  path: '/sla',
-  getParentRoute: () => ReviewRoute,
 } as any)
 const ReviewPeruriRoute = ReviewPeruriRouteImport.update({
   id: '/peruri',
@@ -288,11 +281,6 @@ const OpsActivationSubmissionsRoute =
     path: '/activation/submissions',
     getParentRoute: () => OpsRoute,
   } as any)
-const OpsActivationSettingsRoute = OpsActivationSettingsRouteImport.update({
-  id: '/activation/settings',
-  path: '/activation/settings',
-  getParentRoute: () => OpsRoute,
-} as any)
 const OpsActivationPeruriExportRoute =
   OpsActivationPeruriExportRouteImport.update({
     id: '/activation/peruri-export',
@@ -372,7 +360,6 @@ export interface FileRoutesByFullPath {
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/notifications': typeof ReviewNotificationsRoute
   '/review/peruri': typeof ReviewPeruriRoute
-  '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/ops/': typeof OpsIndexRoute
@@ -384,7 +371,6 @@ export interface FileRoutesByFullPath {
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
   '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
-  '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
   '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
@@ -423,7 +409,6 @@ export interface FileRoutesByTo {
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/notifications': typeof ReviewNotificationsRoute
   '/review/peruri': typeof ReviewPeruriRoute
-  '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
   '/admin': typeof AdminIndexRoute
   '/ops': typeof OpsIndexRoute
@@ -435,7 +420,6 @@ export interface FileRoutesByTo {
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
   '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
-  '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
   '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
@@ -480,7 +464,6 @@ export interface FileRoutesById {
   '/review/inbox': typeof ReviewInboxRouteWithChildren
   '/review/notifications': typeof ReviewNotificationsRoute
   '/review/peruri': typeof ReviewPeruriRoute
-  '/review/sla': typeof ReviewSlaRoute
   '/status/$ticketId': typeof StatusTicketIdRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/ops/': typeof OpsIndexRoute
@@ -492,7 +475,6 @@ export interface FileRoutesById {
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
   '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
-  '/ops/activation/settings': typeof OpsActivationSettingsRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
   '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
@@ -538,7 +520,6 @@ export interface FileRouteTypes {
     | '/review/inbox'
     | '/review/notifications'
     | '/review/peruri'
-    | '/review/sla'
     | '/status/$ticketId'
     | '/admin/'
     | '/ops/'
@@ -550,7 +531,6 @@ export interface FileRouteTypes {
     | '/ops/activation/audit-log'
     | '/ops/activation/notifications'
     | '/ops/activation/peruri-export'
-    | '/ops/activation/settings'
     | '/ops/activation/submissions'
     | '/ops/persuratan/cek-order-id'
     | '/ops/persuratan/kop-surat'
@@ -589,7 +569,6 @@ export interface FileRouteTypes {
     | '/review/inbox'
     | '/review/notifications'
     | '/review/peruri'
-    | '/review/sla'
     | '/status/$ticketId'
     | '/admin'
     | '/ops'
@@ -601,7 +580,6 @@ export interface FileRouteTypes {
     | '/ops/activation/audit-log'
     | '/ops/activation/notifications'
     | '/ops/activation/peruri-export'
-    | '/ops/activation/settings'
     | '/ops/activation/submissions'
     | '/ops/persuratan/cek-order-id'
     | '/ops/persuratan/kop-surat'
@@ -645,7 +623,6 @@ export interface FileRouteTypes {
     | '/review/inbox'
     | '/review/notifications'
     | '/review/peruri'
-    | '/review/sla'
     | '/status/$ticketId'
     | '/admin/'
     | '/ops/'
@@ -657,7 +634,6 @@ export interface FileRouteTypes {
     | '/ops/activation/audit-log'
     | '/ops/activation/notifications'
     | '/ops/activation/peruri-export'
-    | '/ops/activation/settings'
     | '/ops/activation/submissions'
     | '/ops/persuratan/cek-order-id'
     | '/ops/persuratan/kop-surat'
@@ -803,13 +779,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/status/$ticketId'
       preLoaderRoute: typeof StatusTicketIdRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/review/sla': {
-      id: '/review/sla'
-      path: '/sla'
-      fullPath: '/review/sla'
-      preLoaderRoute: typeof ReviewSlaRouteImport
-      parentRoute: typeof ReviewRoute
     }
     '/review/peruri': {
       id: '/review/peruri'
@@ -1000,13 +969,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsActivationSubmissionsRouteImport
       parentRoute: typeof OpsRoute
     }
-    '/ops/activation/settings': {
-      id: '/ops/activation/settings'
-      path: '/activation/settings'
-      fullPath: '/ops/activation/settings'
-      preLoaderRoute: typeof OpsActivationSettingsRouteImport
-      parentRoute: typeof OpsRoute
-    }
     '/ops/activation/peruri-export': {
       id: '/ops/activation/peruri-export'
       path: '/activation/peruri-export'
@@ -1141,7 +1103,6 @@ interface OpsRouteChildren {
   OpsActivationAuditLogRoute: typeof OpsActivationAuditLogRoute
   OpsActivationNotificationsRoute: typeof OpsActivationNotificationsRoute
   OpsActivationPeruriExportRoute: typeof OpsActivationPeruriExportRoute
-  OpsActivationSettingsRoute: typeof OpsActivationSettingsRoute
   OpsActivationSubmissionsRoute: typeof OpsActivationSubmissionsRouteWithChildren
   OpsPersuratanCekOrderIdRoute: typeof OpsPersuratanCekOrderIdRoute
   OpsPersuratanKopSuratRoute: typeof OpsPersuratanKopSuratRoute
@@ -1159,7 +1120,6 @@ const OpsRouteChildren: OpsRouteChildren = {
   OpsActivationAuditLogRoute: OpsActivationAuditLogRoute,
   OpsActivationNotificationsRoute: OpsActivationNotificationsRoute,
   OpsActivationPeruriExportRoute: OpsActivationPeruriExportRoute,
-  OpsActivationSettingsRoute: OpsActivationSettingsRoute,
   OpsActivationSubmissionsRoute: OpsActivationSubmissionsRouteWithChildren,
   OpsPersuratanCekOrderIdRoute: OpsPersuratanCekOrderIdRoute,
   OpsPersuratanKopSuratRoute: OpsPersuratanKopSuratRoute,
@@ -1251,7 +1211,6 @@ interface ReviewRouteChildren {
   ReviewInboxRoute: typeof ReviewInboxRouteWithChildren
   ReviewNotificationsRoute: typeof ReviewNotificationsRoute
   ReviewPeruriRoute: typeof ReviewPeruriRoute
-  ReviewSlaRoute: typeof ReviewSlaRoute
   ReviewIndexRoute: typeof ReviewIndexRoute
 }
 
@@ -1260,7 +1219,6 @@ const ReviewRouteChildren: ReviewRouteChildren = {
   ReviewInboxRoute: ReviewInboxRouteWithChildren,
   ReviewNotificationsRoute: ReviewNotificationsRoute,
   ReviewPeruriRoute: ReviewPeruriRoute,
-  ReviewSlaRoute: ReviewSlaRoute,
   ReviewIndexRoute: ReviewIndexRoute,
 }
 
@@ -1295,3 +1253,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
