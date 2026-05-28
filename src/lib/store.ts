@@ -25,6 +25,7 @@ import {
   type RejectionCategory,
   type RevisionRequestEntry,
   type ResubmitEntry,
+  type AdministratorType,
 } from "@/data/mockData";
 import {
   seedUsers,
