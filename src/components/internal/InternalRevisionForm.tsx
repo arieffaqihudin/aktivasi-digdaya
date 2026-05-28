@@ -1,15 +1,13 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useStore, actions } from "@/lib/store";
-import { isValidNIK, isValidEmail, normalizePhone, isValidPhone } from "@/utils/validation";
 import { toast } from "sonner";
 import { AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
 import { REJECTION_CATEGORY_LABEL, type SumberSuratTugas } from "@/data/mockData";
-import { SuratTugasPicker, validateSuratTugas, type SuratTugasValue } from "@/components/internal/SuratTugasPicker";
+import { SuratTugasSelector, validateSuratTugas, type SuratTugasValue } from "@/components/forms/SuratTugasSelector";
+import { AdministratorForm, adminFromExisting, adminToSubmit, validateAdmin } from "@/components/forms/AdministratorForm";
 
 export function InternalRevisionForm({ ticketId, scope }: { ticketId: string; scope: "pw" | "pc" }) {
   const navigate = useNavigate();
@@ -17,11 +15,7 @@ export function InternalRevisionForm({ ticketId, scope }: { ticketId: string; sc
   const reg = useStore((s) => s.registrations.find((r) => r.ticketId === ticketId));
 
   const initialSumber: SumberSuratTugas = (reg?.sumberSuratTugas as SumberSuratTugas) ?? "DIGDAYA_PERSURATAN";
-  const [namaAdmin, setNamaAdmin] = useState(reg?.namaAdmin ?? "");
-  const [jabatan, setJabatan] = useState(reg?.jabatan ?? "");
-  const [nik, setNik] = useState(reg?.nik ?? "");
-  const [hp, setHp] = useState(reg?.hp ?? "");
-  const [email, setEmail] = useState(reg?.email ?? "");
+  const [admin, setAdmin] = useState(() => adminFromExisting(reg ?? {}));
   const [surat, setSurat] = useState<SuratTugasValue>({
     sumber: initialSumber,
     dokumen: reg?.dokumenSistem ?? null,
@@ -58,18 +52,16 @@ export function InternalRevisionForm({ ticketId, scope }: { ticketId: string; sc
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!namaAdmin.trim() || !jabatan.trim()) return toast.error("Lengkapi data administrator.");
-    if (!isValidNIK(nik)) return toast.error("NIK harus 16 digit angka.");
-    if (!isValidEmail(email)) return toast.error("Email tidak valid.");
-    const normHp = normalizePhone(hp);
-    if (!isValidPhone(normHp)) return toast.error("Nomor HP tidak valid.");
+    const aErr = validateAdmin(admin);
+    if (aErr) return toast.error(aErr);
     const sErr = validateSuratTugas(surat);
     if (sErr) return toast.error(sErr);
 
     setBusy(true);
     await new Promise((r) => setTimeout(r, 500));
+    const payload = adminToSubmit(admin);
     const next = actions.resubmitRevision(ticketId, {
-      namaAdmin, jabatan, nik, hp: normHp, email,
+      namaAdmin: payload.namaAdmin, jabatan: payload.jabatan, nik: payload.nik, hp: payload.hp, email: payload.email,
       sumberSuratTugas: surat.sumber,
       suratTugasFile: surat.file?.name,
       dokumenSistem: surat.dokumen ?? undefined,
@@ -120,18 +112,13 @@ export function InternalRevisionForm({ ticketId, scope }: { ticketId: string; sc
           </dl>
         </div>
 
-        <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-          <p className="text-sm font-semibold">Data Administrator</p>
-          <Field label="Nama Administrator" value={namaAdmin} onChange={setNamaAdmin} />
-          <Field label="Jabatan" value={jabatan} onChange={setJabatan} />
-          <Field label="NIK (16 digit)" value={nik} onChange={(v) => setNik(v.replace(/\D/g, "").slice(0, 16))} />
-          <Field label="Nomor HP WhatsApp" value={hp} onChange={setHp} placeholder="08xxxxxxxxxx" />
-          <Field label="Email" value={email} onChange={setEmail} type="email" />
+        <div className="rounded-xl border border-border bg-card p-5">
+          <AdministratorForm value={admin} onChange={setAdmin} />
         </div>
 
         <div className="rounded-xl border border-border bg-card p-5 space-y-3">
           <p className="text-sm font-semibold">Surat Tugas</p>
-          <SuratTugasPicker value={surat} onChange={setSurat} />
+          <SuratTugasSelector value={surat} onChange={setSurat} />
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
@@ -144,15 +131,6 @@ export function InternalRevisionForm({ ticketId, scope }: { ticketId: string; sc
           </Button>
         </div>
       </form>
-    </div>
-  );
-}
-
-function Field({ label, value, onChange, type = "text", placeholder }: { label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string }) {
-  return (
-    <div>
-      <Label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</Label>
-      <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="mt-1.5" required />
     </div>
   );
 }
