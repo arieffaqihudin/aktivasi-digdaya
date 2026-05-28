@@ -263,11 +263,15 @@ export const masterPC: MasterPC[] = [
 ];
 
 export const masterMWC: MasterMWC[] = [
-  { id: "mwc-depok",   nama: "MWCNU Depok",   pcId: "pc-sleman" },
-  { id: "mwc-gamping", nama: "MWCNU Gamping", pcId: "pc-sleman" },
-  { id: "mwc-mlati",   nama: "MWCNU Mlati",   pcId: "pc-sleman" },
-  { id: "mwc-ngaglik", nama: "MWCNU Ngaglik", pcId: "pc-sleman" },
-  { id: "mwc-godean",  nama: "MWCNU Godean",  pcId: "pc-sleman" },
+  { id: "mwc-depok",      nama: "MWCNU Depok",      pcId: "pc-sleman" },
+  { id: "mwc-gamping",    nama: "MWCNU Gamping",    pcId: "pc-sleman" },
+  { id: "mwc-mlati",      nama: "MWCNU Mlati",      pcId: "pc-sleman" },
+  { id: "mwc-ngaglik",    nama: "MWCNU Ngaglik",    pcId: "pc-sleman" },
+  { id: "mwc-godean",     nama: "MWCNU Godean",     pcId: "pc-sleman" },
+  { id: "mwc-banyuanyar", nama: "MWCNU Banyuanyar", pcId: "pc-sleman" },
+  { id: "mwc-paiton",     nama: "MWCNU Paiton",     pcId: "pc-sleman" },
+  { id: "mwc-gading",     nama: "MWCNU Gading",     pcId: "pc-sleman" },
+  { id: "mwc-kraksaan",   nama: "MWCNU Kraksaan",   pcId: "pc-sleman" },
 ];
 
 export const masterLembaga: MasterLembaga[] = [
