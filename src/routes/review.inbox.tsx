@@ -33,7 +33,12 @@ function Inbox() {
   const pws = Array.from(new Set(regs.map((r) => r.pw)));
 
   const filtered = useMemo(() => regs
-    .filter((r) => sumber === "all" || r.sumberPengajuan === sumber)
+    .filter((r) => {
+      if (sumber === "all") return true;
+      if (sumber === "PUBLIC") return r.sumberPengajuan === "PUBLIC";
+      if (sumber === "LOGIN") return r.sumberPengajuan === "PW_DASHBOARD" || r.sumberPengajuan === "PC_DASHBOARD";
+      return true;
+    })
     .filter((r) => tingkat === "all" || r.tingkatPendaftar === tingkat)
     .filter((r) => sumberSurat === "all" || r.sumberSuratTugas === sumberSurat)
     .filter((r) => tipe === "all" || r.tipeOrg === tipe)
