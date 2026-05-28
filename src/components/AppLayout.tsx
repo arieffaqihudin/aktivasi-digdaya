@@ -34,38 +34,44 @@ export function AppLayout({
   scopeLabel: string;
   orgName?: string;
 }) {
-  const user = useStore((s) => s.user);
+  const storeUser = useStore((s) => s.user);
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
+  // Synchronous auto-login fallback so the layout never gets stuck on an
+  // infinite "Memuat dashboard…" screen on direct navigation.
+  if (!storeUser) {
+    const fallbackRole = allowedRoles[0];
+    if (fallbackRole === "PW") actions.loginAs("pw@digdaya.nu.id");
+    else if (fallbackRole === "PC") actions.loginAs("pc.kraksaan@digdaya.nu.id");
+    else if (fallbackRole === "Super Admin") actions.loginAs("admin@digdaya.nu.id");
+    else if (fallbackRole === "Reviewer") actions.loginAs("reviewer@digdaya.nu.id");
+  }
+
+  // Fallback user object so render proceeds immediately even before the
+  // synchronous loginAs above has propagated through the store.
+  const user = storeUser ?? {
+    email: "admin@digdaya.nu.id",
+    name: "Super Admin Digdaya",
+    role: (allowedRoles[0] ?? "Super Admin") as Role,
+    pcId: undefined as string | undefined,
+    pcName: undefined as string | undefined,
+    pwId: undefined as string | undefined,
+    pwName: undefined as string | undefined,
+  };
+
   useEffect(() => {
-    if (!user) {
-      const fallbackRole = allowedRoles[0];
-      if (fallbackRole === "PW") actions.loginAs("pw@digdaya.nu.id");
-      else if (fallbackRole === "PC") actions.loginAs("pc.kraksaan@digdaya.nu.id");
-      else if (fallbackRole === "Super Admin") actions.loginAs("admin@digdaya.nu.id");
-      else if (fallbackRole === "Reviewer") actions.loginAs("reviewer@digdaya.nu.id");
-      return;
-    }
-    if (!allowedRoles.includes(user.role)) {
-      if (user.role === "Super Admin") navigate({ to: "/ops/activation" });
-      else if (user.role === "Reviewer") navigate({ to: "/review" });
-      else if (user.role === "PW") navigate({ to: "/pw" });
+    if (storeUser && !allowedRoles.includes(storeUser.role)) {
+      if (storeUser.role === "Super Admin") navigate({ to: "/ops/activation" });
+      else if (storeUser.role === "Reviewer") navigate({ to: "/review" });
+      else if (storeUser.role === "PW") navigate({ to: "/pw" });
       else navigate({ to: "/pc" });
     }
-  }, [user, navigate, allowedRoles]);
+  }, [storeUser, navigate, allowedRoles]);
 
   useEffect(() => { setMobileOpen(false); }, [path]);
-
-  if (!user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4">
-        <p className="text-sm text-muted-foreground">Memuat dashboard…</p>
-      </div>
-    );
-  }
 
   const displayOrg = orgName ?? user.pcName ?? user.pwName ?? "Pengurus Besar Nahdlatul Ulama";
 
