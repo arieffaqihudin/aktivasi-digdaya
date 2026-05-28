@@ -960,6 +960,10 @@ export const actions = {
       dokumenSistem?: DokumenSistem;
       submitterEmail?: string;
       submitterRole?: string;
+      namaOrg?: string;
+      parentMwcId?: string;
+      parentMwcName?: string;
+      village?: string;
     },
   ): Registration | null {
     const reg = state.registrations.find((r) => r.ticketId === ticketId);
@@ -979,6 +983,10 @@ export const actions = {
 
     const next: Registration = {
       ...reg,
+      namaOrg: payload.namaOrg ?? reg.namaOrg,
+      parentMwcId: payload.parentMwcId ?? reg.parentMwcId,
+      parentMwcName: payload.parentMwcName ?? reg.parentMwcName,
+      village: payload.village ?? reg.village,
       namaAdmin: payload.namaAdmin ?? reg.namaAdmin,
       jabatan: payload.jabatan ?? reg.jabatan,
       nik: payload.nik ?? reg.nik,
