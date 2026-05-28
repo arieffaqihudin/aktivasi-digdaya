@@ -90,7 +90,7 @@ function Submissions() {
                 <TD className="text-[12px]">{r.namaAdmin}</TD>
                 <TD><SumberSuratBadge sumber={r.sumberSuratTugas} /></TD>
                 <TD><StatusBadge status={r.status} /></TD>
-                <TD><SLABadge bucket={slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays)} /></TD>
+                
                 <TD className="text-right pr-6">
                   <Link to="/ops/activation/submissions/$ticketId" params={{ ticketId: r.ticketId }}>
                     <RowAction title="Lihat detail" tone="primary"><Eye className="h-4 w-4" /></RowAction>
