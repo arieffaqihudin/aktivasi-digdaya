@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, Navigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { actions, useStore } from "@/lib/store";
 import { type TipeOrg, type Registration } from "@/data/mockData";
@@ -6,29 +6,38 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Loader2, Building2, Layers, ChevronRight, ArrowLeft, Search } from "lucide-react";
+import { Loader2, Layers, FileSpreadsheet, ChevronRight, ArrowLeft, Search } from "lucide-react";
 import { findPwDemoTarget, pwDemoTargets, type DemoTarget } from "@/lib/demo-scope-data";
 import { SuratTugasSelector, validateSuratTugas, type SuratTugasValue, emptySuratTugas } from "@/components/forms/SuratTugasSelector";
 import { AdministratorForm, adminToSubmit, emptyAdminValue, validateAdmin } from "@/components/forms/AdministratorForm";
 import { StatusBadge } from "@/components/StatusBadge";
 import { cn } from "@/lib/utils";
 
-type SectionType = "pc" | "lembaga";
+type SectionType = "lembaga";
 
 export const Route = createFileRoute("/pw/daftarkan")({
   validateSearch: (search: Record<string, unknown>) => ({
     targetId: typeof search.targetId === "string" ? search.targetId : undefined,
-    type: search.type === "pc" || search.type === "lembaga" ? (search.type as SectionType) : undefined,
+    // Hanya "lembaga" yang valid. Nilai lain (mis. "pc") akan diabaikan & user diarahkan ke hub.
+    type: search.type === "lembaga" ? ("lembaga" as SectionType) : undefined,
+    invalidType: search.type === "pc" ? true : undefined,
   }),
   component: Daftarkan,
 });
 
 function Daftarkan() {
   const search = Route.useSearch();
-  if (search.targetId) return <StandardForm />;
-  if (search.type === "pc") return <PickerList type="PC" />;
-  if (search.type === "lembaga") return <PickerList type="Lembaga PW" />;
-  return <Hub />;
+
+  // Guard: jika targetId merujuk ke organisasi non-Lembaga PW (mis. PC lama), redirect ke hub.
+  if (search.targetId) {
+    const target = findPwDemoTarget(search.targetId);
+    if (!target || target.type !== "Lembaga PW") {
+      return <Navigate to="/pw/daftarkan" replace />;
+    }
+    return <StandardForm />;
+  }
+  if (search.type === "lembaga") return <PickerList />;
+  return <Hub showPwOnlyNotice={search.invalidType === true} />;
 }
 
 function Breadcrumb({ trail }: { trail: { label: string; to?: string; search?: Record<string, string> }[] }) {
@@ -49,59 +58,64 @@ function Breadcrumb({ trail }: { trail: { label: string; to?: string; search?: R
   );
 }
 
-function Hub() {
-  const cards = [
-    {
-      type: "pc" as const,
-      icon: Building2,
-      title: "Daftarkan PC",
-      desc: "Pilih PC di bawah PWNU DI Yogyakarta yang belum production.",
-      cta: "Pilih PC",
-    },
-    {
-      type: "lembaga" as const,
-      icon: Layers,
-      title: "Daftarkan Lembaga PW",
-      desc: "Pilih lembaga di bawah PWNU DI Yogyakarta yang belum production.",
-      cta: "Pilih Lembaga",
-    },
-  ];
-
+function Hub({ showPwOnlyNotice }: { showPwOnlyNotice?: boolean }) {
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-5xl space-y-6">
-        <Breadcrumb trail={[{ label: "Daftarkan Organisasi" }]} />
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold text-foreground">Daftarkan Organisasi Bawahan</h1>
+    <div className="p-4 pb-24 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-5xl space-y-5">
+        <Breadcrumb trail={[{ label: "Daftarkan Lembaga" }]} />
+        <div className="space-y-1">
+          <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Daftarkan Lembaga PW</h1>
           <p className="text-sm text-muted-foreground">
-            Pilih jenis organisasi yang akan didaftarkan di bawah PWNU DI Yogyakarta.
+            PW hanya dapat mendaftarkan Lembaga di bawah PWNU. Pilih satu per satu atau import banyak sekaligus dari Excel.
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {cards.map((c) => (
-            <div key={c.type} className="flex flex-col rounded-xl border border-border bg-card p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
-                <c.icon className="h-5 w-5" />
-              </div>
-              <p className="mt-4 text-base font-semibold text-foreground">{c.title}</p>
-              <p className="mt-1 flex-1 text-sm text-muted-foreground">{c.desc}</p>
-              <Link
-                to="/pw/daftarkan"
-                search={{ type: c.type }}
-                className="mt-4 inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-              >
-                {c.cta}
-              </Link>
+        {showPwOnlyNotice && (
+          <div className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-sm text-foreground">
+            PW hanya dapat mendaftarkan Lembaga PW melalui halaman ini. Pendaftaran PC dilakukan oleh PC sendiri.
+          </div>
+        )}
+
+        <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
+          <Link
+            to="/pw/daftarkan"
+            search={{ type: "lembaga" }}
+            className="flex flex-col rounded-xl border border-border bg-card p-4 active:bg-accent/40 sm:p-5"
+          >
+            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <Layers className="h-5 w-5" />
             </div>
-          ))}
+            <p className="mt-3 text-base font-semibold text-foreground">Daftarkan Lembaga PW</p>
+            <p className="mt-1 flex-1 text-sm leading-relaxed text-muted-foreground">
+              Pilih lembaga di bawah PWNU yang akan didaftarkan ke Digdaya.
+            </p>
+            <span className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground sm:py-2.5">
+              Pilih Lembaga
+            </span>
+          </Link>
+
+          <Link
+            to="/pw/daftarkan/import"
+            className="flex flex-col rounded-xl border border-primary/30 bg-primary/5 p-4 active:bg-accent/40 sm:p-5"
+          >
+            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/15 text-primary">
+              <FileSpreadsheet className="h-5 w-5" />
+            </div>
+            <p className="mt-3 text-base font-semibold text-foreground">Import Data Administrator</p>
+            <p className="mt-1 flex-1 text-sm leading-relaxed text-muted-foreground">
+              Upload Excel untuk mendaftarkan banyak Lembaga PW sekaligus.
+            </p>
+            <span className="mt-4 inline-flex w-full items-center justify-center rounded-lg border border-primary bg-card px-4 py-3 text-sm font-semibold text-primary sm:py-2.5">
+              Import Excel
+            </span>
+          </Link>
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <Link to="/pw/status-pengajuan" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+          <Link to="/pw/status-pengajuan" className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground sm:h-auto sm:py-2">
             Lihat Status Pengajuan
           </Link>
-          <Link to="/pw" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-muted-foreground">
+          <Link to="/pw" className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-muted-foreground sm:h-auto sm:py-2">
             Kembali ke Overview
           </Link>
         </div>
@@ -123,8 +137,8 @@ function useLatestRegByName() {
   }, [regs]);
 }
 
-function PickerList({ type }: { type: "PC" | "Lembaga PW" }) {
-  const targets = pwDemoTargets.filter((t) => t.type === type);
+function PickerList() {
+  const targets = pwDemoTargets.filter((t) => t.type === "Lembaga PW");
   const latest = useLatestRegByName();
   const [q, setQ] = useState("");
 
@@ -139,35 +153,29 @@ function PickerList({ type }: { type: "PC" | "Lembaga PW" }) {
 
   const filtered = enriched.filter((e) => !q || e.t.name.toLowerCase().includes(q.toLowerCase()));
 
-  const title = type === "PC" ? "Pilih PC" : "Pilih Lembaga PW";
-  const subtitle =
-    type === "PC"
-      ? "Pilih PC di bawah PWNU DI Yogyakarta yang akan didaftarkan."
-      : "Pilih lembaga di bawah PWNU DI Yogyakarta yang akan didaftarkan.";
-
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-5xl space-y-6">
+    <div className="p-4 pb-24 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-5xl space-y-5">
         <Breadcrumb
           trail={[
-            { label: "Daftarkan Organisasi", to: "/pw/daftarkan" },
-            { label: title },
+            { label: "Daftarkan Lembaga", to: "/pw/daftarkan" },
+            { label: "Pilih Lembaga PW" },
           ]}
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
-            <p className="text-sm text-muted-foreground">{subtitle}</p>
+            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Pilih Lembaga PW</h1>
+            <p className="text-sm text-muted-foreground">Pilih lembaga di bawah PWNU yang akan didaftarkan.</p>
           </div>
-          <Link to="/pw/daftarkan" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" /> Kembali ke Pilihan Jenis
+          <Link to="/pw/daftarkan" className="inline-flex h-10 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:h-auto">
+            <ArrowLeft className="h-4 w-4" /> Kembali
           </Link>
         </div>
 
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Cari ${type}...`} className="pl-9" />
+          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari Lembaga PW..." className="h-11 pl-9 text-base sm:h-10 sm:text-sm" />
         </div>
 
         {filtered.length === 0 ? (
@@ -215,7 +223,7 @@ function PickerCard({
           <Link
             to="/pw/daftarkan"
             search={{ targetId: target.id }}
-            className="inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground sm:w-auto"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground sm:h-10 sm:w-auto sm:rounded-md"
           >
             Daftarkan
           </Link>
@@ -224,7 +232,7 @@ function PickerCard({
           <Link
             to="/pw/status-pengajuan/$ticketId"
             params={{ ticketId: reg.ticketId }}
-            className="inline-flex w-full items-center justify-center rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground sm:w-auto"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-border bg-background px-4 text-sm font-medium text-foreground sm:h-10 sm:w-auto sm:rounded-md"
           >
             Lihat Status
           </Link>
@@ -233,13 +241,13 @@ function PickerCard({
           <Link
             to="/pw/status-pengajuan/$ticketId/revisi"
             params={{ ticketId: reg.ticketId }}
-            className="inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground sm:w-auto"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground sm:h-10 sm:w-auto sm:rounded-md"
           >
             Perbaiki
           </Link>
         )}
         {state === "Production" && (
-          <span className="inline-flex w-full items-center justify-center rounded-md bg-success/15 px-4 py-2 text-sm font-medium text-success sm:w-auto">
+          <span className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-success/15 px-4 text-sm font-medium text-success sm:h-10 sm:w-auto sm:rounded-md">
             Sudah Production
           </span>
         )}
@@ -256,24 +264,7 @@ function StandardForm() {
   const [busy, setBusy] = useState(false);
 
   const target = findPwDemoTarget(search.targetId);
-
-  if (!target) {
-    return (
-      <div className="p-4 sm:p-6 lg:p-8">
-        <div className="mx-auto max-w-3xl space-y-6">
-          <Breadcrumb trail={[{ label: "Daftarkan Organisasi", to: "/pw/daftarkan" }, { label: "Tidak Ditemukan" }]} />
-          <div className="rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">
-            Organisasi tidak ditemukan. Silakan kembali ke pilihan.
-          </div>
-          <Link to="/pw/daftarkan" className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
-            Kembali ke Pilihan
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const backType: SectionType = target.type === "PC" ? "pc" : "lembaga";
+  if (!target) return <Navigate to="/pw/daftarkan" replace />;
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -304,23 +295,23 @@ function StandardForm() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-3xl space-y-6">
+    <div className="p-4 pb-24 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-3xl space-y-5">
         <Breadcrumb
           trail={[
-            { label: "Daftarkan Organisasi", to: "/pw/daftarkan" },
-            { label: target.type === "PC" ? "Pilih PC" : "Pilih Lembaga PW", to: "/pw/daftarkan", search: { type: backType } },
+            { label: "Daftarkan Lembaga", to: "/pw/daftarkan" },
+            { label: "Pilih Lembaga PW", to: "/pw/daftarkan", search: { type: "lembaga" } },
             { label: target.name },
           ]}
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-semibold text-foreground">Daftarkan {target.name}</h1>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-1">
+            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Daftarkan {target.name}</h1>
             <p className="text-sm text-muted-foreground">Lengkapi data administrator dan surat tugas.</p>
           </div>
-          <Link to="/pw/daftarkan" search={{ type: backType }} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" /> Kembali ke {target.type === "PC" ? "Pilih PC" : "Pilih Lembaga PW"}
+          <Link to="/pw/daftarkan" search={{ type: "lembaga" }} className="inline-flex h-10 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:h-auto">
+            <ArrowLeft className="h-4 w-4" /> Kembali
           </Link>
         </div>
 
@@ -345,8 +336,8 @@ function StandardForm() {
           </section>
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Link to="/pw/daftarkan" search={{ type: backType }} className="inline-flex w-full items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground sm:w-auto">
-              Kembali ke {target.type === "PC" ? "Pilih PC" : "Pilih Lembaga PW"}
+            <Link to="/pw/daftarkan" search={{ type: "lembaga" }} className="inline-flex w-full items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground sm:w-auto">
+              Kembali
             </Link>
             <Button type="submit" disabled={busy} className="w-full sm:w-auto">
               {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
