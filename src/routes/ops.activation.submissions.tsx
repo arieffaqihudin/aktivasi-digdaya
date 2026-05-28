@@ -17,10 +17,8 @@ export const Route = createFileRoute("/ops/activation/submissions")({
 
 function Submissions() {
   const regs = useStore((s) => s.registrations);
-  const sla = useStore((s) => s.sla);
   const [sumber, setSumber] = useState("all");
   const [status, setStatus] = useState("all");
-  const [slaFilter, setSlaFilter] = useState("all");
   const [pw, setPw] = useState("all");
   const [q, setQ] = useState("");
 
@@ -35,10 +33,9 @@ function Submissions() {
     })
     .filter((r) => status === "all" || r.status === status)
     .filter((r) => pw === "all" || r.pw === pw)
-    .filter((r) => slaFilter === "all" || slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === slaFilter)
     .filter((r) => !q || r.ticketId.toLowerCase().includes(q.toLowerCase()) || r.namaOrg.toLowerCase().includes(q.toLowerCase()) || r.namaAdmin.toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()),
-    [regs, sumber, status, pw, slaFilter, q, sla]
+    [regs, sumber, status, pw, q]
   );
 
   return (
