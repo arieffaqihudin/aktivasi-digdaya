@@ -6,6 +6,7 @@ import {
   ArrowRight,
   BadgeCheck,
   Search,
+  Info,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
