@@ -30,8 +30,8 @@ function PeruriPage() {
   const download = (batchId: string) => {
     const batch = batches.find((b) => b.id === batchId); if (!batch) return;
     const records = regs.filter((r) => batch.ticketIds.includes(r.ticketId));
-    const rows = [["Ticket","Jalur","TipeOrg","NamaOrg","NamaAdmin","Jabatan","Email","HP"]];
-    records.forEach((r) => rows.push([r.ticketId, r.jalur, r.tipeOrg, r.namaOrg, r.namaAdmin, r.jabatan, r.email, r.hp]));
+    const rows = [["Ticket","Sumber Pengajuan","TipeOrg","NamaOrg","NamaAdmin","Jabatan","Email","HP"]];
+    records.forEach((r) => rows.push([r.ticketId, r.jalur === "A" ? "Kode Akses" : "Login Digdaya", r.tipeOrg, r.namaOrg, r.namaAdmin, r.jabatan, r.email, r.hp]));
     const csv = rows.map((r) => r.map((x) => `"${x}"`).join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -56,8 +56,8 @@ function PeruriPage() {
                 <th className="px-4 py-3">Batch ID</th>
                 <th className="px-4 py-3">Tanggal</th>
                 <th className="px-4 py-3">Jumlah</th>
-                <th className="px-4 py-3">Jalur A</th>
-                <th className="px-4 py-3">Jalur B</th>
+                <th className="px-4 py-3">Kode Akses</th>
+                <th className="px-4 py-3">Login Digdaya</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Generated</th>
                 <th className="px-4 py-3">Downloaded By</th>
@@ -88,13 +88,13 @@ function PeruriPage() {
                       <div className="overflow-x-auto rounded-md border border-border bg-card">
                         <table className="w-full text-xs">
                           <thead className="bg-secondary/40 text-left uppercase text-muted-foreground">
-                            <tr><th className="px-3 py-2">Tiket</th><th className="px-3 py-2">Jalur</th><th className="px-3 py-2">Tipe</th><th className="px-3 py-2">Organisasi</th><th className="px-3 py-2">Admin</th><th className="px-3 py-2">Email</th></tr>
+                            <tr><th className="px-3 py-2">Tiket</th><th className="px-3 py-2">Sumber Pengajuan</th><th className="px-3 py-2">Tipe</th><th className="px-3 py-2">Organisasi</th><th className="px-3 py-2">Admin</th><th className="px-3 py-2">Email</th></tr>
                           </thead>
                           <tbody>
                             {regs.filter((r) => b.ticketIds.includes(r.ticketId)).map((r) => (
                               <tr key={r.ticketId} className="border-t border-border">
                                 <td className="px-3 py-2 font-mono">{r.ticketId}</td>
-                                <td className="px-3 py-2">{r.jalur}</td>
+                                <td className="px-3 py-2">{r.jalur === "A" ? "Kode Akses" : "Login Digdaya"}</td>
                                 <td className="px-3 py-2">{r.tipeOrg}</td>
                                 <td className="px-3 py-2">{r.namaOrg}</td>
                                 <td className="px-3 py-2">{r.namaAdmin}</td>

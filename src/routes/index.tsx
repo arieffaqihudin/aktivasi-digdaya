@@ -113,7 +113,7 @@ function Intro() {
       </p>
 
       <p className="mt-1 text-[12px] text-[#8A97A8]">
-        Silakan pilih jalur sesuai status kepengurusan Anda.
+        Pilih sesuai status kepengurusan Anda.
       </p>
 
       <div className="mt-3 flex flex-wrap items-center justify-center gap-2">

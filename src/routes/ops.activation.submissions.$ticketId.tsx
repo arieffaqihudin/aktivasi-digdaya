@@ -52,7 +52,7 @@ function SubmissionDetail() {
             <OpsCard title="Informasi Pengajuan" action={<StatusBadge status={reg.status} />}>
               <dl className="grid gap-3 text-sm sm:grid-cols-2">
                 <Info label="Nomor Tiket" value={reg.ticketId} mono />
-                <Info label="Sumber Pengajuan" value={reg.sumberPengajuan} />
+                <Info label="Sumber Pengajuan" value={reg.sumberPengajuan === "PUBLIC" ? "Kode Akses" : "Login Digdaya"} />
                 <Info label="Organisasi" value={`${reg.tipeOrg} · ${reg.namaOrg}`} />
                 <Info label="Wilayah" value={reg.pw} />
                 <Info label="Kode Akses" value={reg.accessCode ?? "—"} mono />

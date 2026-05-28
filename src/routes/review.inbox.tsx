@@ -33,7 +33,12 @@ function Inbox() {
   const pws = Array.from(new Set(regs.map((r) => r.pw)));
 
   const filtered = useMemo(() => regs
-    .filter((r) => sumber === "all" || r.sumberPengajuan === sumber)
+    .filter((r) => {
+      if (sumber === "all") return true;
+      if (sumber === "PUBLIC") return r.sumberPengajuan === "PUBLIC";
+      if (sumber === "LOGIN") return r.sumberPengajuan === "PW_DASHBOARD" || r.sumberPengajuan === "PC_DASHBOARD";
+      return true;
+    })
     .filter((r) => tingkat === "all" || r.tingkatPendaftar === tingkat)
     .filter((r) => sumberSurat === "all" || r.sumberSuratTugas === sumberSurat)
     .filter((r) => tipe === "all" || r.tipeOrg === tipe)
@@ -88,7 +93,7 @@ function Inbox() {
       />
 
       <FilterBar>
-        <SelectFilter value={sumber} onChange={setSumber} placeholder="Sumber Pengajuan" options={[["all","Semua Sumber"],["PUBLIC","Public Activation"],["PW_DASHBOARD","PW Dashboard"],["PC_DASHBOARD","PC Dashboard"]]} />
+        <SelectFilter value={sumber} onChange={setSumber} placeholder="Sumber Pengajuan" options={[["all","Semua Sumber"],["LOGIN","Login Digdaya"],["PUBLIC","Kode Akses"]]} />
         <SelectFilter value={tingkat} onChange={setTingkat} placeholder="Tingkat Pendaftar" options={[["all","Semua Tingkat"],["PW","PW"],["PC","PC"]]} />
         <SelectFilter value={sumberSurat} onChange={setSumberSurat} placeholder="Sumber Surat Tugas" options={[["all","Semua Surat"],["DIGDAYA_PERSURATAN","Dari Sistem"],["MANUAL_UPLOAD","Upload Manual"]]} />
         <SelectFilter value={tipe} onChange={setTipe} placeholder="Tipe Organisasi" options={[["all","Semua Tipe"],["PW","PW"],["PC","PC"],["MWC","MWC"],["Lembaga PW","Lembaga PW"],["Lembaga PC","Lembaga PC"],["Ranting","Ranting"]]} />
@@ -110,7 +115,7 @@ function Inbox() {
         <THead>
           <tr>
             <TH>Nomor Tiket</TH>
-            <TH>Sumber</TH>
+            <TH>Sumber Pengajuan</TH>
             <TH>Pendaftar</TH>
             <TH>Tipe / Organisasi</TH>
             <TH>Admin</TH>

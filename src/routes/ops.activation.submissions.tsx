@@ -28,7 +28,12 @@ function Submissions() {
   const pws = Array.from(new Set(regs.map((r) => r.pw)));
 
   const filtered = useMemo(() => regs
-    .filter((r) => sumber === "all" || r.sumberPengajuan === sumber)
+    .filter((r) => {
+      if (sumber === "all") return true;
+      if (sumber === "PUBLIC") return r.sumberPengajuan === "PUBLIC";
+      if (sumber === "LOGIN") return r.sumberPengajuan === "PW_DASHBOARD" || r.sumberPengajuan === "PC_DASHBOARD";
+      return true;
+    })
     .filter((r) => status === "all" || r.status === status)
     .filter((r) => pw === "all" || r.pw === pw)
     .filter((r) => slaFilter === "all" || slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === slaFilter)
@@ -55,7 +60,7 @@ function Submissions() {
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input placeholder="Cari nomor tiket / organisasi / administrator" value={q} onChange={(e) => setQ(e.target.value)} className="h-10 w-full pl-9" />
             </div>
-            <SelectFilter value={sumber} onChange={setSumber} placeholder="Sumber" options={[["all","Semua Sumber"],["PUBLIC","Public Activation"],["PW_DASHBOARD","PW Dashboard"],["PC_DASHBOARD","PC Dashboard"]]} />
+            <SelectFilter value={sumber} onChange={setSumber} placeholder="Sumber Pengajuan" options={[["all","Semua Sumber"],["LOGIN","Login Digdaya"],["PUBLIC","Kode Akses"]]} />
             <SelectFilter value={status} onChange={setStatus} placeholder="Status" options={[["all","Semua Status"],["Pending","Pending Review"],["PerluPerbaikan","Perlu Perbaikan"],["Approved","Disetujui"],["RejectedFinal","Ditolak Final"]]} />
             <SelectFilter value={slaFilter} onChange={setSlaFilter} placeholder="SLA" options={[["all","Semua SLA"],["Aman","Aman"],["Mendekati","Mendekati"],["Lewat","Lewat"]]} />
             <SelectFilter value={pw} onChange={setPw} placeholder="Wilayah" options={[["all","Semua PW"], ...pws.map((p) => [p, p.replace("PWNU ","")] as [string,string])]} />
@@ -66,7 +71,7 @@ function Submissions() {
           <THead>
             <tr>
               <TH>Nomor Tiket</TH>
-              <TH>Sumber</TH>
+              <TH>Sumber Pengajuan</TH>
               <TH>Organisasi</TH>
               <TH>Wilayah</TH>
               <TH>Administrator</TH>

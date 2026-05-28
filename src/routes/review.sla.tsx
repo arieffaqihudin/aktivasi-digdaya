@@ -37,7 +37,7 @@ function SLAPage() {
             <thead className="bg-secondary/40 text-left text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Tiket</th>
-                <th className="px-4 py-3">Jalur</th>
+                <th className="px-4 py-3">Sumber Pengajuan</th>
                 <th className="px-4 py-3">Organisasi</th>
                 <th className="px-4 py-3">Tipe</th>
                 <th className="px-4 py-3">Submit</th>
