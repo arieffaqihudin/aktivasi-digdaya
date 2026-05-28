@@ -6,9 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/StatusBadge";
-import { SLABadge } from "@/components/SLABadge";
 import { SumberPengajuanBadge, SumberSuratBadge } from "@/components/SumberBadge";
-import { formatDate, slaBucket } from "@/utils/status";
+import { formatDate } from "@/utils/status";
 import { useState, useMemo } from "react";
 import { Eye, Search, FileDown, Download } from "lucide-react";
 
