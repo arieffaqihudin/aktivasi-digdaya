@@ -6,14 +6,13 @@ import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { Bell, CheckCheck } from "lucide-react";
 
-type FilterKey = "all" | "unread" | "submission" | "revision" | "sla" | "system";
+type FilterKey = "all" | "unread" | "submission" | "revision" | "system";
 
 const FILTERS: { key: FilterKey; label: string }[] = [
   { key: "all", label: "Semua" },
   { key: "unread", label: "Belum Dibaca" },
   { key: "submission", label: "Pengajuan" },
   { key: "revision", label: "Perbaikan" },
-  { key: "sla", label: "SLA" },
   { key: "system", label: "Sistem" },
 ];
 
