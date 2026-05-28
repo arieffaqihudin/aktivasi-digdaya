@@ -84,7 +84,7 @@ function LoginPage() {
   const points = [
     { icon: KeyRound, text: "Kode akses untuk aktivasi PC" },
     { icon: Inbox, text: "Inbox review terpusat" },
-    { icon: FileCheck2, text: "Export Peruri dan monitoring SLA" },
+    { icon: FileCheck2, text: "Export Peruri batch aktivasi" },
   ];
 
   return (
