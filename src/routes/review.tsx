@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
-import { LayoutDashboard, Inbox, FileDown, Timer, ScrollText } from "lucide-react";
+import { LayoutDashboard, Inbox, FileDown, ScrollText } from "lucide-react";
 
 export const Route = createFileRoute("/review")({
   component: ReviewLayout,
@@ -16,7 +16,6 @@ function ReviewLayout() {
         { to: "/review", label: "Ringkasan", icon: LayoutDashboard, exact: true, section: "Dashboard" },
         { to: "/review/inbox", label: "Inbox Pendaftaran", icon: Inbox, section: "Review" },
         { to: "/review/peruri", label: "Export Peruri", icon: FileDown, section: "Review" },
-        { to: "/review/sla", label: "SLA Monitoring", icon: Timer, section: "Monitoring" },
         { to: "/review/audit-log", label: "Audit Log", icon: ScrollText, section: "Monitoring" },
       ]}
     />
