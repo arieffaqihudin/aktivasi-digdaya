@@ -347,8 +347,8 @@ function RantingForm() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-3xl space-y-6">
+    <div className="p-4 pb-28 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-3xl space-y-5">
         <Breadcrumb
           trail={[
             { label: "Daftarkan Organisasi", to: "/pc/daftarkan" },
@@ -356,33 +356,33 @@ function RantingForm() {
           ]}
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-semibold text-foreground">Daftarkan Ranting</h1>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-1">
+            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Daftarkan Ranting</h1>
             <p className="text-sm text-muted-foreground">
               Input data Ranting di bawah {user?.pcName ?? "PCNU Kraksaan"}.
             </p>
           </div>
-          <Link to="/pc/daftarkan" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/pc/daftarkan" className="inline-flex h-10 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:h-auto">
             <ArrowLeft className="h-4 w-4" /> Kembali ke Pilihan
           </Link>
         </div>
 
-        <div className="flex items-start gap-3 rounded-md border border-info/30 bg-info/5 p-4 text-sm text-foreground">
+        <div className="flex items-start gap-3 rounded-lg border border-info/30 bg-info/5 p-4 text-sm text-foreground">
           <InfoIcon className="mt-0.5 h-4 w-4 shrink-0 text-info" />
           <p>
             Karena master data Ranting belum tersedia terpusat, nama Ranting diinput manual oleh PC/MWC dan akan diverifikasi berdasarkan surat tugas.
           </p>
         </div>
 
-        <form onSubmit={submit} className="space-y-5">
-          <section className="rounded-xl border border-border bg-card p-5 space-y-4">
+        <form onSubmit={submit} className="space-y-4">
+          <section className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5">
             <p className="text-sm font-semibold text-foreground">Data Ranting</p>
 
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">MWC Induk</Label>
               <Select value={parentMwcId} onValueChange={setParentMwcId}>
-                <SelectTrigger className="mt-1.5 w-full"><SelectValue placeholder="Pilih MWC induk" /></SelectTrigger>
+                <SelectTrigger className="mt-1.5 h-11 w-full text-base sm:h-10 sm:text-sm"><SelectValue placeholder="Pilih MWC induk" /></SelectTrigger>
                 <SelectContent>
                   {kraksaanMwcOptions.map((m) => (
                     <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
@@ -393,32 +393,32 @@ function RantingForm() {
 
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Nama Ranting</Label>
-              <Input value={namaRanting} onChange={(e) => setNamaRanting(e.target.value)} placeholder="Contoh: Ranting NU Banyuanyar Tengah" className="mt-1.5 h-10" />
+              <Input value={namaRanting} onChange={(e) => setNamaRanting(e.target.value)} placeholder="Contoh: Ranting NU Banyuanyar Tengah" className="mt-1.5 h-11 text-base sm:h-10 sm:text-sm" />
             </div>
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Desa / Kelurahan (opsional)</Label>
-              <Input value={village} onChange={(e) => setVillage(e.target.value)} placeholder="Contoh: Desa Banyuanyar Tengah" className="mt-1.5 h-10" />
+              <Input value={village} onChange={(e) => setVillage(e.target.value)} placeholder="Contoh: Desa Banyuanyar Tengah" className="mt-1.5 h-11 text-base sm:h-10 sm:text-sm" />
             </div>
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Catatan Lokasi (opsional)</Label>
-              <Textarea value={locationNote} onChange={(e) => setLocationNote(e.target.value)} className="mt-1.5" rows={2} />
+              <Textarea value={locationNote} onChange={(e) => setLocationNote(e.target.value)} className="mt-1.5 text-base sm:text-sm" rows={2} />
             </div>
           </section>
 
-          <section className="rounded-xl border border-border bg-card p-5">
+          <section className="rounded-xl border border-border bg-card p-4 sm:p-5">
             <AdministratorForm value={admin} onChange={setAdmin} />
           </section>
 
-          <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+          <section className="space-y-3 rounded-xl border border-border bg-card p-4 sm:p-5">
             <p className="text-sm font-semibold text-foreground">Surat Tugas</p>
             <SuratTugasSelector value={surat} onChange={setSurat} mode="full" />
           </section>
 
-          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Link to="/pc/daftarkan" className="inline-flex w-full items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground sm:w-auto">
+          <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:static sm:z-auto sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none sm:supports-[backdrop-filter]:bg-transparent flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <Link to="/pc/daftarkan" className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground active:bg-accent/40 sm:h-10 sm:w-auto sm:rounded-md">
               Kembali ke Pilihan
             </Link>
-            <Button type="submit" disabled={busy} className="w-full sm:w-auto">
+            <Button type="submit" disabled={busy} className="h-11 w-full text-sm sm:h-10 sm:w-auto">
               {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Kirim Pengajuan
             </Button>
