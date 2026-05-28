@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { ArrowLeft, CheckCircle2, FileText, Clock, RefreshCw } from "lucide-react";
 import { formatDateTime } from "@/utils/status";
 
-export const Route = createFileRoute("/ops/activation/submissions/$ticketId")({
+export const Route = createFileRoute("/ops/activation/submissions_/$ticketId")({
   component: SubmissionDetail,
 });
 
