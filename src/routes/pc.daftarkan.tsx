@@ -84,40 +84,41 @@ function Hub() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-5xl space-y-6">
+    <div className="p-4 pb-24 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-5xl space-y-5">
         <Breadcrumb trail={[{ label: "Daftarkan Organisasi" }]} />
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold text-foreground">Daftarkan Organisasi Bawahan</h1>
+        <div className="space-y-1">
+          <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Daftarkan Organisasi Bawahan</h1>
           <p className="text-sm text-muted-foreground">
-            Pilih jenis organisasi yang akan didaftarkan di bawah PCNU Kraksaan.
+            Pilih jenis organisasi yang akan didaftarkan.
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
           {cards.map((c) => (
-            <div key={c.type} className="flex flex-col rounded-xl border border-border bg-card p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
+            <Link
+              key={c.type}
+              to="/pc/daftarkan"
+              search={{ type: c.type }}
+              className="flex flex-col rounded-xl border border-border bg-card p-4 active:bg-accent/40 sm:p-5"
+            >
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <c.icon className="h-5 w-5" />
               </div>
-              <p className="mt-4 text-base font-semibold text-foreground">{c.title}</p>
-              <p className="mt-1 flex-1 text-sm text-muted-foreground">{c.desc}</p>
-              <Link
-                to="/pc/daftarkan"
-                search={{ type: c.type }}
-                className="mt-4 inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-              >
+              <p className="mt-3 text-base font-semibold text-foreground">{c.title}</p>
+              <p className="mt-1 flex-1 text-sm leading-relaxed text-muted-foreground">{c.desc}</p>
+              <span className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground sm:py-2.5">
                 {c.cta}
-              </Link>
-            </div>
+              </span>
+            </Link>
           ))}
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <Link to="/pc/status-pengajuan" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+          <Link to="/pc/status-pengajuan" className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground sm:h-auto sm:py-2">
             Lihat Status Pengajuan
           </Link>
-          <Link to="/pc" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-muted-foreground">
+          <Link to="/pc" className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-muted-foreground sm:h-auto sm:py-2">
             Kembali ke Overview
           </Link>
         </div>
