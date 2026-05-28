@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
 import { StatusBadge } from "@/components/StatusBadge";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -272,7 +271,7 @@ function RowActions({ row, scope, mobile }: { row: Row; scope: "pc" | "pw"; mobi
           Perbaiki
         </Link>
       )}
-      <WhatsAppButton phone={row.hp} ticketId={row.ticketId} iconOnly size="sm" />
+      
     </div>
   );
 }

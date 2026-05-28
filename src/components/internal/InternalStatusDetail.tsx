@@ -27,7 +27,7 @@ export function InternalStatusDetail({ ticketId, scope }: { ticketId: string; sc
         ]}
         subtitle="Rincian pengajuan aktivasi organisasi."
       />
-      <div className="p-4 sm:p-6 max-w-3xl">
+      <div className="p-4 sm:p-6 max-w-7xl">
         <Link to={listPath} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> Kembali ke daftar
         </Link>
@@ -38,76 +38,77 @@ export function InternalStatusDetail({ ticketId, scope }: { ticketId: string; sc
             <p className="mt-1 text-sm text-muted-foreground">Periksa kembali nomor tiket.</p>
           </div>
         ) : (
-          <div className="mt-4 space-y-5">
-            <div className="rounded-xl border border-border bg-card p-6">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Nomor Tiket</p>
-                  <p className="mt-1 font-mono text-lg font-bold text-primary-dark">{reg.ticketId}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1.5">
-                  <StatusBadge status={reg.status} />
-                  <JalurBadge jalur={reg.jalur} />
-                  {(reg.revisionCount ?? 0) > 0 && (
-                    <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                      Revisi ke-{reg.revisionCount}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-5 rounded-md border border-border bg-secondary/30 p-4">
-                <p className="text-sm">{STATUS_COPY[reg.status]}</p>
-              </div>
-
-              {(reg.status === "PerluPerbaikan" || reg.status === "RejectedFinal") && reg.rejectReason && (
-                <div className="mt-3 rounded-md border border-destructive/30 bg-destructive/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-destructive">
-                    Catatan Reviewer
-                    {reg.rejectionCategory && (
-                      <span className="ml-2 rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-medium normal-case tracking-normal">
-                        {REJECTION_CATEGORY_LABEL[reg.rejectionCategory]}
+          <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] lg:items-start">
+            <div className="space-y-5 min-w-0">
+              <div className="rounded-xl border border-border bg-card p-6">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Nomor Tiket</p>
+                    <p className="mt-1 font-mono text-lg font-bold text-primary-dark">{reg.ticketId}</p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1.5">
+                    <StatusBadge status={reg.status} />
+                    <JalurBadge jalur={reg.jalur} />
+                    {(reg.revisionCount ?? 0) > 0 && (
+                      <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                        Revisi ke-{reg.revisionCount}
                       </span>
                     )}
-                  </p>
-                  <p className="mt-1 text-sm">{reg.rejectReason}</p>
+                  </div>
                 </div>
+
+                <div className="mt-5 rounded-md border border-border bg-secondary/30 p-4">
+                  <p className="text-sm">{STATUS_COPY[reg.status]}</p>
+                </div>
+
+                {(reg.status === "PerluPerbaikan" || reg.status === "RejectedFinal") && reg.rejectReason && (
+                  <div className="mt-3 rounded-md border border-destructive/30 bg-destructive/5 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-destructive">
+                      Catatan Reviewer
+                      {reg.rejectionCategory && (
+                        <span className="ml-2 rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-medium normal-case tracking-normal">
+                          {REJECTION_CATEGORY_LABEL[reg.rejectionCategory]}
+                        </span>
+                      )}
+                    </p>
+                    <p className="mt-1 text-sm">{reg.rejectReason}</p>
+                  </div>
+                )}
+
+                <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+                  <Info label="Nama Organisasi" value={reg.namaOrg} />
+                  <Info label="Tipe Organisasi" value={reg.tipeOrg} />
+                  {reg.tipeOrg === "Ranting" && reg.parentMwcName && <Info label="MWC Induk" value={reg.parentMwcName} />}
+                  {reg.tipeOrg === "Ranting" && reg.sourcePcName && <Info label="PC Induk" value={reg.sourcePcName} />}
+                  {reg.tipeOrg === "Ranting" && reg.village && <Info label="Wilayah / Desa" value={reg.village} />}
+                  {reg.tipeOrg !== "Ranting" && <Info label="Wilayah PW" value={reg.pw} />}
+                  {reg.sourcePcName && reg.tipeOrg !== "Ranting" && <Info label="Didaftarkan oleh" value={reg.sourcePcName} />}
+                  <Info label="Nama Administrator" value={reg.namaAdmin} />
+                  <Info label="Jabatan" value={reg.jabatan} />
+                  <Info label="Email" value={reg.email} />
+                  <Info label="Tanggal Submit" value={formatDateTime(reg.submittedAt)} />
+                </dl>
+              </div>
+
+              {reg.status === "PerluPerbaikan" && (
+                <Link to={revisiPath} params={{ ticketId: reg.ticketId }}>
+                  <Button className="w-full sm:w-auto">
+                    <RefreshCw className="mr-1.5 h-4 w-4" /> Perbaiki Pengajuan
+                  </Button>
+                </Link>
               )}
 
-              <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
-                <Info label="Nama Organisasi" value={reg.namaOrg} />
-                <Info label="Tipe Organisasi" value={reg.tipeOrg} />
-                {reg.tipeOrg === "Ranting" && reg.parentMwcName && <Info label="MWC Induk" value={reg.parentMwcName} />}
-                {reg.tipeOrg === "Ranting" && reg.sourcePcName && <Info label="PC Induk" value={reg.sourcePcName} />}
-                {reg.tipeOrg === "Ranting" && reg.village && <Info label="Wilayah / Desa" value={reg.village} />}
-                {reg.tipeOrg !== "Ranting" && <Info label="Wilayah PW" value={reg.pw} />}
-                {reg.sourcePcName && reg.tipeOrg !== "Ranting" && <Info label="Didaftarkan oleh" value={reg.sourcePcName} />}
-                <Info label="Nama Administrator" value={reg.namaAdmin} />
-                <Info label="Jabatan" value={reg.jabatan} />
-                <Info label="Email" value={reg.email} />
-                <Info label="Tanggal Submit" value={formatDateTime(reg.submittedAt)} />
-              </dl>
-
+              {reg.status === "RejectedFinal" && (
+                <div className="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm">
+                  <p className="flex items-center gap-2 font-medium">
+                    <AlertTriangle className="h-4 w-4 text-destructive" />
+                    Pengajuan ini tidak dapat dilanjutkan.
+                  </p>
+                </div>
+              )}
             </div>
 
-            {reg.status === "PerluPerbaikan" && (
-              <Link to={revisiPath} params={{ ticketId: reg.ticketId }}>
-                <Button className="w-full sm:w-auto">
-                  <RefreshCw className="mr-1.5 h-4 w-4" /> Perbaiki Pengajuan
-                </Button>
-              </Link>
-            )}
-
-            {reg.status === "RejectedFinal" && (
-              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm">
-                <p className="flex items-center gap-2 font-medium">
-                  <AlertTriangle className="h-4 w-4 text-destructive" />
-                  Pengajuan ini tidak dapat dilanjutkan.
-                </p>
-              </div>
-            )}
-
-            <div className="rounded-xl border border-border bg-card p-6">
+            <div className="rounded-xl border border-border bg-card p-6 lg:sticky lg:top-6">
               <h2 className="text-sm font-semibold">Linimasa Pengajuan</h2>
               <ol className="mt-4 space-y-3">
                 <TL icon={ClipboardCheck} active label="Pengajuan dikirim" sub={formatDateTime(reg.submittedAt)} />
