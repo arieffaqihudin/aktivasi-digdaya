@@ -14,7 +14,7 @@ import { SuratTugasSelector, validateSuratTugas, type SuratTugasValue, emptySura
 import { AdministratorForm, adminToSubmit, emptyAdminValue, validateAdmin } from "@/components/forms/AdministratorForm";
 import { StatusBadge } from "@/components/StatusBadge";
 import { cn } from "@/lib/utils";
-import { isValidNIK, isValidEmail, isValidPhone, normalizePhone } from "@/utils/validation";
+
 
 type SectionType = "mwc" | "lembaga" | "ranting";
 
