@@ -1,184 +1,365 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { actions, useStore } from "@/lib/store";
-import { type TipeOrg } from "@/data/mockData";
+import { type TipeOrg, type Registration } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { isValidNIK, isValidEmail, normalizePhone, isValidPhone } from "@/utils/validation";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-import { findPwDemoTarget, pwDemoTargets } from "@/lib/demo-scope-data";
+import { Loader2, Building2, Layers, ChevronRight, ArrowLeft, Search } from "lucide-react";
+import { findPwDemoTarget, pwDemoTargets, type DemoTarget } from "@/lib/demo-scope-data";
+import { SuratTugasSelector, validateSuratTugas, type SuratTugasValue, emptySuratTugas } from "@/components/forms/SuratTugasSelector";
+import { AdministratorForm, adminToSubmit, emptyAdminValue, validateAdmin } from "@/components/forms/AdministratorForm";
+import { StatusBadge } from "@/components/StatusBadge";
+import { cn } from "@/lib/utils";
+
+type SectionType = "pc" | "lembaga";
 
 export const Route = createFileRoute("/pw/daftarkan")({
   validateSearch: (search: Record<string, unknown>) => ({
     targetId: typeof search.targetId === "string" ? search.targetId : undefined,
+    type: search.type === "pc" || search.type === "lembaga" ? (search.type as SectionType) : undefined,
   }),
   component: Daftarkan,
 });
 
 function Daftarkan() {
   const search = Route.useSearch();
-  const navigate = useNavigate();
-  const registrations = useStore((s) => s.registrations);
-  const [tipeSurat, setTipeSurat] = useState<"DIGDAYA_PERSURATAN" | "MANUAL_UPLOAD">("DIGDAYA_PERSURATAN");
-  const [namaAdmin, setNamaAdmin] = useState("");
-  const [jabatan, setJabatan] = useState("");
-  const [nik, setNik] = useState("");
-  const [hp, setHp] = useState("");
-  const [email, setEmail] = useState("");
-  const [suratValue, setSuratValue] = useState("");
-  const [busy, setBusy] = useState(false);
+  if (search.targetId) return <StandardForm />;
+  if (search.type === "pc") return <PickerList type="PC" />;
+  if (search.type === "lembaga") return <PickerList type="Lembaga PW" />;
+  return <Hub />;
+}
 
-  const target = findPwDemoTarget(search.targetId);
-  const history = useMemo(
-    () => registrations.filter((r) => r.sumberPengajuan === "PW_DASHBOARD").slice(0, 5),
-    [registrations],
+function Breadcrumb({ trail }: { trail: { label: string; to?: string; search?: Record<string, string> }[] }) {
+  return (
+    <nav className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+      <Link to="/pw" className="hover:text-foreground">PWNU DI Yogyakarta</Link>
+      {trail.map((t, i) => (
+        <span key={i} className="flex items-center gap-1.5">
+          <ChevronRight className="h-3 w-3" />
+          {t.to ? (
+            <Link to={t.to} search={t.search as never} className="hover:text-foreground">{t.label}</Link>
+          ) : (
+            <span className="text-foreground">{t.label}</span>
+          )}
+        </span>
+      ))}
+    </nav>
   );
+}
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!target) { toast.error("Pilih organisasi terlebih dahulu."); return; }
-    if (!namaAdmin.trim() || !jabatan.trim()) { toast.error("Lengkapi data administrator."); return; }
-    if (!isValidNIK(nik)) { toast.error("NIK harus 16 digit."); return; }
-    if (!isValidEmail(email)) { toast.error("Email tidak valid."); return; }
-    const normHp = normalizePhone(hp);
-    if (!isValidPhone(normHp)) { toast.error("Nomor HP tidak valid."); return; }
-    if (!suratValue.trim()) { toast.error("Lengkapi surat tugas."); return; }
-
-    setBusy(true); await new Promise((r) => setTimeout(r, 500));
-    const reg = actions.submitInternal({
-      tipeOrg: target.type as TipeOrg,
-      namaOrg: target.name,
-      namaAdmin,
-      jabatan,
-      nik,
-      hp: normHp,
-      email,
-      sumberSuratTugas: tipeSurat,
-      suratTugasFile: tipeSurat === "MANUAL_UPLOAD" ? suratValue : undefined,
-      dokumenSistem: tipeSurat === "DIGDAYA_PERSURATAN" ? {
-        documentId: `DOC-${target.id}`,
-        nomorSurat: suratValue,
-        namaDokumen: `Surat Tugas ${target.name}`,
-        tanggalSurat: new Date().toISOString().slice(0, 10),
-        penandatangan: "Ketua PWNU DI Yogyakarta",
-        status: "Tertandatangani",
-      } : undefined,
-    });
-    setBusy(false);
-    if (!reg) { toast.error("Gagal mengirim."); return; }
-    toast.success(`Pengajuan dikirim. Tiket: ${reg.ticketId}`);
-    navigate({ to: "/pw/status-pengajuan" });
-  };
+function Hub() {
+  const cards = [
+    {
+      type: "pc" as const,
+      icon: Building2,
+      title: "Daftarkan PC",
+      desc: "Pilih PC di bawah PWNU DI Yogyakarta yang belum production.",
+      cta: "Pilih PC",
+    },
+    {
+      type: "lembaga" as const,
+      icon: Layers,
+      title: "Daftarkan Lembaga PW",
+      desc: "Pilih lembaga di bawah PWNU DI Yogyakarta yang belum production.",
+      cta: "Pilih Lembaga",
+    },
+  ];
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-5xl space-y-6">
+        <Breadcrumb trail={[{ label: "Daftarkan Organisasi" }]} />
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold text-foreground">Daftarkan Organisasi Bawahan</h1>
-          <p className="text-sm text-muted-foreground">Lengkapi data administrator dan surat tugas untuk target yang dipilih.</p>
+          <p className="text-sm text-muted-foreground">
+            Pilih jenis organisasi yang akan didaftarkan di bawah PWNU DI Yogyakarta.
+          </p>
         </div>
 
-        {!target ? (
-          <div className="space-y-4 rounded-xl border border-border bg-card p-5">
-            <div>
-              <h2 className="text-base font-semibold text-foreground">Pilih organisasi</h2>
-              <p className="text-sm text-muted-foreground">Pilih salah satu target di bawah ini.</p>
-            </div>
-            <div className="space-y-3">
-              {pwDemoTargets.map((item) => (
-                <div key={item.id} className="flex flex-col gap-3 rounded-lg border border-border p-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="font-medium text-foreground">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">{item.type}</p>
-                  </div>
-                  <Link to="/pw/daftarkan" search={{ targetId: item.id }} className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
-                    Pilih
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <form onSubmit={submit} className="space-y-5">
-            <div className="rounded-xl border border-border bg-card p-5">
-              <p className="text-sm font-semibold text-foreground">Data organisasi</p>
-              <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-                <ReadOnlyField label="Organisasi" value={target.name} />
-                <ReadOnlyField label="Tipe" value={target.type} />
-              </dl>
-            </div>
-
-            <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-              <p className="text-sm font-semibold text-foreground">Data administrator</p>
-              <Field label="Nama Administrator" value={namaAdmin} onChange={setNamaAdmin} />
-              <Field label="Jabatan Administrator" value={jabatan} onChange={setJabatan} />
-              <Field label="NIK" value={nik} onChange={(v) => setNik(v.replace(/\D/g, "").slice(0,16))} />
-              <Field label="Nomor HP WhatsApp" value={hp} onChange={setHp} placeholder="08xxxxxxxxxx" />
-              <Field label="Email" value={email} onChange={setEmail} type="email" />
-            </div>
-
-            <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-              <p className="text-sm font-semibold text-foreground">Surat Tugas</p>
-              <div className="grid gap-2 sm:grid-cols-2">
-                <button type="button" onClick={() => { setTipeSurat("DIGDAYA_PERSURATAN"); setSuratValue(""); }} className={tipeSurat === "DIGDAYA_PERSURATAN" ? "rounded-md border border-primary bg-secondary px-3 py-2 text-sm font-medium text-foreground" : "rounded-md border border-border px-3 py-2 text-sm text-muted-foreground"}>
-                  Ambil dari Digdaya Persuratan
-                </button>
-                <button type="button" onClick={() => { setTipeSurat("MANUAL_UPLOAD"); setSuratValue(""); }} className={tipeSurat === "MANUAL_UPLOAD" ? "rounded-md border border-primary bg-secondary px-3 py-2 text-sm font-medium text-foreground" : "rounded-md border border-border px-3 py-2 text-sm text-muted-foreground"}>
-                  Upload Manual
-                </button>
+        <div className="grid gap-4 md:grid-cols-2">
+          {cards.map((c) => (
+            <div key={c.type} className="flex flex-col rounded-xl border border-border bg-card p-5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <c.icon className="h-5 w-5" />
               </div>
-              <Field
-                label={tipeSurat === "DIGDAYA_PERSURATAN" ? "Nomor surat" : "Nama file surat tugas"}
-                value={suratValue}
-                onChange={setSuratValue}
-                placeholder={tipeSurat === "DIGDAYA_PERSURATAN" ? "Contoh: 011/PW-DIY/ST/2026" : "Contoh: surat-tugas-pc-yogyakarta.pdf"}
-              />
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <Button type="submit" disabled={busy}>
-                {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Kirim Pengajuan
-              </Button>
-              <Link to="/pw/status-pengajuan" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground">
-                Lihat Status Pengajuan
+              <p className="mt-4 text-base font-semibold text-foreground">{c.title}</p>
+              <p className="mt-1 flex-1 text-sm text-muted-foreground">{c.desc}</p>
+              <Link
+                to="/pw/daftarkan"
+                search={{ type: c.type }}
+                className="mt-4 inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+              >
+                {c.cta}
               </Link>
             </div>
-          </form>
-        )}
+          ))}
+        </div>
 
-        <div className="rounded-xl border border-border bg-card p-5">
-          <h2 className="text-base font-semibold text-foreground">Pengajuan terbaru</h2>
-          <div className="mt-4 space-y-3">
-            {history.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Belum ada pengajuan.</p>
-            ) : (
-              history.map((item) => (
-                <div key={item.ticketId} className="rounded-lg border border-border p-4">
-                  <p className="font-medium text-foreground">{item.namaOrg}</p>
-                  <p className="text-sm text-muted-foreground">{item.ticketId} · {item.status}</p>
-                </div>
-              ))
-            )}
-          </div>
+        <div className="flex flex-wrap gap-3">
+          <Link to="/pw/status-pengajuan" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground">
+            Lihat Status Pengajuan
+          </Link>
+          <Link to="/pw" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-muted-foreground">
+            Kembali ke Overview
+          </Link>
         </div>
       </div>
     </div>
   );
 }
 
-function Field({ label, value, onChange, type = "text", placeholder }: { label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string }) {
+function useLatestRegByName() {
+  const regs = useStore((s) => s.registrations);
+  return useMemo(() => {
+    const map = new Map<string, Registration>();
+    for (const r of regs) {
+      if (r.sumberPengajuan !== "PW_DASHBOARD") continue;
+      const prev = map.get(r.namaOrg);
+      if (!prev || new Date(r.submittedAt) > new Date(prev.submittedAt)) map.set(r.namaOrg, r);
+    }
+    return map;
+  }, [regs]);
+}
+
+function PickerList({ type }: { type: "PC" | "Lembaga PW" }) {
+  const targets = pwDemoTargets.filter((t) => t.type === type);
+  const latest = useLatestRegByName();
+  const [q, setQ] = useState("");
+
+  const enriched = targets.map((t) => {
+    const reg = latest.get(t.name);
+    let state: "Belum Production" | "Pending" | "PerluPerbaikan" | "Production" = "Belum Production";
+    if (reg?.status === "Approved") state = "Production";
+    else if (reg?.status === "Pending") state = "Pending";
+    else if (reg?.status === "PerluPerbaikan") state = "PerluPerbaikan";
+    return { t, reg, state };
+  });
+
+  const filtered = enriched.filter((e) => !q || e.t.name.toLowerCase().includes(q.toLowerCase()));
+
+  const title = type === "PC" ? "Pilih PC" : "Pilih Lembaga PW";
+  const subtitle =
+    type === "PC"
+      ? "Pilih PC di bawah PWNU DI Yogyakarta yang akan didaftarkan."
+      : "Pilih lembaga di bawah PWNU DI Yogyakarta yang akan didaftarkan.";
+
   return (
-    <div>
-      <Label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</Label>
-      <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="mt-1.5" required />
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-5xl space-y-6">
+        <Breadcrumb
+          trail={[
+            { label: "Daftarkan Organisasi", to: "/pw/daftarkan" },
+            { label: title },
+          ]}
+        />
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
+            <p className="text-sm text-muted-foreground">{subtitle}</p>
+          </div>
+          <Link to="/pw/daftarkan" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-4 w-4" /> Kembali ke Pilihan
+          </Link>
+        </div>
+
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Cari ${type}...`} className="pl-9" />
+        </div>
+
+        {filtered.length === 0 ? (
+          <div className="rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
+            Tidak ada hasil.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filtered.map(({ t, reg, state }) => (
+              <PickerCard key={t.id} target={t} reg={reg} state={state} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-function ReadOnlyField({ label, value }: { label: string; value: string }) {
+function PickerCard({
+  target,
+  reg,
+  state,
+}: {
+  target: DemoTarget;
+  reg?: Registration;
+  state: "Belum Production" | "Pending" | "PerluPerbaikan" | "Production";
+}) {
+  return (
+    <div className={cn("flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between")}>
+      <div className="min-w-0">
+        <p className="font-medium text-foreground">{target.name}</p>
+        <p className="mt-0.5 text-sm text-muted-foreground">{target.type}</p>
+        <div className="mt-2">
+          {reg ? (
+            <StatusBadge status={reg.status} />
+          ) : (
+            <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+              Belum Production
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+        {state === "Belum Production" && (
+          <Link
+            to="/pw/daftarkan"
+            search={{ targetId: target.id }}
+            className="inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground sm:w-auto"
+          >
+            Daftarkan
+          </Link>
+        )}
+        {state === "Pending" && reg && (
+          <Link
+            to="/pw/status-pengajuan/$ticketId"
+            params={{ ticketId: reg.ticketId }}
+            className="inline-flex w-full items-center justify-center rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground sm:w-auto"
+          >
+            Lihat Status
+          </Link>
+        )}
+        {state === "PerluPerbaikan" && reg && (
+          <Link
+            to="/pw/status-pengajuan/$ticketId/revisi"
+            params={{ ticketId: reg.ticketId }}
+            className="inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground sm:w-auto"
+          >
+            Perbaiki
+          </Link>
+        )}
+        {state === "Production" && (
+          <span className="inline-flex w-full items-center justify-center rounded-md bg-success/15 px-4 py-2 text-sm font-medium text-success sm:w-auto">
+            Sudah Production
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function StandardForm() {
+  const search = Route.useSearch();
+  const navigate = useNavigate();
+  const [admin, setAdmin] = useState(emptyAdminValue());
+  const [surat, setSurat] = useState<SuratTugasValue>(emptySuratTugas("full"));
+  const [busy, setBusy] = useState(false);
+
+  const target = findPwDemoTarget(search.targetId);
+
+  if (!target) {
+    return (
+      <div className="p-4 sm:p-6 lg:p-8">
+        <div className="mx-auto max-w-3xl space-y-6">
+          <Breadcrumb trail={[{ label: "Daftarkan Organisasi", to: "/pw/daftarkan" }, { label: "Tidak Ditemukan" }]} />
+          <div className="rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground">
+            Organisasi tidak ditemukan. Silakan kembali ke pilihan.
+          </div>
+          <Link to="/pw/daftarkan" className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+            Kembali ke Pilihan
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const backType: SectionType = target.type === "PC" ? "pc" : "lembaga";
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const aErr = validateAdmin(admin);
+    if (aErr) return toast.error(aErr);
+    const sErr = validateSuratTugas(surat);
+    if (sErr) return toast.error(sErr);
+
+    setBusy(true);
+    await new Promise((r) => setTimeout(r, 400));
+    const a = adminToSubmit(admin);
+    const reg = actions.submitInternal({
+      tipeOrg: target.type as TipeOrg,
+      namaOrg: target.name,
+      namaAdmin: a.namaAdmin,
+      jabatan: a.jabatan,
+      nik: a.nik,
+      hp: a.hp,
+      email: a.email,
+      sumberSuratTugas: surat.sumber,
+      suratTugasFile: surat.file?.name,
+      dokumenSistem: surat.dokumen ?? undefined,
+    });
+    setBusy(false);
+    if (!reg) return toast.error("Gagal mengirim pengajuan.");
+    toast.success(`Pengajuan dikirim. Tiket: ${reg.ticketId}`);
+    navigate({ to: "/pw/status-pengajuan" });
+  };
+
+  return (
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-3xl space-y-6">
+        <Breadcrumb
+          trail={[
+            { label: "Daftarkan Organisasi", to: "/pw/daftarkan" },
+            { label: target.type === "PC" ? "Pilih PC" : "Pilih Lembaga PW", to: "/pw/daftarkan", search: { type: backType } },
+            { label: target.name },
+          ]}
+        />
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-2">
+            <h1 className="text-2xl font-semibold text-foreground">Daftarkan {target.name}</h1>
+            <p className="text-sm text-muted-foreground">Lengkapi data administrator dan surat tugas.</p>
+          </div>
+          <Link to="/pw/daftarkan" search={{ type: backType }} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-4 w-4" /> Kembali
+          </Link>
+        </div>
+
+        <form onSubmit={submit} className="space-y-5">
+          <section className="rounded-xl border border-border bg-card p-5">
+            <p className="text-sm font-semibold text-foreground">Data Organisasi</p>
+            <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+              <InfoBlock label="Nama Organisasi" value={target.name} />
+              <InfoBlock label="Tipe Organisasi" value={target.type} />
+              <InfoBlock label="Induk" value="PWNU DI Yogyakarta" />
+              <InfoBlock label="Status" value="Belum Production" />
+            </dl>
+          </section>
+
+          <section className="rounded-xl border border-border bg-card p-5">
+            <AdministratorForm value={admin} onChange={setAdmin} />
+          </section>
+
+          <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+            <p className="text-sm font-semibold text-foreground">Surat Tugas</p>
+            <SuratTugasSelector value={surat} onChange={setSurat} mode="full" />
+          </section>
+
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <Link to="/pw/daftarkan" search={{ type: backType }} className="inline-flex w-full items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground sm:w-auto">
+              Kembali ke Pilihan
+            </Link>
+            <Button type="submit" disabled={busy} className="w-full sm:w-auto">
+              {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Kirim Pengajuan
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function InfoBlock({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <Label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</Label>
