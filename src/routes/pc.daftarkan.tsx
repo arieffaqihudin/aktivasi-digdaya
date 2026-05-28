@@ -327,7 +327,7 @@ function RantingForm() {
     if (sErr) return toast.error(sErr);
 
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 250));
     const a = adminToSubmit(admin);
     const reg = actions.submitRanting({
       namaRanting: namaRanting.trim(),
@@ -465,7 +465,7 @@ function StandardForm() {
     if (sErr) return toast.error(sErr);
 
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 250));
     const a = adminToSubmit(admin);
     const reg = actions.submitInternal({
       tipeOrg: target.type as TipeOrg,

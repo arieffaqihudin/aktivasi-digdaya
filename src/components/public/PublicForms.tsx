@@ -34,7 +34,7 @@ export function AktivasiForm() {
     if (!code.trim()) return;
     setVerifying(true);
     setCodeError(null);
-    await new Promise((r) => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 250));
     const res: VerifyResult = actions.verifyAccessCode(code);
     setVerifying(false);
     if (!res.ok) {
@@ -66,7 +66,7 @@ export function AktivasiForm() {
   const submit = async () => {
     if (!verified) return;
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 250));
     const reg = actions.submitPublicActivation({
       accessCode: verified.code,
       namaAdmin, jabatan, nik, hp, email,

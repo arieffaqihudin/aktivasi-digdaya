@@ -28,7 +28,7 @@ function ReviewDetail() {
   if (!reg) return <div className="p-10 text-sm text-muted-foreground">Tiket tidak ditemukan.</div>;
 
   const doApprove = async () => {
-    setBusy(true); await new Promise((r) => setTimeout(r, 400));
+    setBusy(true); await new Promise((r) => setTimeout(r, 250));
     actions.approve(reg.ticketId); setBusy(false); setApproveOpen(false);
     toast.success(`${reg.ticketId} disetujui dan masuk batch Peruri.`);
   };

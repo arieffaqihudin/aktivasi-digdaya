@@ -58,7 +58,7 @@ export function InternalRevisionForm({ ticketId, scope }: { ticketId: string; sc
     if (sErr) return toast.error(sErr);
 
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 250));
     const payload = adminToSubmit(admin);
     const next = actions.resubmitRevision(ticketId, {
       namaAdmin: payload.namaAdmin, jabatan: payload.jabatan, nik: payload.nik, hp: payload.hp, email: payload.email,

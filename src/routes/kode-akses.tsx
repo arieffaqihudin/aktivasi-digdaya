@@ -41,7 +41,7 @@ function KodeAksesPage() {
     if (!code.trim()) return;
     setVerifying(true);
     setError(null);
-    await new Promise((r) => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 250));
     const res: VerifyResult = actions.verifyAccessCode(code);
     setVerifying(false);
     if (!res.ok) {

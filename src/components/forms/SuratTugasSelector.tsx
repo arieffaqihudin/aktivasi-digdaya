@@ -76,7 +76,7 @@ export function SuratTugasSelector({
     }
     setFetching(true);
     setNotFound(false);
-    await new Promise((r) => setTimeout(r, 350));
+    await new Promise((r) => setTimeout(r, 250));
     const found = findDokumen(query);
     setFetching(false);
     if (!found) {
