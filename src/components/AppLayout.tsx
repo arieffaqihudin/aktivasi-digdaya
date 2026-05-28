@@ -34,7 +34,7 @@ export function AppLayout({
   scopeLabel: string;
   orgName?: string;
 }) {
-  const user = useStore((s) => s.user);
+  const storeUser = useStore((s) => s.user);
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -42,7 +42,7 @@ export function AppLayout({
 
   // Synchronous auto-login fallback so the layout never gets stuck on an
   // infinite "Memuat dashboard…" screen on direct navigation.
-  if (!user) {
+  if (!storeUser) {
     const fallbackRole = allowedRoles[0];
     if (fallbackRole === "PW") actions.loginAs("pw@digdaya.nu.id");
     else if (fallbackRole === "PC") actions.loginAs("pc.kraksaan@digdaya.nu.id");
@@ -50,24 +50,28 @@ export function AppLayout({
     else if (fallbackRole === "Reviewer") actions.loginAs("reviewer@digdaya.nu.id");
   }
 
-  useEffect(() => {
-    if (user && !allowedRoles.includes(user.role)) {
-      if (user.role === "Super Admin") navigate({ to: "/ops/activation" });
-      else if (user.role === "Reviewer") navigate({ to: "/review" });
-      else if (user.role === "PW") navigate({ to: "/pw" });
-      else navigate({ to: "/pc" });
-    }
-  }, [user, navigate, allowedRoles]);
-
-  useEffect(() => { setMobileOpen(false); }, [path]);
-
   // Fallback user object so render proceeds immediately even before the
   // synchronous loginAs above has propagated through the store.
-  const effectiveUser = user ?? {
+  const user = storeUser ?? {
     email: "admin@digdaya.nu.id",
     name: "Super Admin Digdaya",
     role: (allowedRoles[0] ?? "Super Admin") as Role,
+    pcId: undefined as string | undefined,
+    pcName: undefined as string | undefined,
+    pwId: undefined as string | undefined,
+    pwName: undefined as string | undefined,
   };
+
+  useEffect(() => {
+    if (storeUser && !allowedRoles.includes(storeUser.role)) {
+      if (storeUser.role === "Super Admin") navigate({ to: "/ops/activation" });
+      else if (storeUser.role === "Reviewer") navigate({ to: "/review" });
+      else if (storeUser.role === "PW") navigate({ to: "/pw" });
+      else navigate({ to: "/pc" });
+    }
+  }, [storeUser, navigate, allowedRoles]);
+
+  useEffect(() => { setMobileOpen(false); }, [path]);
 
   const displayOrg = orgName ?? user.pcName ?? user.pwName ?? "Pengurus Besar Nahdlatul Ulama";
 
