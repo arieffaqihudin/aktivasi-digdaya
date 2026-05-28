@@ -1,7 +1,6 @@
 import { AppLayout, type MenuItem } from "./AppLayout";
 import {
   Home,
-  LayoutDashboard,
   KeyRound,
   Inbox,
   FileDown,
