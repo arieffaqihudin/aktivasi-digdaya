@@ -9,7 +9,7 @@ import { formatDate } from "@/utils/status";
 import { toast } from "sonner";
 import { useMemo } from "react";
 
-export const Route = createFileRoute("/ops/activation/access-codes/$codeId")({
+export const Route = createFileRoute("/ops/activation/access-codes_/$codeId")({
   component: AccessCodeDetail,
 });
 
