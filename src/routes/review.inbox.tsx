@@ -42,14 +42,13 @@ function Inbox() {
     .filter((r) => tipe === "all" || r.tipeOrg === tipe)
     .filter((r) => status === "all" || r.status === status)
     .filter((r) => pw === "all" || r.pw === pw)
-    .filter((r) => slaFilter === "all" || slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === slaFilter)
     .filter((r) => {
       if (!q) return true;
       const s = q.toLowerCase();
       return r.ticketId.toLowerCase().includes(s) || r.namaOrg.toLowerCase().includes(s) || r.namaAdmin.toLowerCase().includes(s);
     })
     .sort((a, b) => new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime()),
-    [regs, sumber, tingkat, sumberSurat, tipe, status, pw, slaFilter, q, sla]
+    [regs, sumber, tingkat, sumberSurat, tipe, status, pw, q]
   );
 
   const total = filtered.length;
