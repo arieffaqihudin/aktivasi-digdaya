@@ -496,9 +496,14 @@ function CodeCard({ code }: { code: AccessCode }) {
         <MiniStat label="Produksi" value={stats.production} />
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
-        <Link to="/ops/activation/access-codes/$codeId" params={{ codeId: code.code }} className="flex-1">
-          <Button variant="outline" size="sm" className="h-9 w-full"><Eye className="mr-1.5 h-3.5 w-3.5" /> Detail</Button>
+        <Link
+          to="/ops/activation/access-codes/$codeId"
+          params={{ codeId: code.code }}
+          className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md border border-input bg-background px-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+        >
+          <Eye className="h-3.5 w-3.5" /> Lihat Detail
         </Link>
+
         <Button variant="outline" size="sm" className="h-9" onClick={() => { navigator.clipboard.writeText(code.code); toast.success("Kode disalin."); }}>
           <Copy className="h-3.5 w-3.5" />
         </Button>
