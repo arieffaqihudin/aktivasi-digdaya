@@ -9,11 +9,11 @@ export function JalurBadge({ jalur, className }: { jalur: Jalur; className?: str
         "inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium",
         isA
           ? "bg-[oklch(0.94_0.06_150)] text-[oklch(0.36_0.10_152)]"
-          : "bg-[oklch(0.95_0.025_160)] text-[oklch(0.34_0.04_160)]",
+          : "bg-[oklch(0.93_0.06_240)] text-[oklch(0.34_0.10_240)]",
         className,
       )}
     >
-      Jalur {jalur}
+      {isA ? "Kode Akses" : "Login Digdaya"}
     </span>
   );
 }
