@@ -1,7 +1,6 @@
 import { AppLayout, type MenuItem } from "./AppLayout";
 import {
   Home,
-  LayoutDashboard,
   KeyRound,
   Inbox,
   FileDown,
@@ -21,14 +20,13 @@ import { effectivePermissions, type PermissionKey } from "@/data/usersData";
 type OpsMenuItem = MenuItem & { permission?: PermissionKey };
 
 const opsMenuAll: OpsMenuItem[] = [
-  { to: "/ops", label: "Beranda", icon: Home, exact: true, section: "BERANDA", permission: "overview" },
+  { to: "/ops", label: "Overview", icon: Home, exact: true, section: "OVERVIEW", permission: "overview" },
 
   { to: "/ops/persuratan/pengajuan-ubah-email", label: "Pengajuan Ubah Email", icon: Mail, section: "PERSURATAN", permission: "persuratan.change_email" },
   { to: "/ops/persuratan/cek-order-id", label: "Cek Order ID", icon: Search, section: "PERSURATAN", permission: "persuratan.check_order_id" },
   { to: "/ops/persuratan/kop-surat", label: "Kop Surat", icon: FileText, section: "PERSURATAN", permission: "persuratan.kop_surat" },
   { to: "/ops/persuratan/stamper", label: "Stamper", icon: Stamp, section: "PERSURATAN", permission: "persuratan.stamper" },
 
-  { to: "/ops/activation", label: "Overview Aktivasi", icon: LayoutDashboard, exact: true, section: "PORTAL AKTIVASI", permission: "overview" },
   { to: "/ops/activation/access-codes", label: "Kode Akses", icon: KeyRound, section: "PORTAL AKTIVASI", permission: "activation.access_codes" },
   { to: "/ops/activation/submissions", label: "Pengajuan Aktivasi", icon: Inbox, section: "PORTAL AKTIVASI", permission: "activation.submissions" },
   { to: "/ops/activation/peruri-export", label: "Export Peruri", icon: FileDown, section: "PORTAL AKTIVASI", permission: "activation.peruri_export" },

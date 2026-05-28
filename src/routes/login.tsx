@@ -37,7 +37,7 @@ function LoginPage() {
 
   const routeByRole = (user: User) => {
     toast.success(`Selamat datang, ${user.name}.`);
-    if (user.role === "Super Admin") navigate({ to: "/ops/activation" });
+    if (user.role === "Super Admin") navigate({ to: "/ops" });
     else if (user.role === "Reviewer") navigate({ to: "/review" });
     else if (user.role === "PW") navigate({ to: "/pw" });
     else navigate({ to: "/pc" });
