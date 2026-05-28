@@ -130,13 +130,14 @@ function setState(next: Partial<State> | ((s: State) => Partial<State>)) {
 }
 function subscribe(l: () => void) { listeners.add(l); return () => listeners.delete(l); }
 export function useStore<T>(selector: (s: State) => T): T {
-  const snapshot = useSyncExternalStore(
+  useEffect(() => { hydrateStateFromStorage(); }, []);
+  return useSyncExternalStoreWithSelector(
     subscribe,
     () => state,
     () => serverSnapshot,
+    selector,
+    Object.is,
   );
-  useEffect(() => { hydrateStateFromStorage(); }, []);
-  return selector(snapshot);
 }
 export function getState() { return state; }
 
