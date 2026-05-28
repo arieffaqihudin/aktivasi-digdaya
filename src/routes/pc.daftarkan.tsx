@@ -44,12 +44,12 @@ function Breadcrumb({ trail }: { trail: { label: string; to?: string; search?: R
     <nav className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
       <Link to="/pc" className="hover:text-foreground">PCNU Kraksaan</Link>
       {trail.map((t, i) => (
-        <span key={i} className="flex items-center gap-1.5">
-          <ChevronRight className="h-3 w-3" />
+        <span key={i} className="flex min-w-0 items-center gap-1.5">
+          <ChevronRight className="h-3 w-3 shrink-0" />
           {t.to ? (
-            <Link to={t.to} search={t.search as never} className="hover:text-foreground">{t.label}</Link>
+            <Link to={t.to} search={t.search as never} className="truncate hover:text-foreground">{t.label}</Link>
           ) : (
-            <span className="text-foreground">{t.label}</span>
+            <span className="truncate text-foreground">{t.label}</span>
           )}
         </span>
       ))}
@@ -84,40 +84,41 @@ function Hub() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-5xl space-y-6">
+    <div className="p-4 pb-24 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-5xl space-y-5">
         <Breadcrumb trail={[{ label: "Daftarkan Organisasi" }]} />
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold text-foreground">Daftarkan Organisasi Bawahan</h1>
+        <div className="space-y-1">
+          <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Daftarkan Organisasi Bawahan</h1>
           <p className="text-sm text-muted-foreground">
-            Pilih jenis organisasi yang akan didaftarkan di bawah PCNU Kraksaan.
+            Pilih jenis organisasi yang akan didaftarkan.
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
           {cards.map((c) => (
-            <div key={c.type} className="flex flex-col rounded-xl border border-border bg-card p-5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
+            <Link
+              key={c.type}
+              to="/pc/daftarkan"
+              search={{ type: c.type }}
+              className="flex flex-col rounded-xl border border-border bg-card p-4 active:bg-accent/40 sm:p-5"
+            >
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <c.icon className="h-5 w-5" />
               </div>
-              <p className="mt-4 text-base font-semibold text-foreground">{c.title}</p>
-              <p className="mt-1 flex-1 text-sm text-muted-foreground">{c.desc}</p>
-              <Link
-                to="/pc/daftarkan"
-                search={{ type: c.type }}
-                className="mt-4 inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-              >
+              <p className="mt-3 text-base font-semibold text-foreground">{c.title}</p>
+              <p className="mt-1 flex-1 text-sm leading-relaxed text-muted-foreground">{c.desc}</p>
+              <span className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground sm:py-2.5">
                 {c.cta}
-              </Link>
-            </div>
+              </span>
+            </Link>
           ))}
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <Link to="/pc/status-pengajuan" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+          <Link to="/pc/status-pengajuan" className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground sm:h-auto sm:py-2">
             Lihat Status Pengajuan
           </Link>
-          <Link to="/pc" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-muted-foreground">
+          <Link to="/pc" className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-muted-foreground sm:h-auto sm:py-2">
             Kembali ke Overview
           </Link>
         </div>
@@ -177,8 +178,8 @@ function PickerList({ type }: { type: "MWC" | "Lembaga PC" }) {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-5xl space-y-6">
+    <div className="p-4 pb-24 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-5xl space-y-5">
         <Breadcrumb
           trail={[
             { label: "Daftarkan Organisasi", to: "/pc/daftarkan" },
@@ -186,12 +187,12 @@ function PickerList({ type }: { type: "MWC" | "Lembaga PC" }) {
           ]}
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
+            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">{title}</h1>
             <p className="text-sm text-muted-foreground">{subtitle}</p>
           </div>
-          <Link to="/pc/daftarkan" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/pc/daftarkan" className="inline-flex h-10 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:h-auto">
             <ArrowLeft className="h-4 w-4" /> Kembali ke Pilihan
           </Link>
         </div>
@@ -199,9 +200,9 @@ function PickerList({ type }: { type: "MWC" | "Lembaga PC" }) {
         <div className="space-y-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Cari ${type}...`} className="pl-9" />
+            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Cari ${type}...`} className="h-11 pl-9 text-base sm:h-10 sm:text-sm" />
           </div>
-          <div className="-mx-1 flex w-full overflow-x-auto">
+          <div className="-mx-1 flex w-full overflow-x-auto pb-1">
             <div className="inline-flex w-max gap-2 px-1">
               {filters.map((f) => (
                 <button
@@ -209,7 +210,7 @@ function PickerList({ type }: { type: "MWC" | "Lembaga PC" }) {
                   type="button"
                   onClick={() => setFilter(f)}
                   className={cn(
-                    "whitespace-nowrap rounded-full border px-3 py-1.5 text-sm",
+                    "whitespace-nowrap rounded-full border px-3 py-2 text-sm sm:py-1.5",
                     filter === f
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-border bg-card text-muted-foreground hover:text-foreground",
@@ -269,7 +270,7 @@ function PickerCard({
           <Link
             to="/pc/daftarkan"
             search={{ targetId: target.id }}
-            className="inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground sm:w-auto"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground active:bg-primary/90 sm:h-10 sm:w-auto sm:rounded-md"
           >
             Daftarkan
           </Link>
@@ -278,7 +279,7 @@ function PickerCard({
           <Link
             to="/pc/status-pengajuan/$ticketId"
             params={{ ticketId: reg.ticketId }}
-            className="inline-flex w-full items-center justify-center rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground sm:w-auto"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-border bg-background px-4 text-sm font-medium text-foreground active:bg-accent/40 sm:h-10 sm:w-auto sm:rounded-md"
           >
             Lihat Status
           </Link>
@@ -287,13 +288,13 @@ function PickerCard({
           <Link
             to="/pc/status-pengajuan/$ticketId/revisi"
             params={{ ticketId: reg.ticketId }}
-            className="inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground sm:w-auto"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground active:bg-primary/90 sm:h-10 sm:w-auto sm:rounded-md"
           >
             Perbaiki
           </Link>
         )}
         {state === "Production" && (
-          <span className="inline-flex w-full items-center justify-center rounded-md bg-success/15 px-4 py-2 text-sm font-medium text-success sm:w-auto">
+          <span className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-success/15 px-4 text-sm font-medium text-success sm:h-10 sm:w-auto sm:rounded-md">
             Sudah Production
           </span>
         )}
@@ -346,8 +347,8 @@ function RantingForm() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-3xl space-y-6">
+    <div className="p-4 pb-28 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-3xl space-y-5">
         <Breadcrumb
           trail={[
             { label: "Daftarkan Organisasi", to: "/pc/daftarkan" },
@@ -355,33 +356,33 @@ function RantingForm() {
           ]}
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-semibold text-foreground">Daftarkan Ranting</h1>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-1">
+            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Daftarkan Ranting</h1>
             <p className="text-sm text-muted-foreground">
               Input data Ranting di bawah {user?.pcName ?? "PCNU Kraksaan"}.
             </p>
           </div>
-          <Link to="/pc/daftarkan" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/pc/daftarkan" className="inline-flex h-10 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:h-auto">
             <ArrowLeft className="h-4 w-4" /> Kembali ke Pilihan
           </Link>
         </div>
 
-        <div className="flex items-start gap-3 rounded-md border border-info/30 bg-info/5 p-4 text-sm text-foreground">
+        <div className="flex items-start gap-3 rounded-lg border border-info/30 bg-info/5 p-4 text-sm text-foreground">
           <InfoIcon className="mt-0.5 h-4 w-4 shrink-0 text-info" />
           <p>
             Karena master data Ranting belum tersedia terpusat, nama Ranting diinput manual oleh PC/MWC dan akan diverifikasi berdasarkan surat tugas.
           </p>
         </div>
 
-        <form onSubmit={submit} className="space-y-5">
-          <section className="rounded-xl border border-border bg-card p-5 space-y-4">
+        <form onSubmit={submit} className="space-y-4">
+          <section className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5">
             <p className="text-sm font-semibold text-foreground">Data Ranting</p>
 
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">MWC Induk</Label>
               <Select value={parentMwcId} onValueChange={setParentMwcId}>
-                <SelectTrigger className="mt-1.5 w-full"><SelectValue placeholder="Pilih MWC induk" /></SelectTrigger>
+                <SelectTrigger className="mt-1.5 h-11 w-full text-base sm:h-10 sm:text-sm"><SelectValue placeholder="Pilih MWC induk" /></SelectTrigger>
                 <SelectContent>
                   {kraksaanMwcOptions.map((m) => (
                     <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
@@ -392,32 +393,32 @@ function RantingForm() {
 
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Nama Ranting</Label>
-              <Input value={namaRanting} onChange={(e) => setNamaRanting(e.target.value)} placeholder="Contoh: Ranting NU Banyuanyar Tengah" className="mt-1.5 h-10" />
+              <Input value={namaRanting} onChange={(e) => setNamaRanting(e.target.value)} placeholder="Contoh: Ranting NU Banyuanyar Tengah" className="mt-1.5 h-11 text-base sm:h-10 sm:text-sm" />
             </div>
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Desa / Kelurahan (opsional)</Label>
-              <Input value={village} onChange={(e) => setVillage(e.target.value)} placeholder="Contoh: Desa Banyuanyar Tengah" className="mt-1.5 h-10" />
+              <Input value={village} onChange={(e) => setVillage(e.target.value)} placeholder="Contoh: Desa Banyuanyar Tengah" className="mt-1.5 h-11 text-base sm:h-10 sm:text-sm" />
             </div>
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Catatan Lokasi (opsional)</Label>
-              <Textarea value={locationNote} onChange={(e) => setLocationNote(e.target.value)} className="mt-1.5" rows={2} />
+              <Textarea value={locationNote} onChange={(e) => setLocationNote(e.target.value)} className="mt-1.5 text-base sm:text-sm" rows={2} />
             </div>
           </section>
 
-          <section className="rounded-xl border border-border bg-card p-5">
+          <section className="rounded-xl border border-border bg-card p-4 sm:p-5">
             <AdministratorForm value={admin} onChange={setAdmin} />
           </section>
 
-          <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+          <section className="space-y-3 rounded-xl border border-border bg-card p-4 sm:p-5">
             <p className="text-sm font-semibold text-foreground">Surat Tugas</p>
             <SuratTugasSelector value={surat} onChange={setSurat} mode="full" />
           </section>
 
-          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Link to="/pc/daftarkan" className="inline-flex w-full items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground sm:w-auto">
+          <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:static sm:z-auto sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none sm:supports-[backdrop-filter]:bg-transparent flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <Link to="/pc/daftarkan" className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground active:bg-accent/40 sm:h-10 sm:w-auto sm:rounded-md">
               Kembali ke Pilihan
             </Link>
-            <Button type="submit" disabled={busy} className="w-full sm:w-auto">
+            <Button type="submit" disabled={busy} className="h-11 w-full text-sm sm:h-10 sm:w-auto">
               {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Kirim Pengajuan
             </Button>
@@ -485,8 +486,8 @@ function StandardForm() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-3xl space-y-6">
+    <div className="p-4 pb-28 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-3xl space-y-5">
         <Breadcrumb
           trail={[
             { label: "Daftarkan Organisasi", to: "/pc/daftarkan" },
@@ -495,20 +496,20 @@ function StandardForm() {
           ]}
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-semibold text-foreground">Daftarkan {target.name}</h1>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-1">
+            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Daftarkan {target.name}</h1>
             <p className="text-sm text-muted-foreground">Lengkapi data administrator dan surat tugas.</p>
           </div>
-          <Link to="/pc/daftarkan" search={{ type: backType }} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/pc/daftarkan" search={{ type: backType }} className="inline-flex h-10 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:h-auto">
             <ArrowLeft className="h-4 w-4" /> Kembali
           </Link>
         </div>
 
-        <form onSubmit={submit} className="space-y-5">
-          <section className="rounded-xl border border-border bg-card p-5">
+        <form onSubmit={submit} className="space-y-4">
+          <section className="space-y-3 rounded-xl border border-border bg-card p-4 sm:p-5">
             <p className="text-sm font-semibold text-foreground">Data Organisasi</p>
-            <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+            <dl className="grid gap-3 sm:grid-cols-2">
               <InfoBlock label="Nama Organisasi" value={target.name} />
               <InfoBlock label="Tipe Organisasi" value={target.type} />
               <InfoBlock label="Induk" value="PCNU Kraksaan" />
@@ -516,20 +517,20 @@ function StandardForm() {
             </dl>
           </section>
 
-          <section className="rounded-xl border border-border bg-card p-5">
+          <section className="rounded-xl border border-border bg-card p-4 sm:p-5">
             <AdministratorForm value={admin} onChange={setAdmin} />
           </section>
 
-          <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+          <section className="space-y-3 rounded-xl border border-border bg-card p-4 sm:p-5">
             <p className="text-sm font-semibold text-foreground">Surat Tugas</p>
             <SuratTugasSelector value={surat} onChange={setSurat} mode="full" />
           </section>
 
-          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Link to="/pc/daftarkan" search={{ type: backType }} className="inline-flex w-full items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground sm:w-auto">
+          <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:static sm:z-auto sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none sm:supports-[backdrop-filter]:bg-transparent flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <Link to="/pc/daftarkan" search={{ type: backType }} className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground active:bg-accent/40 sm:h-10 sm:w-auto sm:rounded-md">
               Kembali ke Pilihan
             </Link>
-            <Button type="submit" disabled={busy} className="w-full sm:w-auto">
+            <Button type="submit" disabled={busy} className="h-11 w-full text-sm sm:h-10 sm:w-auto">
               {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Kirim Pengajuan
             </Button>
