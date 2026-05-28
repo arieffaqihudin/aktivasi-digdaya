@@ -320,7 +320,7 @@ function StandardForm() {
             <p className="text-sm text-muted-foreground">Lengkapi data administrator dan surat tugas.</p>
           </div>
           <Link to="/pw/daftarkan" search={{ type: backType }} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> Kembali ke {target.type === "PC" ? "Pilih PC" : "Pilih Lembaga PW"}
           </Link>
         </div>
 
