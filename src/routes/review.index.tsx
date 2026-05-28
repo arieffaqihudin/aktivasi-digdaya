@@ -38,8 +38,8 @@ function ReviewSummary() {
       <div className="space-y-5 p-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <KPI label="Total Pending" value={pending.length} icon={Inbox} tone="warning" />
-          <KPI label="Pending Jalur A" value={pendingA} icon={FileCheck} />
-          <KPI label="Pending Jalur B" value={pendingB} icon={Network} tone="info" />
+          <KPI label="Pending Kode Akses" value={pendingA} icon={FileCheck} />
+          <KPI label="Pending Login Digdaya" value={pendingB} icon={Network} tone="info" />
           <KPI label="Approved Hari Ini" value={approvedToday} icon={CheckCircle2} tone="success" />
           <KPI label="Rejected Hari Ini" value={rejectedToday} icon={XCircle} tone="destructive" />
           <KPI label="Melewati SLA" value={overSla} icon={Timer} tone="destructive" />
