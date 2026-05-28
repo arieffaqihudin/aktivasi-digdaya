@@ -46,6 +46,7 @@ import { Route as OpsActivationIndexRouteImport } from './routes/ops.activation.
 import { Route as StatusTicketIdRevisiRouteImport } from './routes/status.$ticketId.revisi'
 import { Route as ReviewInboxTicketIdRouteImport } from './routes/review.inbox.$ticketId'
 import { Route as PwStatusPengajuanTicketIdRouteImport } from './routes/pw.status-pengajuan.$ticketId'
+import { Route as PwDaftarkanImportRouteImport } from './routes/pw.daftarkan_.import'
 import { Route as PcStatusPengajuanTicketIdRouteImport } from './routes/pc.status-pengajuan.$ticketId'
 import { Route as PcDaftarkanImportRouteImport } from './routes/pc.daftarkan_.import'
 import { Route as OpsPersuratanStamperRouteImport } from './routes/ops.persuratan.stamper'
@@ -250,6 +251,11 @@ const PwStatusPengajuanTicketIdRoute =
     path: '/status-pengajuan/$ticketId',
     getParentRoute: () => PwRoute,
   } as any)
+const PwDaftarkanImportRoute = PwDaftarkanImportRouteImport.update({
+  id: '/daftarkan_/import',
+  path: '/daftarkan/import',
+  getParentRoute: () => PwRoute,
+} as any)
 const PcStatusPengajuanTicketIdRoute =
   PcStatusPengajuanTicketIdRouteImport.update({
     id: '/status-pengajuan/$ticketId',
@@ -391,6 +397,7 @@ export interface FileRoutesByFullPath {
   '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
   '/pc/daftarkan/import': typeof PcDaftarkanImportRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
+  '/pw/daftarkan/import': typeof PwDaftarkanImportRoute
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
   '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
@@ -442,6 +449,7 @@ export interface FileRoutesByTo {
   '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
   '/pc/daftarkan/import': typeof PcDaftarkanImportRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
+  '/pw/daftarkan/import': typeof PwDaftarkanImportRoute
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
   '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
@@ -499,6 +507,7 @@ export interface FileRoutesById {
   '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
   '/pc/daftarkan_/import': typeof PcDaftarkanImportRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
+  '/pw/daftarkan_/import': typeof PwDaftarkanImportRoute
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
   '/status/$ticketId/revisi': typeof StatusTicketIdRevisiRoute
@@ -557,6 +566,7 @@ export interface FileRouteTypes {
     | '/ops/persuratan/stamper'
     | '/pc/daftarkan/import'
     | '/pc/status-pengajuan/$ticketId'
+    | '/pw/daftarkan/import'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
     | '/status/$ticketId/revisi'
@@ -608,6 +618,7 @@ export interface FileRouteTypes {
     | '/ops/persuratan/stamper'
     | '/pc/daftarkan/import'
     | '/pc/status-pengajuan/$ticketId'
+    | '/pw/daftarkan/import'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
     | '/status/$ticketId/revisi'
@@ -664,6 +675,7 @@ export interface FileRouteTypes {
     | '/ops/persuratan/stamper'
     | '/pc/daftarkan_/import'
     | '/pc/status-pengajuan/$ticketId'
+    | '/pw/daftarkan_/import'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
     | '/status/$ticketId/revisi'
@@ -951,6 +963,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PwStatusPengajuanTicketIdRouteImport
       parentRoute: typeof PwRoute
     }
+    '/pw/daftarkan_/import': {
+      id: '/pw/daftarkan_/import'
+      path: '/daftarkan/import'
+      fullPath: '/pw/daftarkan/import'
+      preLoaderRoute: typeof PwDaftarkanImportRouteImport
+      parentRoute: typeof PwRoute
+    }
     '/pc/status-pengajuan/$ticketId': {
       id: '/pc/status-pengajuan/$ticketId'
       path: '/status-pengajuan/$ticketId'
@@ -1197,6 +1216,7 @@ interface PwRouteChildren {
   PwDaftarkanRoute: typeof PwDaftarkanRoute
   PwNotificationsRoute: typeof PwNotificationsRoute
   PwIndexRoute: typeof PwIndexRoute
+  PwDaftarkanImportRoute: typeof PwDaftarkanImportRoute
   PwStatusPengajuanTicketIdRoute: typeof PwStatusPengajuanTicketIdRouteWithChildren
   PwStatusPengajuanIndexRoute: typeof PwStatusPengajuanIndexRoute
 }
@@ -1205,6 +1225,7 @@ const PwRouteChildren: PwRouteChildren = {
   PwDaftarkanRoute: PwDaftarkanRoute,
   PwNotificationsRoute: PwNotificationsRoute,
   PwIndexRoute: PwIndexRoute,
+  PwDaftarkanImportRoute: PwDaftarkanImportRoute,
   PwStatusPengajuanTicketIdRoute: PwStatusPengajuanTicketIdRouteWithChildren,
   PwStatusPengajuanIndexRoute: PwStatusPengajuanIndexRoute,
 }
