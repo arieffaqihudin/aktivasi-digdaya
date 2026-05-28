@@ -149,7 +149,7 @@ function Filters(props: {
 }
 
 function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
 }
 
 function sumberLabel(s: SumberSuratTugas) {
