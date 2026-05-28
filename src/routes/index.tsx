@@ -108,12 +108,22 @@ function Intro() {
       </h1>
 
       <p className="mt-3 max-w-[480px] text-[14px] leading-relaxed text-[#6B7280]">
-        Silakan pilih jalur sesuai status kepengurusan Anda.
+        Portal ini digunakan untuk aktivasi akses Digdaya Kepengurusan dan
+        Digdaya Persuratan.
       </p>
 
       <p className="mt-1 text-[12px] text-[#8A97A8]">
-        Pilih salah satu untuk melanjutkan proses aktivasi.
+        Silakan pilih jalur sesuai status kepengurusan Anda.
       </p>
+
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAF8F0] px-3 py-1 text-[12px] font-medium text-[#00843D] ring-1 ring-[#DDEBE3]">
+          Digdaya Kepengurusan
+        </span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAF8F0] px-3 py-1 text-[12px] font-medium text-[#00843D] ring-1 ring-[#DDEBE3]">
+          Digdaya Persuratan
+        </span>
+      </div>
     </div>
   );
 }
@@ -127,7 +137,7 @@ function GatewayCards() {
         badge="SUDAH PRODUCTION"
         badgeTone="muted"
         title="Sudah punya akses Digdaya?"
-        description="Login untuk mendaftarkan MWC, Lembaga, atau Ranting."
+        description="Login untuk mendaftarkan MWC, Lembaga, atau Ranting serta mengelola akses layanan."
         cta="Login dengan Email / NU.ID"
         ctaMobile="Login Email / NU.ID"
         variant="secondary"
@@ -178,9 +188,13 @@ function StatusLink() {
 
 function InfoNote() {
   return (
-    <p className="mt-5 text-center text-[12px] text-[#8A97A8]">
-      Belum punya akses? Aktifkan kepengurusan terlebih dahulu melalui kode akses.
-    </p>
+    <div className="mt-5 flex items-start justify-center gap-2 text-center">
+      <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#8A97A8]" />
+      <p className="text-[12px] text-[#8A97A8]">
+        Setelah aktif, kepengurusan dapat mulai menggunakan layanan Digdaya
+        Kepengurusan dan Digdaya Persuratan sesuai kewenangannya.
+      </p>
+    </div>
   );
 }
 
