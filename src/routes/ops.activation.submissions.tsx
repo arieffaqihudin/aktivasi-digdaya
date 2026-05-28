@@ -20,6 +20,7 @@ function Submissions() {
   const navigate = useNavigate();
   const goDetail = (ticketId: string) => navigate({ to: "/ops/activation/submissions/$ticketId", params: { ticketId } });
   const [sumber, setSumber] = useState("all");
+  const [status, setStatus] = useState("all");
   const [pw, setPw] = useState("all");
   const [q, setQ] = useState("");
 
