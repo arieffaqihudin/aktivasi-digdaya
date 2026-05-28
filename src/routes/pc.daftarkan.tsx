@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Loader2, Info as InfoIcon, Building2, Layers, Sprout, ChevronRight, ArrowLeft, Search } from "lucide-react";
+import { Loader2, Info as InfoIcon, Building2, Layers, Sprout, ChevronRight, ArrowLeft, Search, FileSpreadsheet } from "lucide-react";
 import { findPcDemoTarget, pcDemoTargets, kraksaanMwcOptions, findKraksaanMwc, type DemoTarget } from "@/lib/demo-scope-data";
 import { SuratTugasSelector, validateSuratTugas, type SuratTugasValue, emptySuratTugas } from "@/components/forms/SuratTugasSelector";
 import { AdministratorForm, adminToSubmit, emptyAdminValue, validateAdmin } from "@/components/forms/AdministratorForm";
@@ -90,11 +90,11 @@ function Hub() {
         <div className="space-y-1">
           <h1 className="text-xl font-semibold text-foreground sm:text-2xl">Daftarkan Organisasi Bawahan</h1>
           <p className="text-sm text-muted-foreground">
-            Pilih jenis organisasi yang akan didaftarkan.
+            Pilih jenis organisasi yang akan didaftarkan, atau import data administrator dari Excel.
           </p>
         </div>
 
-        <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-4">
           {cards.map((c) => (
             <Link
               key={c.type}
@@ -112,6 +112,22 @@ function Hub() {
               </span>
             </Link>
           ))}
+
+          <Link
+            to="/pc/daftarkan/import"
+            className="flex flex-col rounded-xl border border-primary/30 bg-primary/5 p-4 active:bg-accent/40 sm:p-5"
+          >
+            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/15 text-primary">
+              <FileSpreadsheet className="h-5 w-5" />
+            </div>
+            <p className="mt-3 text-base font-semibold text-foreground">Import Data Administrator</p>
+            <p className="mt-1 flex-1 text-sm leading-relaxed text-muted-foreground">
+              Upload Excel untuk mendaftarkan banyak MWC atau Lembaga PC sekaligus.
+            </p>
+            <span className="mt-4 inline-flex w-full items-center justify-center rounded-lg border border-primary bg-card px-4 py-3 text-sm font-semibold text-primary sm:py-2.5">
+              Import Excel
+            </span>
+          </Link>
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">

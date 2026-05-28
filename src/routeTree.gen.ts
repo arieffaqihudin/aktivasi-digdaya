@@ -47,6 +47,7 @@ import { Route as StatusTicketIdRevisiRouteImport } from './routes/status.$ticke
 import { Route as ReviewInboxTicketIdRouteImport } from './routes/review.inbox.$ticketId'
 import { Route as PwStatusPengajuanTicketIdRouteImport } from './routes/pw.status-pengajuan.$ticketId'
 import { Route as PcStatusPengajuanTicketIdRouteImport } from './routes/pc.status-pengajuan.$ticketId'
+import { Route as PcDaftarkanImportRouteImport } from './routes/pc.daftarkan_.import'
 import { Route as OpsPersuratanStamperRouteImport } from './routes/ops.persuratan.stamper'
 import { Route as OpsPersuratanPengajuanUbahEmailRouteImport } from './routes/ops.persuratan.pengajuan-ubah-email'
 import { Route as OpsPersuratanKopSuratRouteImport } from './routes/ops.persuratan.kop-surat'
@@ -255,6 +256,11 @@ const PcStatusPengajuanTicketIdRoute =
     path: '/status-pengajuan/$ticketId',
     getParentRoute: () => PcRoute,
   } as any)
+const PcDaftarkanImportRoute = PcDaftarkanImportRouteImport.update({
+  id: '/daftarkan_/import',
+  path: '/daftarkan/import',
+  getParentRoute: () => PcRoute,
+} as any)
 const OpsPersuratanStamperRoute = OpsPersuratanStamperRouteImport.update({
   id: '/persuratan/stamper',
   path: '/persuratan/stamper',
@@ -383,6 +389,7 @@ export interface FileRoutesByFullPath {
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
   '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
   '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
+  '/pc/daftarkan/import': typeof PcDaftarkanImportRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
@@ -433,6 +440,7 @@ export interface FileRoutesByTo {
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
   '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
   '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
+  '/pc/daftarkan/import': typeof PcDaftarkanImportRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
@@ -489,6 +497,7 @@ export interface FileRoutesById {
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
   '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
   '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
+  '/pc/daftarkan_/import': typeof PcDaftarkanImportRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
   '/review/inbox/$ticketId': typeof ReviewInboxTicketIdRoute
@@ -546,6 +555,7 @@ export interface FileRouteTypes {
     | '/ops/persuratan/kop-surat'
     | '/ops/persuratan/pengajuan-ubah-email'
     | '/ops/persuratan/stamper'
+    | '/pc/daftarkan/import'
     | '/pc/status-pengajuan/$ticketId'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
@@ -596,6 +606,7 @@ export interface FileRouteTypes {
     | '/ops/persuratan/kop-surat'
     | '/ops/persuratan/pengajuan-ubah-email'
     | '/ops/persuratan/stamper'
+    | '/pc/daftarkan/import'
     | '/pc/status-pengajuan/$ticketId'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
@@ -651,6 +662,7 @@ export interface FileRouteTypes {
     | '/ops/persuratan/kop-surat'
     | '/ops/persuratan/pengajuan-ubah-email'
     | '/ops/persuratan/stamper'
+    | '/pc/daftarkan_/import'
     | '/pc/status-pengajuan/$ticketId'
     | '/pw/status-pengajuan/$ticketId'
     | '/review/inbox/$ticketId'
@@ -946,6 +958,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PcStatusPengajuanTicketIdRouteImport
       parentRoute: typeof PcRoute
     }
+    '/pc/daftarkan_/import': {
+      id: '/pc/daftarkan_/import'
+      path: '/daftarkan/import'
+      fullPath: '/pc/daftarkan/import'
+      preLoaderRoute: typeof PcDaftarkanImportRouteImport
+      parentRoute: typeof PcRoute
+    }
     '/ops/persuratan/stamper': {
       id: '/ops/persuratan/stamper'
       path: '/persuratan/stamper'
@@ -1144,6 +1163,7 @@ interface PcRouteChildren {
   PcDaftarkanRoute: typeof PcDaftarkanRoute
   PcNotificationsRoute: typeof PcNotificationsRoute
   PcIndexRoute: typeof PcIndexRoute
+  PcDaftarkanImportRoute: typeof PcDaftarkanImportRoute
   PcStatusPengajuanTicketIdRoute: typeof PcStatusPengajuanTicketIdRouteWithChildren
   PcStatusPengajuanIndexRoute: typeof PcStatusPengajuanIndexRoute
 }
@@ -1152,6 +1172,7 @@ const PcRouteChildren: PcRouteChildren = {
   PcDaftarkanRoute: PcDaftarkanRoute,
   PcNotificationsRoute: PcNotificationsRoute,
   PcIndexRoute: PcIndexRoute,
+  PcDaftarkanImportRoute: PcDaftarkanImportRoute,
   PcStatusPengajuanTicketIdRoute: PcStatusPengajuanTicketIdRouteWithChildren,
   PcStatusPengajuanIndexRoute: PcStatusPengajuanIndexRoute,
 }
