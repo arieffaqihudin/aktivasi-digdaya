@@ -3,6 +3,7 @@ import { PublicHeader, PublicFooter } from "@/components/PublicHeader";
 import { Button } from "@/components/ui/button";
 import { useMemo, useState } from "react";
 import { useStore, actions } from "@/lib/store";
+import { effectiveStatusOrg } from "@/lib/store";
 import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import {
