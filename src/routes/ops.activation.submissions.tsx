@@ -71,7 +71,7 @@ function Submissions() {
           <THead>
             <tr>
               <TH>Nomor Tiket</TH>
-              <TH>Sumber</TH>
+              <TH>Sumber Pengajuan</TH>
               <TH>Organisasi</TH>
               <TH>Wilayah</TH>
               <TH>Administrator</TH>
