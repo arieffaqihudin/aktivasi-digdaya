@@ -56,8 +56,8 @@ function PeruriPage() {
                 <th className="px-4 py-3">Batch ID</th>
                 <th className="px-4 py-3">Tanggal</th>
                 <th className="px-4 py-3">Jumlah</th>
-                <th className="px-4 py-3">Jalur A</th>
-                <th className="px-4 py-3">Jalur B</th>
+                <th className="px-4 py-3">Kode Akses</th>
+                <th className="px-4 py-3">Login Digdaya</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Generated</th>
                 <th className="px-4 py-3">Downloaded By</th>
