@@ -30,8 +30,8 @@ function PeruriPage() {
   const download = (batchId: string) => {
     const batch = batches.find((b) => b.id === batchId); if (!batch) return;
     const records = regs.filter((r) => batch.ticketIds.includes(r.ticketId));
-    const rows = [["Ticket","Jalur","TipeOrg","NamaOrg","NamaAdmin","Jabatan","Email","HP"]];
-    records.forEach((r) => rows.push([r.ticketId, r.jalur, r.tipeOrg, r.namaOrg, r.namaAdmin, r.jabatan, r.email, r.hp]));
+    const rows = [["Ticket","Sumber Pengajuan","TipeOrg","NamaOrg","NamaAdmin","Jabatan","Email","HP"]];
+    records.forEach((r) => rows.push([r.ticketId, r.jalur === "A" ? "Kode Akses" : "Login Digdaya", r.tipeOrg, r.namaOrg, r.namaAdmin, r.jabatan, r.email, r.hp]));
     const csv = rows.map((r) => r.map((x) => `"${x}"`).join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
