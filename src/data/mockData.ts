@@ -204,6 +204,13 @@ export interface Registration {
   revisionHistory?: RevisionRequestEntry[];
   resubmitHistory?: ResubmitEntry[];
   peruriBatchId?: string;
+
+  // Ranting management ID (Super Admin generates after approval)
+  idManagementStatus?: "Belum Dibuat" | "ID Terbuat" | "Siap Aktivasi Sistem" | "Aktif di Digdaya";
+  managementId?: string;
+  managementGeneratedAt?: string;
+  managementGeneratedBy?: string;
+  activatedSystems?: Array<"Digdaya Kepengurusan" | "Digdaya Persuratan">;
 }
 
 export interface PeruriBatch {
