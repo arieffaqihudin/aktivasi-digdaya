@@ -25,16 +25,12 @@ export const Route = createFileRoute("/ops/")({
 function OpsOverview() {
   const regs = useStore((s) => s.registrations);
   const codes = useStore((s) => s.accessCodes);
-  const sla = useStore((s) => s.sla);
 
   const allOrgs = [...masterPC, ...masterPW];
   const belumProduction = allOrgs.filter((o) => effectiveStatusOrg(o.id) !== "Production").length;
   const production = allOrgs.length - belumProduction;
   const pending = regs.filter((r) => r.status === "Pending").length;
   const perluPerbaikan = regs.filter((r) => r.status === "PerluPerbaikan").length;
-  const lewatSla = regs.filter(
-    (r) => r.status === "Pending" && slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === "Lewat"
-  ).length;
 
   const recent = [...regs]
     .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
