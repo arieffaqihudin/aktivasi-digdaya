@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
-import { LayoutDashboard, PlusCircle, ListChecks } from "lucide-react";
+import { LayoutDashboard, PlusCircle, ListChecks, Bell } from "lucide-react";
 import { actions, useStore } from "@/lib/store";
 import { useEffect } from "react";
 
@@ -23,6 +23,7 @@ function PwLayout() {
         { to: "/pw", label: "Overview", icon: LayoutDashboard, exact: true, section: "Beranda" },
         { to: "/pw/daftarkan", label: "Daftarkan Organisasi Bawahan", icon: PlusCircle, section: "Aktivasi Organisasi" },
         { to: "/pw/status-pengajuan", label: "Status Pengajuan", icon: ListChecks, section: "Aktivasi Organisasi" },
+        { to: "/pw/notifications", label: "Notifikasi", icon: Bell, section: "Lainnya" },
       ]}
     />
   );
