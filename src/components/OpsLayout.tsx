@@ -30,7 +30,7 @@ const opsMenuAll: OpsMenuItem[] = [
   { to: "/ops/activation/access-codes", label: "Kode Akses", icon: KeyRound, section: "PORTAL AKTIVASI", permission: "activation.access_codes" },
   { to: "/ops/activation/submissions", label: "Pengajuan Aktivasi", icon: Inbox, section: "PORTAL AKTIVASI", permission: "activation.submissions" },
   { to: "/ops/activation/peruri-export", label: "Export Peruri", icon: FileDown, section: "PORTAL AKTIVASI", permission: "activation.peruri_export" },
-  { to: "/ops/activation/settings", label: "Pengaturan Aktivasi", icon: Settings, section: "PORTAL AKTIVASI", permission: "activation.settings" },
+  
   { to: "/ops/activation/audit-log", label: "Audit Log Aktivasi", icon: ScrollText, section: "PORTAL AKTIVASI", permission: "activation.audit_log" },
 
   { to: "/ops/users", label: "Pengguna", icon: Users, section: "MANAJEMEN AKSES", permission: "access.users" },
