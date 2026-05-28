@@ -298,6 +298,12 @@ export const mockSuratTugasDigdaya: DokumenSistem[] = [
   { documentId: "DOC-2026-0401", nomorSurat: "030/PC-SLO/ST/2026", namaDokumen: "Surat Tugas Pengurus LP Ma'arif PCNU Surakarta",   tanggalSurat: isoDate(1),  penandatangan: "KH. Mu'inudinillah (Ketua PCNU Surakarta)",     status: "Tertandatangani" },
   { documentId: "DOC-2026-0203", nomorSurat: "201/PW.01/A.I.06.03/05/2026", namaDokumen: "Surat Tugas Aktivasi PCNU Kota Yogyakarta", tanggalSurat: isoDate(3), penandatangan: "KH. Hilmy Muhammad (Rais PWNU DIY)", status: "Tertandatangani" },
   { documentId: "DOC-2026-0501", nomorSurat: "125/PC.13/A.I.06.03/05/2026", namaDokumen: "Surat Tugas Aktivasi MWCNU Banyuanyar", tanggalSurat: isoDate(1), penandatangan: "Ketua dan Sekretaris PCNU Kraksaan", status: "Tertandatangani" },
+
+  // Letter ID format (UUID) — referenced from new SuratTugasSelector demo
+  { documentId: "DOC-PBNU-001", letterId: "a53f57ba-a0f8-478d-a44c-8a19f6d9b7a3", nomorSurat: "332/PB.01/A.II.06.03/99/05/2026", namaDokumen: "Surat Tugas Tim Survei Lokasi Munas dan Konbes 2026", tanggalSurat: isoDate(6),  penandatangan: "Ketua dan Sekretaris", status: "Terkirim / Terstempel", pdfUrl: "mock-pdf-url-1" },
+  { documentId: "DOC-PBNU-002", letterId: "66b8ef82-b77c-46db-a797-e3fbef3d3afc", nomorSurat: "347/PB.23/B.I.03.08/99/05/2026", namaDokumen: "Letter of Support for Italian Visa Application",       tanggalSurat: isoDate(1),  penandatangan: "Sekretariat PBNU",      status: "Terkirim / Terstempel", pdfUrl: "mock-pdf-url-2" },
+  { documentId: "DOC-PC-KRK-201", nomorSurat: "201/PC.13/A.I.06.03/05/2026", namaDokumen: "Surat Tugas Aktivasi MWCNU Banyuanyar",        tanggalSurat: isoDate(8),  penandatangan: "Ketua dan Sekretaris PCNU Kraksaan", status: "Terkirim / Terstempel", pdfUrl: "mock-pdf-url-3" },
+  { documentId: "DOC-PC-KRK-202", nomorSurat: "202/PC.13/A.I.06.03/05/2026", namaDokumen: "Surat Tugas Aktivasi Ranting NU Banyuanyar Tengah", tanggalSurat: isoDate(7), penandatangan: "Ketua dan Sekretaris PCNU Kraksaan", status: "Terkirim / Terstempel", pdfUrl: "mock-pdf-url-4" },
 ];
 
 // ============================================================
