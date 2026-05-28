@@ -119,7 +119,7 @@ function Inbox() {
             <TH>Surat Tugas</TH>
             <TH>Tanggal</TH>
             <TH>Status</TH>
-            <TH>SLA</TH>
+            
             <TH className="text-right pr-6">Aksi</TH>
           </tr>
         </THead>
