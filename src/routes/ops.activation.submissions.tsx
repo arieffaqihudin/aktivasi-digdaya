@@ -81,7 +81,7 @@ function Submissions() {
           </THead>
           <tbody>
             {filtered.map((r) => (
-              <TR key={r.ticketId}>
+              <TR key={r.ticketId} onClick={() => goDetail(r.ticketId)} className="cursor-pointer">
                 <TD className="font-mono text-[12px] text-primary-dark">{r.ticketId}</TD>
                 <TD><SumberPengajuanBadge sumber={r.sumberPengajuan} /></TD>
                 <TD>
@@ -92,17 +92,17 @@ function Submissions() {
                 <TD className="text-[12px]">{r.namaAdmin}</TD>
                 <TD><SumberSuratBadge sumber={r.sumberSuratTugas} /></TD>
                 <TD><StatusBadge status={r.status} /></TD>
-                
+
                 <TD className="text-right pr-6">
-                  <Link
-                    to="/ops/activation/submissions/$ticketId"
-                    params={{ ticketId: r.ticketId }}
-                    title="Lihat detail"
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={(e) => { e.stopPropagation(); goDetail(r.ticketId); }}
                     aria-label={`Lihat detail ${r.ticketId}`}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-md text-primary hover:bg-accent transition-colors"
                   >
-                    <Eye className="h-4 w-4" />
-                  </Link>
+                    <Eye className="mr-1.5 h-4 w-4" /> Lihat Detail
+                  </Button>
                 </TD>
               </TR>
             ))}
