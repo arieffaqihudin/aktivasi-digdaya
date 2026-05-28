@@ -73,6 +73,7 @@ interface State {
   notif: NotifConfig;
   user: User | null;
   nextTicketSeq: number;
+  nextRantingMgmtSeq: number;
 }
 
 const STORAGE_KEY = "digdaya-portal-state-v9";
