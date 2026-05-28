@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { OpsPageHeader, OpsPageBody, OpsCard } from "@/components/ops/OpsPageHeader";
-import { DataTable, THead, TH, TR, TD, RowAction, EmptyRow } from "@/components/dashboard/DataTable";
+import { DataTable, THead, TH, TR, TD, EmptyRow } from "@/components/dashboard/DataTable";
 import { useStore } from "@/lib/store";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
