@@ -23,7 +23,7 @@ function Inbox() {
   const [tipe, setTipe] = useState("all");
   const [status, setStatus] = useState("Pending");
   const [pw, setPw] = useState("all");
-  const [slaFilter, setSlaFilter] = useState("all");
+  
   const [q, setQ] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
