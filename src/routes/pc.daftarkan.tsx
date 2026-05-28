@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { isValidNIK, isValidEmail, normalizePhone, isValidPhone } from "@/utils/validation";
 import { toast } from "sonner";
 import { Loader2, Info as InfoIcon, Building2, Layers, Sprout, ChevronRight, ArrowLeft, Search } from "lucide-react";
 import { findPcDemoTarget, pcDemoTargets, kraksaanMwcOptions, findKraksaanMwc, type DemoTarget } from "@/lib/demo-scope-data";
-import { SuratTugasPicker, validateSuratTugas, type SuratTugasValue } from "@/components/internal/SuratTugasPicker";
+import { SuratTugasSelector, validateSuratTugas, type SuratTugasValue, emptySuratTugas } from "@/components/forms/SuratTugasSelector";
+import { AdministratorForm, adminToSubmit, emptyAdminValue, validateAdmin } from "@/components/forms/AdministratorForm";
 import { StatusBadge } from "@/components/StatusBadge";
 import { cn } from "@/lib/utils";
 
