@@ -91,6 +91,7 @@ function initial(): State {
     notif: { emailEnabled: true, whatsappEnabled: false },
     user: null,
     nextTicketSeq: 200,
+    nextRantingMgmtSeq: 3,
   };
 }
 
