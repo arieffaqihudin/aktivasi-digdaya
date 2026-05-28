@@ -111,7 +111,7 @@ function OpsOverview() {
                     </div>
                     <StatusBadge status={r.status} />
                   </Link>
-                  <WhatsAppButton phone={r.hp} ticketId={r.ticketId} iconOnly aria-label={`WhatsApp ${r.ticketId}`} />
+                  <WhatsAppButton phone={r.hp} ticketId={r.ticketId} iconOnly />
                 </li>
               ))}
             </ul>
