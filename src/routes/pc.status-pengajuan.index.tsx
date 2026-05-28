@@ -271,7 +271,7 @@ function RowActions({ row, scope, mobile }: { row: Row; scope: "pc" | "pw"; mobi
           Perbaiki
         </Link>
       )}
-      <WhatsAppButton phone={row.hp} ticketId={row.ticketId} iconOnly size="sm" />
+      
     </div>
   );
 }
