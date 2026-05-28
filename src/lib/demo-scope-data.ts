@@ -44,10 +44,18 @@ export const pcDemoTargets: DemoTarget[] = [
 ];
 
 export const pwDemoTargets: DemoTarget[] = [
+  // PC di bawah PWNU DI Yogyakarta
   { id: "pc-yogyakarta", name: "PCNU Kota Yogyakarta", type: "PC" },
   { id: "pc-sleman", name: "PCNU Kabupaten Sleman", type: "PC" },
   { id: "pc-bantul", name: "PCNU Bantul", type: "PC" },
-  { id: "lpw-maarif", name: "LP Ma'arif PWNU DIY", type: "Lembaga PW" },
+  { id: "pc-kulon-progo", name: "PCNU Kulon Progo", type: "PC" },
+  { id: "pc-gunungkidul", name: "PCNU Gunungkidul", type: "PC" },
+  // Lembaga PW di bawah PWNU DI Yogyakarta
+  { id: "lembaga-pw-ldnu", name: "LDNU PWNU DI Yogyakarta", type: "Lembaga PW" },
+  { id: "lembaga-pw-lkknu", name: "LKKNU PWNU DI Yogyakarta", type: "Lembaga PW" },
+  { id: "lembaga-pw-lazisnu", name: "LAZISNU PWNU DI Yogyakarta", type: "Lembaga PW" },
+  { id: "lembaga-pw-maarif", name: "LP Ma'arif PWNU DI Yogyakarta", type: "Lembaga PW" },
+  { id: "lembaga-pw-rminu", name: "RMINU PWNU DI Yogyakarta", type: "Lembaga PW" },
 ];
 
 /** MWC induk pilihan saat PCNU Kraksaan mendaftarkan Ranting. */
