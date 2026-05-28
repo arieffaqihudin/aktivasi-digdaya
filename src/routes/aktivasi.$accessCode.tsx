@@ -88,7 +88,7 @@ function AktivasiPage() {
   }
 
   const orgStatusLabel = resolvedOrg
-    ? actions.getEffectiveStatusOrg?.(resolvedOrg.id) ?? "Belum Production"
+    ? effectiveStatusOrg(resolvedOrg.id)
     : "Belum Production";
 
   const handleNext = (e: React.FormEvent) => {
