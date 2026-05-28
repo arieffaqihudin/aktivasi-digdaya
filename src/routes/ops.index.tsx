@@ -8,7 +8,6 @@ import {
   FileDown,
   Inbox,
   ArrowRight,
-  ClipboardList,
   AlertTriangle,
   CheckCircle2,
   Clock,
@@ -16,7 +15,7 @@ import {
   FileText,
   Stamp,
 } from "lucide-react";
-import { formatDate, slaBucket } from "@/utils/status";
+import { formatDate } from "@/utils/status";
 import { StatusBadge } from "@/components/StatusBadge";
 
 export const Route = createFileRoute("/ops/")({
