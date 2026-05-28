@@ -93,7 +93,7 @@ function Inbox() {
       />
 
       <FilterBar>
-        <SelectFilter value={sumber} onChange={setSumber} placeholder="Sumber Pengajuan" options={[["all","Semua Sumber"],["PUBLIC","Public Activation"],["PW_DASHBOARD","PW Dashboard"],["PC_DASHBOARD","PC Dashboard"]]} />
+        <SelectFilter value={sumber} onChange={setSumber} placeholder="Sumber Pengajuan" options={[["all","Semua Sumber"],["LOGIN","Login Digdaya"],["PUBLIC","Kode Akses"]]} />
         <SelectFilter value={tingkat} onChange={setTingkat} placeholder="Tingkat Pendaftar" options={[["all","Semua Tingkat"],["PW","PW"],["PC","PC"]]} />
         <SelectFilter value={sumberSurat} onChange={setSumberSurat} placeholder="Sumber Surat Tugas" options={[["all","Semua Surat"],["DIGDAYA_PERSURATAN","Dari Sistem"],["MANUAL_UPLOAD","Upload Manual"]]} />
         <SelectFilter value={tipe} onChange={setTipe} placeholder="Tipe Organisasi" options={[["all","Semua Tipe"],["PW","PW"],["PC","PC"],["MWC","MWC"],["Lembaga PW","Lembaga PW"],["Lembaga PC","Lembaga PC"],["Ranting","Ranting"]]} />
