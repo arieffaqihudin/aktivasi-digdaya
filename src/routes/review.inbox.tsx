@@ -137,7 +137,7 @@ function Inbox() {
               <TD><SumberSuratBadge sumber={r.sumberSuratTugas} /></TD>
               <TD className="text-[12px] whitespace-nowrap">{formatDate(r.submittedAt)}</TD>
               <TD><StatusBadge status={r.status} /></TD>
-              <TD><SLABadge bucket={slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays)} /></TD>
+              
               <TD className="text-right pr-6">
                 <div className="flex justify-end gap-1">
                   <Link to="/review/inbox/$ticketId" params={{ ticketId: r.ticketId }}>
