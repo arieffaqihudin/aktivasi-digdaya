@@ -94,7 +94,7 @@ function PeruriPage() {
                             {regs.filter((r) => b.ticketIds.includes(r.ticketId)).map((r) => (
                               <tr key={r.ticketId} className="border-t border-border">
                                 <td className="px-3 py-2 font-mono">{r.ticketId}</td>
-                                <td className="px-3 py-2">{r.jalur}</td>
+                                <td className="px-3 py-2">{r.jalur === "A" ? "Kode Akses" : "Login Digdaya"}</td>
                                 <td className="px-3 py-2">{r.tipeOrg}</td>
                                 <td className="px-3 py-2">{r.namaOrg}</td>
                                 <td className="px-3 py-2">{r.namaAdmin}</td>
