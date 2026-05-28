@@ -219,15 +219,7 @@ function LoginPage() {
           )}
 
           {step === "otp" && (
-            <form onSubmit={handleVerifyOtp} className="mt-6 space-y-5">
-              <div>
-                <h2 className="text-base font-semibold text-foreground">Masukkan Kode OTP</h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Kode OTP telah dikirim ke email Anda.
-                </p>
-                <p className="mt-2 text-sm font-medium text-foreground">{email}</p>
-              </div>
-
+            <form onSubmit={handleVerifyOtp} className="space-y-5">
               <div className="flex justify-center">
                 <InputOTP maxLength={6} value={otp} onChange={setOtp}>
                   <InputOTPGroup>
