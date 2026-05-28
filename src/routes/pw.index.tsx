@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { useStore } from "@/lib/store";
+import { useStore, effectiveStatusOrg } from "@/lib/store";
+import { StatusBadge } from "@/components/StatusBadge";
 import { pwDemoTargets } from "@/lib/demo-scope-data";
+import { PlusCircle, Upload, ListChecks, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/pw/")({
   component: PwDashboard,
@@ -14,9 +16,23 @@ function PwDashboard() {
     [registrations],
   );
 
+  const totalLembagaPw = pwDemoTargets.filter((t) => t.type === "Lembaga PW").length;
   const pendingReview = regs.filter((r) => r.status === "Pending").length;
   const needRevision = regs.filter((r) => r.status === "PerluPerbaikan").length;
-  const pcBelumProduction = pwDemoTargets.filter((item) => item.type === "PC").length;
+  const production = regs.filter(
+    (r) => r.selectedOrgId && effectiveStatusOrg(r.selectedOrgId) === "Production",
+  ).length;
+  const belumProduction = Math.max(totalLembagaPw - production, 0);
+
+  const now = new Date();
+  const thisMonth = regs.filter((r) => {
+    const d = new Date(r.submittedAt);
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+
+  const latest = [...regs]
+    .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
+    .slice(0, 5);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -24,46 +40,101 @@ function PwDashboard() {
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold text-foreground">PWNU DI Yogyakarta</h1>
           <p className="text-sm text-muted-foreground">
-            Pilih PC atau Lembaga di bawah PW yang akan didaftarkan ke Digdaya.
+            Ringkasan aktivasi Lembaga PW di bawah PWNU DI Yogyakarta.
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <MetricCard label="Total PC" value="5" />
-          <MetricCard label="PC Belum Production" value={String(pcBelumProduction)} />
+        <div className="grid gap-3 grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <MetricCard label="Total Lembaga PW" value={String(totalLembagaPw)} />
+          <MetricCard label="Belum Production" value={String(belumProduction)} />
           <MetricCard label="Pending Review" value={String(pendingReview)} />
           <MetricCard label="Perlu Perbaikan" value={String(needRevision)} />
+          <MetricCard label="Sudah Production" value={String(production)} />
+          <MetricCard label="Pengajuan Bulan Ini" value={String(thisMonth)} />
         </div>
 
         <section className="rounded-xl border border-border bg-card p-4 sm:p-5">
-          <div>
-            <h2 className="text-base font-semibold text-foreground">Organisasi Belum Production</h2>
-            <p className="text-sm text-muted-foreground">Pilih target yang akan didaftarkan.</p>
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="text-base font-semibold text-foreground">Status Pengajuan Terbaru</h2>
+              <p className="text-sm text-muted-foreground">5 pengajuan paling baru.</p>
+            </div>
+            <Link
+              to="/pw/status-pengajuan"
+              className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-primary"
+            >
+              Lihat Semua Status <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
-          <div className="mt-4 space-y-3">
-            {pwDemoTargets.filter((item) => item.type === "PC").map((item) => (
-              <div key={item.id} className="flex flex-col gap-3 rounded-lg border border-border p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="font-medium text-foreground">{item.name}</p>
-                  <p className="text-sm text-muted-foreground">{item.type}</p>
-                </div>
-                <Link
-                  to="/pw/daftarkan"
-                  search={{ targetId: item.id }}
-                  className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-                >
-                  Daftarkan
-                </Link>
+          <div className="mt-4 space-y-2">
+            {latest.length === 0 ? (
+              <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+                Belum ada pengajuan.
               </div>
-            ))}
+            ) : (
+              latest.map((r) => (
+                <div
+                  key={r.ticketId}
+                  className="flex flex-col gap-2 rounded-lg border border-border p-3 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="min-w-0">
+                    <p className="font-medium text-foreground truncate">{r.namaOrg}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {r.ticketId} · {r.tipeOrg} · {new Date(r.submittedAt).toLocaleDateString("id-ID")}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <StatusBadge status={r.status} />
+                    <Link
+                      to="/pw/status-pengajuan/$ticketId"
+                      params={{ ticketId: r.ticketId }}
+                      className="inline-flex items-center justify-center rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground"
+                    >
+                      Lihat Status
+                    </Link>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className="mt-4 sm:hidden">
+            <Link
+              to="/pw/status-pengajuan"
+              className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground"
+            >
+              Lihat Semua Status <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </section>
 
-        <div className="flex flex-wrap gap-3">
-          <Link to="/pw/status-pengajuan" className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground">
-            Lihat Status Pengajuan
-          </Link>
+        <section className="space-y-3">
+          <h2 className="text-base font-semibold text-foreground">Aksi Cepat</h2>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <QuickAction
+              to="/pw/daftarkan"
+              icon={PlusCircle}
+              title="Daftarkan Organisasi Bawahan"
+              desc="Lembaga PW di bawah PWNU."
+            />
+            <QuickAction
+              to="/pw/daftarkan/import"
+              icon={Upload}
+              title="Import Data Administrator"
+              desc="Upload Excel data administrator."
+            />
+            <QuickAction
+              to="/pw/status-pengajuan"
+              icon={ListChecks}
+              title="Cek Status Pengajuan"
+              desc="Pantau progress pengajuan."
+            />
+          </div>
+        </section>
+
+        <div className="rounded-lg border border-dashed border-border bg-secondary/30 p-4 text-sm text-muted-foreground">
+          Gunakan menu <strong className="text-foreground">Daftarkan Organisasi Bawahan</strong> untuk mendaftarkan Lembaga PW.
         </div>
       </div>
     </div>
@@ -73,8 +144,31 @@ function PwDashboard() {
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-border bg-card p-4">
-      <p className="text-sm text-muted-foreground">{label}</p>
+      <p className="text-xs sm:text-sm text-muted-foreground">{label}</p>
       <p className="mt-2 text-2xl font-semibold text-foreground">{value}</p>
     </div>
+  );
+}
+
+function QuickAction({
+  to,
+  icon: Icon,
+  title,
+  desc,
+}: {
+  to: string;
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <Link
+      to={to}
+      className="group flex flex-col gap-2 rounded-xl border border-border bg-card p-4 transition hover:border-primary hover:bg-primary/5"
+    >
+      <Icon className="h-5 w-5 text-primary" />
+      <p className="font-medium text-foreground">{title}</p>
+      <p className="text-xs text-muted-foreground">{desc}</p>
+    </Link>
   );
 }
