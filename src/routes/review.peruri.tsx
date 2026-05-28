@@ -21,7 +21,7 @@ function PeruriPage() {
   const pending = regs.filter((r) => r.status === "Approved" && !r.peruriBatchId).length;
 
   const generate = async () => {
-    setBusy(true); await new Promise((r) => setTimeout(r, 600));
+    setBusy(true); await new Promise((r) => setTimeout(r, 250));
     const b = actions.generatePeruriBatch(); setBusy(false);
     if (!b) toast.error("Tidak ada record approved baru untuk dibatch.");
     else toast.success(`Batch ${b.id} dibuat (${b.count} record).`);

@@ -49,7 +49,7 @@ function LoginPage() {
     if (!value) { toast.error("Email wajib diisi."); return; }
     if (!isValidEmail(value)) { toast.error("Format email tidak valid."); return; }
     setLoadingSend(true);
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 250));
     setLoadingSend(false);
     setStep("otp");
     toast.success("Kode OTP telah dikirim. (Demo: 123456)");
@@ -59,7 +59,7 @@ function LoginPage() {
     e.preventDefault();
     if (otp.length !== 6) { toast.error("Masukkan 6 digit OTP."); return; }
     setLoadingVerify(true);
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 250));
     setLoadingVerify(false);
     if (otp !== "123456") {
       toast.error("Kode OTP tidak sesuai. Silakan coba lagi.");
@@ -71,7 +71,7 @@ function LoginPage() {
 
   const handleNuId = async () => {
     setLoadingNuId(true);
-    await new Promise((r) => setTimeout(r, 700));
+    await new Promise((r) => setTimeout(r, 250));
     setLoadingNuId(false);
     toast.success("Simulasi login NU.ID berhasil.");
     // Default to PC production user for NU.ID demo

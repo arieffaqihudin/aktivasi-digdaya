@@ -98,7 +98,7 @@ function AktivasiPage() {
   const submit = async () => {
     if (!resolvedOrg) return toast.error("Kepengurusan belum dipilih.");
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 250));
     const reg = actions.submitPublicActivation({
       accessCode: code.code,
       selectedOrgId: isScoped ? resolvedOrg.id : undefined,

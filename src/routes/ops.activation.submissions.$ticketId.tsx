@@ -33,7 +33,7 @@ function SubmissionDetail() {
   }
 
   const doApprove = async () => {
-    setBusy(true); await new Promise((r) => setTimeout(r, 400));
+    setBusy(true); await new Promise((r) => setTimeout(r, 250));
     actions.approve(reg.ticketId); setBusy(false); setApproveOpen(false);
     toast.success(`${reg.ticketId} disetujui dan masuk batch Peruri.`);
   };

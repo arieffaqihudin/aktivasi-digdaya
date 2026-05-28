@@ -70,7 +70,7 @@ function RevisiPublicPage() {
     if (file && file.size > 5 * 1024 * 1024) return toast.error("Ukuran file maksimal 5MB.");
 
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 250));
     const next = actions.resubmitRevision(ticketId, {
       namaAdmin, jabatan, nik, hp: normHp, email,
       sumberSuratTugas: "MANUAL_UPLOAD",
