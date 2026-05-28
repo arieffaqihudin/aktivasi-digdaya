@@ -131,10 +131,24 @@ function LoginPage() {
         </div>
 
         <div className="w-full max-w-[440px] rounded-lg border border-border bg-card p-5 sm:p-7 shadow-sm">
-          <h1 className="text-xl font-semibold text-foreground">Masuk ke Portal Aktivasi</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Gunakan NU.ID atau email terdaftar untuk melanjutkan.
-          </p>
+          {step === "method" && (
+            <div className="mb-6">
+              <h1 className="text-xl font-semibold text-foreground">Masuk ke Portal Aktivasi</h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Gunakan NU.ID atau email terdaftar untuk melanjutkan.
+              </p>
+            </div>
+          )}
+
+          {step === "otp" && (
+            <div className="mb-6">
+              <h1 className="text-xl font-semibold text-foreground">Masukkan Kode OTP</h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Kode OTP telah dikirim ke email Anda.
+              </p>
+              <p className="mt-2 text-sm font-medium text-foreground">{email}</p>
+            </div>
+          )}
 
           {step === "method" && (
             <div className="mt-6 space-y-5">
@@ -205,15 +219,7 @@ function LoginPage() {
           )}
 
           {step === "otp" && (
-            <form onSubmit={handleVerifyOtp} className="mt-6 space-y-5">
-              <div>
-                <h2 className="text-base font-semibold text-foreground">Masukkan Kode OTP</h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Kode OTP telah dikirim ke email Anda.
-                </p>
-                <p className="mt-2 text-sm font-medium text-foreground">{email}</p>
-              </div>
-
+            <form onSubmit={handleVerifyOtp} className="space-y-5">
               <div className="flex justify-center">
                 <InputOTP maxLength={6} value={otp} onChange={setOtp}>
                   <InputOTPGroup>
