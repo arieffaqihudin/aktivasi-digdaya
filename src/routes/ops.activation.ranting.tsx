@@ -41,10 +41,13 @@ import {
   ShieldCheck,
   FileText,
   Layers,
+  MoreHorizontal,
+  MessageCircle,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { formatDate } from "@/utils/status";
 import { toast } from "sonner";
+import { buildWhatsAppUrl, waMessageForTicket } from "@/lib/whatsapp";
 import type { Registration } from "@/data/mockData";
 
 export const Route = createFileRoute("/ops/activation/ranting")({
