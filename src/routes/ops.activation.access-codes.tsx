@@ -451,8 +451,14 @@ function CodeRow({ code }: { code: AccessCode }) {
       <TD><AccessCodeStatusBadge status={code.status} /></TD>
       <TD className="text-right pr-6">
         <div className="flex justify-end gap-1">
-          <Link to="/ops/activation/access-codes/$codeId" params={{ codeId: code.code }}>
-            <RowAction title="Detail" tone="primary"><Eye className="h-4 w-4" /></RowAction>
+          <Link
+            to="/ops/activation/access-codes/$codeId"
+            params={{ codeId: code.code }}
+            title="Detail"
+            aria-label={`Detail ${code.code}`}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md text-primary hover:bg-accent transition-colors"
+          >
+            <Eye className="h-4 w-4" />
           </Link>
           <RowAction title="Salin kode" onClick={() => { navigator.clipboard.writeText(code.code); toast.success("Kode disalin."); }}><Copy className="h-4 w-4" /></RowAction>
           {status === "Aktif" && (
@@ -463,6 +469,7 @@ function CodeRow({ code }: { code: AccessCode }) {
           )}
         </div>
       </TD>
+
     </TR>
   );
 }
@@ -489,9 +496,14 @@ function CodeCard({ code }: { code: AccessCode }) {
         <MiniStat label="Produksi" value={stats.production} />
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
-        <Link to="/ops/activation/access-codes/$codeId" params={{ codeId: code.code }} className="flex-1">
-          <Button variant="outline" size="sm" className="h-9 w-full"><Eye className="mr-1.5 h-3.5 w-3.5" /> Detail</Button>
+        <Link
+          to="/ops/activation/access-codes/$codeId"
+          params={{ codeId: code.code }}
+          className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md border border-input bg-background px-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+        >
+          <Eye className="h-3.5 w-3.5" /> Lihat Detail
         </Link>
+
         <Button variant="outline" size="sm" className="h-9" onClick={() => { navigator.clipboard.writeText(code.code); toast.success("Kode disalin."); }}>
           <Copy className="h-3.5 w-3.5" />
         </Button>
