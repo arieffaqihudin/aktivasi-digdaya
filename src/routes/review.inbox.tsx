@@ -96,7 +96,7 @@ function Inbox() {
         <SelectFilter value={tipe} onChange={setTipe} placeholder="Tipe Organisasi" options={[["all","Semua Tipe"],["PW","PW"],["PC","PC"],["MWC","MWC"],["Lembaga PW","Lembaga PW"],["Lembaga PC","Lembaga PC"],["Ranting","Ranting"]]} />
         <SelectFilter value={status} onChange={setStatus} placeholder="Status" options={[["all","Semua Status"],["Pending","Pending Review"],["PerluPerbaikan","Perlu Perbaikan"],["Approved","Disetujui"],["RejectedFinal","Ditolak Final"]]} />
         <SelectFilter value={pw} onChange={setPw} placeholder="Wilayah PW" options={[["all","Semua PW"], ...pws.map((p) => [p, p.replace("PWNU ","")] as [string,string])]} />
-        <SelectFilter value={slaFilter} onChange={setSlaFilter} placeholder="SLA" options={[["all","Semua SLA"],["Aman","Aman"],["Mendekati","Mendekati"],["Lewat","Lewat SLA"]]} />
+        
         <div className="relative ml-auto w-full sm:w-auto">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
