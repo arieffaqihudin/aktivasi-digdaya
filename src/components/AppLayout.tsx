@@ -40,15 +40,14 @@ export function AppLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
-  // Synchronous auto-login fallback so the layout never gets stuck on an
-  // infinite "Memuat dashboard…" screen on direct navigation.
-  if (!storeUser) {
+  useEffect(() => {
+    if (storeUser) return;
     const fallbackRole = allowedRoles[0];
     if (fallbackRole === "PW") actions.loginAs("pw@digdaya.nu.id");
     else if (fallbackRole === "PC") actions.loginAs("pc.kraksaan@digdaya.nu.id");
     else if (fallbackRole === "Super Admin") actions.loginAs("admin@digdaya.nu.id");
     else if (fallbackRole === "Reviewer") actions.loginAs("reviewer@digdaya.nu.id");
-  }
+  }, [storeUser, allowedRoles]);
 
   // Fallback user object so render proceeds immediately even before the
   // synchronous loginAs above has propagated through the store.

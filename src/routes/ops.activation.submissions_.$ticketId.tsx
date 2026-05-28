@@ -17,24 +17,53 @@ export const Route = createFileRoute("/ops/activation/submissions_/$ticketId")({
 
 function SubmissionDetail() {
   const { ticketId } = Route.useParams();
-  const reg = useStore((s) => s.registrations.find((r) => r.ticketId === ticketId));
+  const reg = useStore((s) =>
+    s.registrations.find((r) => {
+      const candidate = r.ticketId || (r as typeof r & { nomorTiket?: string; id?: string }).nomorTiket || (r as typeof r & { id?: string }).id;
+      return candidate === ticketId;
+    })
+  );
   const audit = useStore((s) => s.audit.filter((a) => a.ticketId === ticketId));
   const [approveOpen, setApproveOpen] = useState(false);
   const [revisionOpen, setRevisionOpen] = useState(false);
   const [busy, setBusy] = useState(false);
 
+  if (!ticketId) {
+    return (
+      <div>
+        <OpsPageHeader title="Detail Pengajuan Aktivasi" breadcrumb={[{ label: "Aktivasi Digdaya", to: "/ops/activation" }, { label: "Pengajuan Aktivasi", to: "/ops/activation/submissions" }, { label: "Tidak Valid" }]} />
+        <OpsPageBody>
+          <OpsCard>
+            <p className="text-sm text-muted-foreground">Nomor tiket tidak ditemukan.</p>
+          </OpsCard>
+        </OpsPageBody>
+      </div>
+    );
+  }
+
   if (!reg) {
     return (
       <div>
         <OpsPageHeader title="Tiket Tidak Ditemukan" breadcrumb={[{ label: "Aktivasi Digdaya", to: "/ops/activation" }, { label: "Pengajuan Aktivasi", to: "/ops/activation/submissions" }, { label: ticketId }]} />
-        <OpsPageBody><OpsCard><p className="text-sm text-muted-foreground">Tiket {ticketId} tidak ditemukan.</p></OpsCard></OpsPageBody>
+        <OpsPageBody>
+          <OpsCard>
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">Tiket {ticketId} tidak ditemukan.</p>
+              <Link to="/ops/activation/submissions" className="inline-flex">
+                <Button variant="outline"><ArrowLeft className="mr-1.5 h-4 w-4" /> Kembali</Button>
+              </Link>
+            </div>
+          </OpsCard>
+        </OpsPageBody>
       </div>
     );
   }
 
   const doApprove = async () => {
-    setBusy(true); await new Promise((r) => setTimeout(r, 250));
-    actions.approve(reg.ticketId); setBusy(false); setApproveOpen(false);
+    setBusy(true);
+    actions.approve(reg.ticketId);
+    setBusy(false);
+    setApproveOpen(false);
     toast.success(`${reg.ticketId} disetujui dan masuk batch Peruri.`);
   };
 
