@@ -183,6 +183,8 @@ export interface Registration {
   // Administrator
   namaAdmin: string;
   jabatan: string;
+  /** "Pengurus" | "Staf" — optional untuk backward-compat dengan seed lama. */
+  administratorType?: AdministratorType;
   nik: string;
   hp: string;
   email: string;
