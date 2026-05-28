@@ -14,7 +14,7 @@ import { SuratTugasSelector, validateSuratTugas, type SuratTugasValue, emptySura
 import { AdministratorForm, adminToSubmit, emptyAdminValue, validateAdmin } from "@/components/forms/AdministratorForm";
 import { StatusBadge } from "@/components/StatusBadge";
 import { cn } from "@/lib/utils";
-import { isValidNIK, isValidEmail, isValidPhone, normalizePhone } from "@/utils/validation";
+
 
 type SectionType = "mwc" | "lembaga" | "ranting";
 
@@ -432,13 +432,8 @@ function RantingForm() {
 function StandardForm() {
   const search = Route.useSearch();
   const navigate = useNavigate();
-  const [tipeSurat, setTipeSurat] = useState<"DIGDAYA_PERSURATAN" | "MANUAL_UPLOAD">("DIGDAYA_PERSURATAN");
-  const [namaAdmin, setNamaAdmin] = useState("");
-  const [jabatan, setJabatan] = useState("");
-  const [nik, setNik] = useState("");
-  const [hp, setHp] = useState("");
-  const [email, setEmail] = useState("");
-  const [suratValue, setSuratValue] = useState("");
+  const [admin, setAdmin] = useState(emptyAdminValue());
+  const [surat, setSurat] = useState<SuratTugasValue>(emptySuratTugas("full"));
   const [busy, setBusy] = useState(false);
 
   const target = findPcDemoTarget(search.targetId);
@@ -463,30 +458,28 @@ function StandardForm() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!namaAdmin.trim() || !jabatan.trim()) { toast.error("Lengkapi data administrator."); return; }
-    if (!isValidNIK(nik)) { toast.error("NIK harus 16 digit."); return; }
-    if (!isValidEmail(email)) { toast.error("Email tidak valid."); return; }
-    const normHp = normalizePhone(hp);
-    if (!isValidPhone(normHp)) { toast.error("Nomor HP tidak valid."); return; }
-    if (!suratValue.trim()) { toast.error("Lengkapi surat tugas."); return; }
-    setBusy(true); await new Promise((r) => setTimeout(r, 500));
+    const aErr = validateAdmin(admin);
+    if (aErr) return toast.error(aErr);
+    const sErr = validateSuratTugas(surat);
+    if (sErr) return toast.error(sErr);
+
+    setBusy(true);
+    await new Promise((r) => setTimeout(r, 400));
+    const a = adminToSubmit(admin);
     const reg = actions.submitInternal({
       tipeOrg: target.type as TipeOrg,
       namaOrg: target.name,
-      namaAdmin, jabatan, nik, hp: normHp, email,
-      sumberSuratTugas: tipeSurat,
-      suratTugasFile: tipeSurat === "MANUAL_UPLOAD" ? suratValue : undefined,
-      dokumenSistem: tipeSurat === "DIGDAYA_PERSURATAN" ? {
-        documentId: `DOC-${target.id}`,
-        nomorSurat: suratValue,
-        namaDokumen: `Surat Tugas ${target.name}`,
-        tanggalSurat: new Date().toISOString().slice(0, 10),
-        penandatangan: "Ketua PCNU Kraksaan",
-        status: "Tertandatangani",
-      } : undefined,
+      namaAdmin: a.namaAdmin,
+      jabatan: a.jabatan,
+      nik: a.nik,
+      hp: a.hp,
+      email: a.email,
+      sumberSuratTugas: surat.sumber,
+      suratTugasFile: surat.file?.name,
+      dokumenSistem: surat.dokumen ?? undefined,
     });
     setBusy(false);
-    if (!reg) { toast.error("Gagal mengirim."); return; }
+    if (!reg) return toast.error("Gagal mengirim pengajuan.");
     toast.success(`Pengajuan dikirim. Tiket: ${reg.ticketId}`);
     navigate({ to: "/pc/status-pengajuan" });
   };
@@ -513,42 +506,24 @@ function StandardForm() {
         </div>
 
         <form onSubmit={submit} className="space-y-5">
-          <div className="rounded-xl border border-border bg-card p-5">
+          <section className="rounded-xl border border-border bg-card p-5">
             <p className="text-sm font-semibold text-foreground">Data Organisasi</p>
             <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-              <Info label="Nama Organisasi" value={target.name} />
-              <Info label="Tipe Organisasi" value={target.type} />
-              <Info label="Induk" value="PCNU Kraksaan" />
-              <Info label="Status" value="Belum Production" />
+              <InfoBlock label="Nama Organisasi" value={target.name} />
+              <InfoBlock label="Tipe Organisasi" value={target.type} />
+              <InfoBlock label="Induk" value="PCNU Kraksaan" />
+              <InfoBlock label="Status" value="Belum Production" />
             </dl>
-          </div>
+          </section>
 
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-            <p className="text-sm font-semibold text-foreground">Data Administrator</p>
-            <Field label="Nama Administrator" value={namaAdmin} onChange={setNamaAdmin} />
-            <Field label="Jabatan Administrator" value={jabatan} onChange={setJabatan} />
-            <Field label="NIK" value={nik} onChange={(v) => setNik(v.replace(/\D/g, "").slice(0,16))} />
-            <Field label="Nomor HP WhatsApp" value={hp} onChange={setHp} placeholder="08xxxxxxxxxx" />
-            <Field label="Email" value={email} onChange={setEmail} type="email" />
-          </div>
+          <section className="rounded-xl border border-border bg-card p-5">
+            <AdministratorForm value={admin} onChange={setAdmin} />
+          </section>
 
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <section className="rounded-xl border border-border bg-card p-5 space-y-3">
             <p className="text-sm font-semibold text-foreground">Surat Tugas</p>
-            <div className="grid gap-2 sm:grid-cols-2">
-              <button type="button" onClick={() => { setTipeSurat("DIGDAYA_PERSURATAN"); setSuratValue(""); }} className={tipeSurat === "DIGDAYA_PERSURATAN" ? "rounded-md border border-primary bg-secondary px-3 py-2 text-sm font-medium text-foreground" : "rounded-md border border-border px-3 py-2 text-sm text-muted-foreground"}>
-                Ambil dari Digdaya Persuratan
-              </button>
-              <button type="button" onClick={() => { setTipeSurat("MANUAL_UPLOAD"); setSuratValue(""); }} className={tipeSurat === "MANUAL_UPLOAD" ? "rounded-md border border-primary bg-secondary px-3 py-2 text-sm font-medium text-foreground" : "rounded-md border border-border px-3 py-2 text-sm text-muted-foreground"}>
-                Upload Surat Tugas Baru
-              </button>
-            </div>
-            <Field
-              label={tipeSurat === "DIGDAYA_PERSURATAN" ? "Nomor surat" : "Nama file surat tugas"}
-              value={suratValue}
-              onChange={setSuratValue}
-              placeholder={tipeSurat === "DIGDAYA_PERSURATAN" ? "Contoh: 014/PC-KRK/ST/2026" : "Contoh: surat-tugas.pdf"}
-            />
-          </div>
+            <SuratTugasSelector value={surat} onChange={setSurat} mode="full" />
+          </section>
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <Link to="/pc/daftarkan" search={{ type: backType }} className="inline-flex w-full items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground sm:w-auto">
@@ -565,16 +540,7 @@ function StandardForm() {
   );
 }
 
-function Field({ label, value, onChange, type = "text", placeholder, required = true }: { label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string; required?: boolean }) {
-  return (
-    <div>
-      <Label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</Label>
-      <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className="mt-1.5" required={required} />
-    </div>
-  );
-}
-
-function Info({ label, value }: { label: string; value: string }) {
+function InfoBlock({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <Label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</Label>
