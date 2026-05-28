@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
-import { LayoutDashboard, Inbox, FileDown, ScrollText } from "lucide-react";
+import { Home, Inbox, FileDown, ScrollText } from "lucide-react";
 
 export const Route = createFileRoute("/review")({
   component: ReviewLayout,
@@ -9,14 +9,14 @@ export const Route = createFileRoute("/review")({
 function ReviewLayout() {
   return (
     <AppLayout
-      scopeLabel="Reviewer Tim Digdaya"
-      orgName="Tim Digdaya PBNU"
+      scopeLabel="Digdaya Ops"
+      orgName="Digdaya Ops"
       allowedRoles={["Reviewer", "Super Admin"]}
       menu={[
-        { to: "/review", label: "Ringkasan", icon: LayoutDashboard, exact: true, section: "Dashboard" },
-        { to: "/review/inbox", label: "Inbox Pendaftaran", icon: Inbox, section: "Review" },
-        { to: "/review/peruri", label: "Export Peruri", icon: FileDown, section: "Review" },
-        { to: "/review/audit-log", label: "Audit Log", icon: ScrollText, section: "Monitoring" },
+        { to: "/review", label: "Overview", icon: Home, exact: true, section: "OVERVIEW" },
+        { to: "/review/inbox", label: "Pengajuan Aktivasi", icon: Inbox, section: "PORTAL AKTIVASI" },
+        { to: "/review/peruri", label: "Export Peruri", icon: FileDown, section: "PORTAL AKTIVASI" },
+        { to: "/review/audit-log", label: "Audit Log Aktivasi", icon: ScrollText, section: "PORTAL AKTIVASI" },
       ]}
     />
   );
