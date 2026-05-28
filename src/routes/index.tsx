@@ -113,17 +113,8 @@ function Intro() {
       </p>
 
       <p className="mt-1 text-[12px] text-[#8A97A8]">
-        Pilih sesuai status kepengurusan Anda.
+        Silakan pilih sesuai status kepengurusan Anda.
       </p>
-
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAF8F0] px-3 py-1 text-[12px] font-medium text-[#00843D] ring-1 ring-[#DDEBE3]">
-          Digdaya Kepengurusan
-        </span>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAF8F0] px-3 py-1 text-[12px] font-medium text-[#00843D] ring-1 ring-[#DDEBE3]">
-          Digdaya Persuratan
-        </span>
-      </div>
     </div>
   );
 }
