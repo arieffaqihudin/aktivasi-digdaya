@@ -17,8 +17,9 @@ export const Route = createFileRoute("/ops/activation/submissions")({
 
 function Submissions() {
   const regs = useStore((s) => s.registrations);
+  const navigate = useNavigate();
+  const goDetail = (ticketId: string) => navigate({ to: "/ops/activation/submissions/$ticketId", params: { ticketId } });
   const [sumber, setSumber] = useState("all");
-  const [status, setStatus] = useState("all");
   const [pw, setPw] = useState("all");
   const [q, setQ] = useState("");
 
