@@ -59,8 +59,8 @@ import { Route as OpsActivationAccessCodesRouteImport } from './routes/ops.activ
 import { Route as AktivasiSuksesTicketIdRouteImport } from './routes/aktivasi.sukses.$ticketId'
 import { Route as PwStatusPengajuanTicketIdRevisiRouteImport } from './routes/pw.status-pengajuan.$ticketId.revisi'
 import { Route as PcStatusPengajuanTicketIdRevisiRouteImport } from './routes/pc.status-pengajuan.$ticketId.revisi'
-import { Route as OpsActivationSubmissionsTicketIdRouteImport } from './routes/ops.activation.submissions.$ticketId'
-import { Route as OpsActivationAccessCodesCodeIdRouteImport } from './routes/ops.activation.access-codes.$codeId'
+import { Route as OpsActivationSubmissionsTicketIdRouteImport } from './routes/ops.activation.submissions_.$ticketId'
+import { Route as OpsActivationAccessCodesCodeIdRouteImport } from './routes/ops.activation.access-codes_.$codeId'
 
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
@@ -323,15 +323,15 @@ const PcStatusPengajuanTicketIdRevisiRoute =
   } as any)
 const OpsActivationSubmissionsTicketIdRoute =
   OpsActivationSubmissionsTicketIdRouteImport.update({
-    id: '/$ticketId',
-    path: '/$ticketId',
-    getParentRoute: () => OpsActivationSubmissionsRoute,
+    id: '/activation/submissions_/$ticketId',
+    path: '/activation/submissions/$ticketId',
+    getParentRoute: () => OpsRoute,
   } as any)
 const OpsActivationAccessCodesCodeIdRoute =
   OpsActivationAccessCodesCodeIdRouteImport.update({
-    id: '/$codeId',
-    path: '/$codeId',
-    getParentRoute: () => OpsActivationAccessCodesRoute,
+    id: '/activation/access-codes_/$codeId',
+    path: '/activation/access-codes/$codeId',
+    getParentRoute: () => OpsRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -367,11 +367,11 @@ export interface FileRoutesByFullPath {
   '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
-  '/ops/activation/access-codes': typeof OpsActivationAccessCodesRouteWithChildren
+  '/ops/activation/access-codes': typeof OpsActivationAccessCodesRoute
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
   '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
-  '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
+  '/ops/activation/submissions': typeof OpsActivationSubmissionsRoute
   '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
   '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
@@ -416,11 +416,11 @@ export interface FileRoutesByTo {
   '/pw': typeof PwIndexRoute
   '/review': typeof ReviewIndexRoute
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
-  '/ops/activation/access-codes': typeof OpsActivationAccessCodesRouteWithChildren
+  '/ops/activation/access-codes': typeof OpsActivationAccessCodesRoute
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
   '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
-  '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
+  '/ops/activation/submissions': typeof OpsActivationSubmissionsRoute
   '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
   '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
@@ -471,11 +471,11 @@ export interface FileRoutesById {
   '/pw/': typeof PwIndexRoute
   '/review/': typeof ReviewIndexRoute
   '/aktivasi/sukses/$ticketId': typeof AktivasiSuksesTicketIdRoute
-  '/ops/activation/access-codes': typeof OpsActivationAccessCodesRouteWithChildren
+  '/ops/activation/access-codes': typeof OpsActivationAccessCodesRoute
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
   '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
-  '/ops/activation/submissions': typeof OpsActivationSubmissionsRouteWithChildren
+  '/ops/activation/submissions': typeof OpsActivationSubmissionsRoute
   '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
   '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
@@ -487,8 +487,8 @@ export interface FileRoutesById {
   '/ops/activation/': typeof OpsActivationIndexRoute
   '/pc/status-pengajuan/': typeof PcStatusPengajuanIndexRoute
   '/pw/status-pengajuan/': typeof PwStatusPengajuanIndexRoute
-  '/ops/activation/access-codes/$codeId': typeof OpsActivationAccessCodesCodeIdRoute
-  '/ops/activation/submissions/$ticketId': typeof OpsActivationSubmissionsTicketIdRoute
+  '/ops/activation/access-codes_/$codeId': typeof OpsActivationAccessCodesCodeIdRoute
+  '/ops/activation/submissions_/$ticketId': typeof OpsActivationSubmissionsTicketIdRoute
   '/pc/status-pengajuan/$ticketId/revisi': typeof PcStatusPengajuanTicketIdRevisiRoute
   '/pw/status-pengajuan/$ticketId/revisi': typeof PwStatusPengajuanTicketIdRevisiRoute
 }
@@ -646,8 +646,8 @@ export interface FileRouteTypes {
     | '/ops/activation/'
     | '/pc/status-pengajuan/'
     | '/pw/status-pengajuan/'
-    | '/ops/activation/access-codes/$codeId'
-    | '/ops/activation/submissions/$ticketId'
+    | '/ops/activation/access-codes_/$codeId'
+    | '/ops/activation/submissions_/$ticketId'
     | '/pc/status-pengajuan/$ticketId/revisi'
     | '/pw/status-pengajuan/$ticketId/revisi'
   fileRoutesById: FileRoutesById
@@ -1018,19 +1018,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PcStatusPengajuanTicketIdRevisiRouteImport
       parentRoute: typeof PcStatusPengajuanTicketIdRoute
     }
-    '/ops/activation/submissions/$ticketId': {
-      id: '/ops/activation/submissions/$ticketId'
-      path: '/$ticketId'
+    '/ops/activation/submissions_/$ticketId': {
+      id: '/ops/activation/submissions_/$ticketId'
+      path: '/activation/submissions/$ticketId'
       fullPath: '/ops/activation/submissions/$ticketId'
       preLoaderRoute: typeof OpsActivationSubmissionsTicketIdRouteImport
-      parentRoute: typeof OpsActivationSubmissionsRoute
+      parentRoute: typeof OpsRoute
     }
-    '/ops/activation/access-codes/$codeId': {
-      id: '/ops/activation/access-codes/$codeId'
-      path: '/$codeId'
+    '/ops/activation/access-codes_/$codeId': {
+      id: '/ops/activation/access-codes_/$codeId'
+      path: '/activation/access-codes/$codeId'
       fullPath: '/ops/activation/access-codes/$codeId'
       preLoaderRoute: typeof OpsActivationAccessCodesCodeIdRouteImport
-      parentRoute: typeof OpsActivationAccessCodesRoute
+      parentRoute: typeof OpsRoute
     }
   }
 }
@@ -1065,50 +1065,23 @@ const AktivasiRouteWithChildren = AktivasiRoute._addFileChildren(
   AktivasiRouteChildren,
 )
 
-interface OpsActivationAccessCodesRouteChildren {
-  OpsActivationAccessCodesCodeIdRoute: typeof OpsActivationAccessCodesCodeIdRoute
-}
-
-const OpsActivationAccessCodesRouteChildren: OpsActivationAccessCodesRouteChildren =
-  {
-    OpsActivationAccessCodesCodeIdRoute: OpsActivationAccessCodesCodeIdRoute,
-  }
-
-const OpsActivationAccessCodesRouteWithChildren =
-  OpsActivationAccessCodesRoute._addFileChildren(
-    OpsActivationAccessCodesRouteChildren,
-  )
-
-interface OpsActivationSubmissionsRouteChildren {
-  OpsActivationSubmissionsTicketIdRoute: typeof OpsActivationSubmissionsTicketIdRoute
-}
-
-const OpsActivationSubmissionsRouteChildren: OpsActivationSubmissionsRouteChildren =
-  {
-    OpsActivationSubmissionsTicketIdRoute:
-      OpsActivationSubmissionsTicketIdRoute,
-  }
-
-const OpsActivationSubmissionsRouteWithChildren =
-  OpsActivationSubmissionsRoute._addFileChildren(
-    OpsActivationSubmissionsRouteChildren,
-  )
-
 interface OpsRouteChildren {
   OpsRepositoryRoute: typeof OpsRepositoryRoute
   OpsRolesRoute: typeof OpsRolesRoute
   OpsUsersRoute: typeof OpsUsersRoute
   OpsIndexRoute: typeof OpsIndexRoute
-  OpsActivationAccessCodesRoute: typeof OpsActivationAccessCodesRouteWithChildren
+  OpsActivationAccessCodesRoute: typeof OpsActivationAccessCodesRoute
   OpsActivationAuditLogRoute: typeof OpsActivationAuditLogRoute
   OpsActivationNotificationsRoute: typeof OpsActivationNotificationsRoute
   OpsActivationPeruriExportRoute: typeof OpsActivationPeruriExportRoute
-  OpsActivationSubmissionsRoute: typeof OpsActivationSubmissionsRouteWithChildren
+  OpsActivationSubmissionsRoute: typeof OpsActivationSubmissionsRoute
   OpsPersuratanCekOrderIdRoute: typeof OpsPersuratanCekOrderIdRoute
   OpsPersuratanKopSuratRoute: typeof OpsPersuratanKopSuratRoute
   OpsPersuratanPengajuanUbahEmailRoute: typeof OpsPersuratanPengajuanUbahEmailRoute
   OpsPersuratanStamperRoute: typeof OpsPersuratanStamperRoute
   OpsActivationIndexRoute: typeof OpsActivationIndexRoute
+  OpsActivationAccessCodesCodeIdRoute: typeof OpsActivationAccessCodesCodeIdRoute
+  OpsActivationSubmissionsTicketIdRoute: typeof OpsActivationSubmissionsTicketIdRoute
 }
 
 const OpsRouteChildren: OpsRouteChildren = {
@@ -1116,16 +1089,18 @@ const OpsRouteChildren: OpsRouteChildren = {
   OpsRolesRoute: OpsRolesRoute,
   OpsUsersRoute: OpsUsersRoute,
   OpsIndexRoute: OpsIndexRoute,
-  OpsActivationAccessCodesRoute: OpsActivationAccessCodesRouteWithChildren,
+  OpsActivationAccessCodesRoute: OpsActivationAccessCodesRoute,
   OpsActivationAuditLogRoute: OpsActivationAuditLogRoute,
   OpsActivationNotificationsRoute: OpsActivationNotificationsRoute,
   OpsActivationPeruriExportRoute: OpsActivationPeruriExportRoute,
-  OpsActivationSubmissionsRoute: OpsActivationSubmissionsRouteWithChildren,
+  OpsActivationSubmissionsRoute: OpsActivationSubmissionsRoute,
   OpsPersuratanCekOrderIdRoute: OpsPersuratanCekOrderIdRoute,
   OpsPersuratanKopSuratRoute: OpsPersuratanKopSuratRoute,
   OpsPersuratanPengajuanUbahEmailRoute: OpsPersuratanPengajuanUbahEmailRoute,
   OpsPersuratanStamperRoute: OpsPersuratanStamperRoute,
   OpsActivationIndexRoute: OpsActivationIndexRoute,
+  OpsActivationAccessCodesCodeIdRoute: OpsActivationAccessCodesCodeIdRoute,
+  OpsActivationSubmissionsTicketIdRoute: OpsActivationSubmissionsTicketIdRoute,
 }
 
 const OpsRouteWithChildren = OpsRoute._addFileChildren(OpsRouteChildren)
@@ -1253,3 +1228,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
