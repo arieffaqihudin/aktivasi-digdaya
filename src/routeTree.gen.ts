@@ -396,7 +396,6 @@ export interface FileRoutesByFullPath {
   '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
   '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
   '/pc/daftarkan/import': typeof PcDaftarkanImportRoute
-  '/pw/daftarkan/import': typeof PwDaftarkanImportRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/daftarkan/import': typeof PwDaftarkanImportRoute
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
