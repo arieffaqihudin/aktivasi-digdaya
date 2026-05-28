@@ -490,7 +490,7 @@ export const seedRegistrations: Registration[] = [
   regJalurB({ ticketId: "AKT-2026-000128", tipeOrg: "Lembaga PC", namaOrg: "RMINU PCNU Sleman",   pw: "PWNU DI Yogyakarta", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kabupaten Sleman", namaAdmin: "Anisa Putri",   jabatan: "Sekretaris", nik: "3404282828920028", hp: "+6281234567028", email: "anisa@rmi-sleman.id", status: "Pending", submittedAt: daysAgo(0, 7) }),
   regJalurB({ ticketId: "AKT-2026-000105", tipeOrg: "Ranting", namaOrg: "Ranting NU Condongcatur",  pw: "PWNU DI Yogyakarta", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kabupaten Sleman", namaAdmin: "Nurul Hasanah", jabatan: "Sekretaris", nik: "3404050505920005", hp: "+6281234567005", email: "nurul@ranting-condongcatur.id", status: "Approved", submittedAt: daysAgo(6), reviewedAt: daysAgo(5), reviewedBy: "reviewer@digdaya.nu.id", peruriBatchId: "BATCH-2026-001" }),
   regJalurB({ ticketId: "AKT-2026-000130", tipeOrg: "Ranting", namaOrg: "Ranting NU Banyuanyar Tengah", pw: "PWNU Jawa Timur", sourcePcId: "pc-sleman", sourcePcName: "PCNU Kraksaan", namaAdmin: "Muhammad Rafi", jabatan: "Sekretaris", nik: "3507000000001300", hp: "+6281234500130", email: "muhammad.rafi@example.com", status: "Pending", submittedAt: "2026-05-29T02:30:00.000Z",
-    sumberSuratTugas: "MANUAL", suratTugasFile: "surat-tugas-ranting-banyuanyar-tengah.pdf",
+    sumberSuratTugas: "MANUAL_UPLOAD", suratTugasFile: "surat-tugas-ranting-banyuanyar-tengah.pdf",
   }),
 
   // Jalur B — dari PCNU Jombang
