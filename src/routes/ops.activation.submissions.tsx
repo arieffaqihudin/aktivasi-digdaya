@@ -92,8 +92,14 @@ function Submissions() {
                 <TD><StatusBadge status={r.status} /></TD>
                 
                 <TD className="text-right pr-6">
-                  <Link to="/ops/activation/submissions/$ticketId" params={{ ticketId: r.ticketId }}>
-                    <RowAction title="Lihat detail" tone="primary"><Eye className="h-4 w-4" /></RowAction>
+                  <Link
+                    to="/ops/activation/submissions/$ticketId"
+                    params={{ ticketId: r.ticketId }}
+                    title="Lihat detail"
+                    aria-label={`Lihat detail ${r.ticketId}`}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-md text-primary hover:bg-accent transition-colors"
+                  >
+                    <Eye className="h-4 w-4" />
                   </Link>
                 </TD>
               </TR>
