@@ -10,6 +10,7 @@ import { SumberPengajuanBadge, SumberSuratBadge } from "@/components/SumberBadge
 import { formatDate } from "@/utils/status";
 import { useState, useMemo } from "react";
 import { Eye, Search, Download } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/ops/activation/submissions")({
   component: Submissions,
@@ -18,11 +19,24 @@ export const Route = createFileRoute("/ops/activation/submissions")({
 function Submissions() {
   const regs = useStore((s) => s.registrations);
   const navigate = useNavigate();
-  const goDetail = (ticketId: string) => navigate({ to: "/ops/activation/submissions/$ticketId", params: { ticketId } });
   const [sumber, setSumber] = useState("all");
   const [status, setStatus] = useState("all");
   const [pw, setPw] = useState("all");
   const [q, setQ] = useState("");
+
+  const getTicketId = (submission: { ticketId?: string; nomorTiket?: string; id?: string }) =>
+    submission.ticketId || submission.nomorTiket || submission.id;
+
+  const goDetail = (ticketId: string) => navigate({ to: "/ops/activation/submissions/$ticketId", params: { ticketId } });
+
+  const handleViewDetail = (submission: { ticketId?: string; nomorTiket?: string; id?: string }) => {
+    const ticketId = getTicketId(submission);
+    if (!ticketId) {
+      toast.error("Nomor tiket tidak tersedia");
+      return;
+    }
+    goDetail(ticketId);
+  };
 
   const pws = Array.from(new Set(regs.map((r) => r.pw)));
 
@@ -81,8 +95,8 @@ function Submissions() {
           </THead>
           <tbody>
             {filtered.map((r) => (
-              <TR key={r.ticketId} onClick={() => goDetail(r.ticketId)} className="cursor-pointer">
-                <TD className="font-mono text-[12px] text-primary-dark">{r.ticketId}</TD>
+              <TR key={getTicketId(r) ?? r.ticketId} onClick={() => handleViewDetail(r)} className="cursor-pointer">
+                <TD className="font-mono text-[12px] text-primary-dark">{getTicketId(r) ?? "—"}</TD>
                 <TD><SumberPengajuanBadge sumber={r.sumberPengajuan} /></TD>
                 <TD>
                   <div className="text-[12.5px] font-medium">{r.tipeOrg} · {r.namaOrg}</div>
@@ -98,8 +112,12 @@ function Submissions() {
                     type="button"
                     size="sm"
                     variant="outline"
-                    onClick={(e) => { e.stopPropagation(); goDetail(r.ticketId); }}
-                    aria-label={`Lihat detail ${r.ticketId}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleViewDetail(r);
+                    }}
+                    aria-label={`Lihat detail ${getTicketId(r) ?? "submission"}`}
                   >
                     <Eye className="mr-1.5 h-4 w-4" /> Lihat Detail
                   </Button>
