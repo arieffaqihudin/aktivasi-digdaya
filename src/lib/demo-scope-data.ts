@@ -44,18 +44,25 @@ export const pcDemoTargets: DemoTarget[] = [
 ];
 
 export const pwDemoTargets: DemoTarget[] = [
-  // PC di bawah PWNU DI Yogyakarta
-  { id: "pc-yogyakarta", name: "PCNU Kota Yogyakarta", type: "PC" },
-  { id: "pc-sleman", name: "PCNU Kabupaten Sleman", type: "PC" },
-  { id: "pc-bantul", name: "PCNU Bantul", type: "PC" },
-  { id: "pc-kulon-progo", name: "PCNU Kulon Progo", type: "PC" },
-  { id: "pc-gunungkidul", name: "PCNU Gunungkidul", type: "PC" },
-  // Lembaga PW di bawah PWNU DI Yogyakarta
-  { id: "lembaga-pw-ldnu", name: "LDNU PWNU DI Yogyakarta", type: "Lembaga PW" },
-  { id: "lembaga-pw-lkknu", name: "LKKNU PWNU DI Yogyakarta", type: "Lembaga PW" },
-  { id: "lembaga-pw-lazisnu", name: "LAZISNU PWNU DI Yogyakarta", type: "Lembaga PW" },
-  { id: "lembaga-pw-maarif", name: "LP Ma'arif PWNU DI Yogyakarta", type: "Lembaga PW" },
-  { id: "lembaga-pw-rminu", name: "RMINU PWNU DI Yogyakarta", type: "Lembaga PW" },
+  // Lembaga PW di bawah PWNU DI Yogyakarta (18)
+  { id: "lembaga-pw-ldnu", name: "LDNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lkknu", name: "LKKNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-rminu", name: "RMINU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lazisnu", name: "LAZISNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lbmnu", name: "LBMNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lesbuminu", name: "LESBUMINU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lfnu", name: "LFNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lknu", name: "LKNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lpmaarif", name: "LP MAARIF NU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lppnu", name: "LPPNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lptnu", name: "LPTNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-ltmnu", name: "LTMNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-ltnnu", name: "LTNNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lwpnu", name: "LWPNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lpnu", name: "LPNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lakpesdam", name: "LAKPESDAM PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lpbhnu", name: "LPBHNU PW", type: "Lembaga PW" },
+  { id: "lembaga-pw-lpbinu", name: "LPBI NU PW", type: "Lembaga PW" },
 ];
 
 /** MWC induk pilihan saat PCNU Kraksaan mendaftarkan Ranting. */
