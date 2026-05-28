@@ -40,16 +40,18 @@ export function AppLayout({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
+  // Synchronous auto-login fallback so the layout never gets stuck on an
+  // infinite "Memuat dashboard…" screen on direct navigation.
+  if (!user) {
+    const fallbackRole = allowedRoles[0];
+    if (fallbackRole === "PW") actions.loginAs("pw@digdaya.nu.id");
+    else if (fallbackRole === "PC") actions.loginAs("pc.kraksaan@digdaya.nu.id");
+    else if (fallbackRole === "Super Admin") actions.loginAs("admin@digdaya.nu.id");
+    else if (fallbackRole === "Reviewer") actions.loginAs("reviewer@digdaya.nu.id");
+  }
+
   useEffect(() => {
-    if (!user) {
-      const fallbackRole = allowedRoles[0];
-      if (fallbackRole === "PW") actions.loginAs("pw@digdaya.nu.id");
-      else if (fallbackRole === "PC") actions.loginAs("pc.kraksaan@digdaya.nu.id");
-      else if (fallbackRole === "Super Admin") actions.loginAs("admin@digdaya.nu.id");
-      else if (fallbackRole === "Reviewer") actions.loginAs("reviewer@digdaya.nu.id");
-      return;
-    }
-    if (!allowedRoles.includes(user.role)) {
+    if (user && !allowedRoles.includes(user.role)) {
       if (user.role === "Super Admin") navigate({ to: "/ops/activation" });
       else if (user.role === "Reviewer") navigate({ to: "/review" });
       else if (user.role === "PW") navigate({ to: "/pw" });
@@ -59,13 +61,13 @@ export function AppLayout({
 
   useEffect(() => { setMobileOpen(false); }, [path]);
 
-  if (!user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4">
-        <p className="text-sm text-muted-foreground">Memuat dashboard…</p>
-      </div>
-    );
-  }
+  // Fallback user object so render proceeds immediately even before the
+  // synchronous loginAs above has propagated through the store.
+  const effectiveUser = user ?? {
+    email: "admin@digdaya.nu.id",
+    name: "Super Admin Digdaya",
+    role: (allowedRoles[0] ?? "Super Admin") as Role,
+  };
 
   const displayOrg = orgName ?? user.pcName ?? user.pwName ?? "Pengurus Besar Nahdlatul Ulama";
 
