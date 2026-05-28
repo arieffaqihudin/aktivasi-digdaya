@@ -494,11 +494,11 @@ export const seedRegistrations: Registration[] = [
     parentMwcId: "mwc-banyuanyar", parentMwcName: "MWCNU Banyuanyar", village: "Banyuanyar Selatan",
     namaAdmin: "Ahmad Subhan", jabatan: "Sekretaris", nik: "3507123456789151", hp: "+6281234500151", email: "ahmad.subhan@gmial.com",
     sumberSuratTugas: "MANUAL_UPLOAD", suratTugasFile: "surat-tugas-ranting-salah.pdf",
-    status: "PerluPerbaikan", submittedAt: daysAgo(4, 10, 30), reviewedAt: daysAgo(4, 13, 10), reviewedBy: "reviewer@digdaya.nu.id",
+    status: "PerluPerbaikan", submittedAt: daysAgo(4, 10), reviewedAt: daysAgo(4, 13), reviewedBy: "reviewer@digdaya.nu.id",
     rejectReason: "Surat tugas yang diunggah belum sesuai dengan Ranting NU Banyuanyar Selatan. Mohon unggah ulang surat tugas yang benar. Email administrator juga terindikasi typo, seharusnya menggunakan domain email yang valid.",
     rejectionCategory: "SURAT_TIDAK_SESUAI_NAMA",
     revisionCount: 1,
-    revisionHistory: [{ at: daysAgo(4, 13, 10), reviewer: "reviewer@digdaya.nu.id", decision: "PerluPerbaikan", category: "SURAT_TIDAK_SESUAI_NAMA", note: "Surat tugas salah dan email perlu diperbaiki" }],
+    revisionHistory: [{ at: daysAgo(4, 13), reviewer: "reviewer@digdaya.nu.id", decision: "PerluPerbaikan", category: "SURAT_TIDAK_SESUAI_NAMA", note: "Surat tugas salah dan email perlu diperbaiki" }],
   } as Registration,
 
   { jalur: "B", sumberPengajuan: "PC_DASHBOARD", tingkatPendaftar: "PC", ticketId: "AKT-2026-000152", tipeOrg: "Ranting",
