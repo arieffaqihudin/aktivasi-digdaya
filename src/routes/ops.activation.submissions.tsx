@@ -27,14 +27,10 @@ function Submissions() {
   const getTicketId = (submission: { ticketId?: string; nomorTiket?: string; id?: string }) =>
     submission.ticketId || submission.nomorTiket || submission.id;
 
-  const goDetail = (ticketId: string) => {
-    console.log("NAVIGATE_TO", `/ops/activation/submissions/${ticketId}`);
-    navigate({ to: "/ops/activation/submissions/$ticketId", params: { ticketId } });
-  };
+  const goDetail = (ticketId: string) => navigate({ to: "/ops/activation/submissions/$ticketId", params: { ticketId } });
 
   const handleViewDetail = (submission: { ticketId?: string; nomorTiket?: string; id?: string }) => {
     const ticketId = getTicketId(submission);
-    console.log("CLICK_DETAIL_SUBMISSION", submission);
     if (!ticketId) {
       toast.error("Nomor tiket tidak tersedia");
       return;
@@ -82,16 +78,6 @@ function Submissions() {
             <SelectFilter value={pw} onChange={setPw} placeholder="Wilayah" options={[["all","Semua PW"], ...pws.map((p) => [p, p.replace("PWNU ","")] as [string,string])]} />
           </div>
         </OpsCard>
-
-        {import.meta.env.DEV && (
-          <OpsCard title="Debug Detail Route" description="Smoke test route detail submission Ops.">
-            <div className="flex flex-wrap gap-2">
-              <Button type="button" size="sm" variant="outline" onClick={() => goDetail("AKT-2026-000130")}>Test AKT-2026-000130</Button>
-              <Button type="button" size="sm" variant="outline" onClick={() => goDetail("AKT-2026-000121")}>Test AKT-2026-000121</Button>
-              <Button type="button" size="sm" variant="outline" onClick={() => goDetail("AKT-2026-000124")}>Test AKT-2026-000124</Button>
-            </div>
-          </OpsCard>
-        )}
 
         <DataTable className="mx-0">
           <THead>
