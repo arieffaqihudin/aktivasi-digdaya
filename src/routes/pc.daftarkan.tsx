@@ -309,12 +309,8 @@ function RantingForm() {
   const [namaRanting, setNamaRanting] = useState("");
   const [village, setVillage] = useState("");
   const [locationNote, setLocationNote] = useState("");
-  const [namaAdmin, setNamaAdmin] = useState("");
-  const [jabatan, setJabatan] = useState("");
-  const [nik, setNik] = useState("");
-  const [hp, setHp] = useState("");
-  const [email, setEmail] = useState("");
-  const [surat, setSurat] = useState<SuratTugasValue>({ sumber: "DIGDAYA_PERSURATAN", dokumen: null, file: null });
+  const [admin, setAdmin] = useState(emptyAdminValue());
+  const [surat, setSurat] = useState<SuratTugasValue>(emptySuratTugas("full"));
   const [busy, setBusy] = useState(false);
 
   const parent = findKraksaanMwc(parentMwcId);
@@ -323,27 +319,21 @@ function RantingForm() {
     e.preventDefault();
     if (!parent) return toast.error("Pilih MWC induk terlebih dahulu.");
     if (!namaRanting.trim()) return toast.error("Nama Ranting wajib diisi.");
-    if (!namaAdmin.trim() || !jabatan.trim()) return toast.error("Lengkapi data administrator.");
-    if (!isValidNIK(nik)) return toast.error("NIK harus 16 digit.");
-    if (!isValidEmail(email)) return toast.error("Email tidak valid.");
-    const normHp = normalizePhone(hp);
-    if (!isValidPhone(normHp)) return toast.error("Nomor HP tidak valid.");
+    const aErr = validateAdmin(admin);
+    if (aErr) return toast.error(aErr);
     const sErr = validateSuratTugas(surat);
     if (sErr) return toast.error(sErr);
 
     setBusy(true);
     await new Promise((r) => setTimeout(r, 400));
+    const a = adminToSubmit(admin);
     const reg = actions.submitRanting({
       namaRanting: namaRanting.trim(),
       parentMwcId: parent.id,
       parentMwcName: parent.name,
       village: village.trim() || undefined,
       locationNote: locationNote.trim() || undefined,
-      namaAdmin,
-      jabatan,
-      nik,
-      hp: normHp,
-      email,
+      namaAdmin: a.namaAdmin, jabatan: a.jabatan, nik: a.nik, hp: a.hp, email: a.email,
       sumberSuratTugas: surat.sumber,
       suratTugasFile: surat.file?.name,
       dokumenSistem: surat.dokumen ?? undefined,
@@ -368,7 +358,7 @@ function RantingForm() {
           <div className="space-y-2">
             <h1 className="text-2xl font-semibold text-foreground">Daftarkan Ranting</h1>
             <p className="text-sm text-muted-foreground">
-              Input data Ranting di bawah {user?.pcName ?? "PCNU Kraksaan"}. Data ini akan menjadi dasar master data Ranting setelah diverifikasi.
+              Input data Ranting di bawah {user?.pcName ?? "PCNU Kraksaan"}.
             </p>
           </div>
           <Link to="/pc/daftarkan" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
@@ -399,45 +389,28 @@ function RantingForm() {
               </Select>
             </div>
 
-            <Field label="Nama Ranting" value={namaRanting} onChange={setNamaRanting} placeholder="Contoh: Ranting NU Banyuanyar Tengah" />
-            <Field label="Desa / Kelurahan (opsional)" value={village} onChange={setVillage} required={false} placeholder="Contoh: Desa Banyuanyar Tengah" />
+            <div>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Nama Ranting</Label>
+              <Input value={namaRanting} onChange={(e) => setNamaRanting(e.target.value)} placeholder="Contoh: Ranting NU Banyuanyar Tengah" className="mt-1.5 h-10" />
+            </div>
+            <div>
+              <Label className="text-xs uppercase tracking-wider text-muted-foreground">Desa / Kelurahan (opsional)</Label>
+              <Input value={village} onChange={(e) => setVillage(e.target.value)} placeholder="Contoh: Desa Banyuanyar Tengah" className="mt-1.5 h-10" />
+            </div>
             <div>
               <Label className="text-xs uppercase tracking-wider text-muted-foreground">Catatan Lokasi (opsional)</Label>
               <Textarea value={locationNote} onChange={(e) => setLocationNote(e.target.value)} className="mt-1.5" rows={2} />
             </div>
           </section>
 
-          <section className="rounded-xl border border-border bg-card p-5 space-y-4">
-            <p className="text-sm font-semibold text-foreground">Data Administrator</p>
-            <Field label="Nama Administrator" value={namaAdmin} onChange={setNamaAdmin} />
-            <Field label="Jabatan Administrator" value={jabatan} onChange={setJabatan} />
-            <Field label="NIK (16 digit)" value={nik} onChange={(v) => setNik(v.replace(/\D/g, "").slice(0, 16))} />
-            <Field label="Nomor HP WhatsApp" value={hp} onChange={setHp} placeholder="08xxxxxxxxxx" />
-            <Field label="Email" value={email} onChange={setEmail} type="email" />
+          <section className="rounded-xl border border-border bg-card p-5">
+            <AdministratorForm value={admin} onChange={setAdmin} />
           </section>
 
           <section className="rounded-xl border border-border bg-card p-5 space-y-3">
             <p className="text-sm font-semibold text-foreground">Surat Tugas</p>
-            <SuratTugasPicker value={surat} onChange={setSurat} />
+            <SuratTugasSelector value={surat} onChange={setSurat} mode="full" />
           </section>
-
-          {parent && namaRanting && (
-            <section className="rounded-xl border border-border bg-card p-5">
-              <p className="text-sm font-semibold text-foreground">Konfirmasi</p>
-              <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
-                <Info label="Nama Ranting" value={namaRanting} />
-                <Info label="MWC Induk" value={parent.name} />
-                <Info label="PC Induk" value={user?.pcName ?? "PCNU Kraksaan"} />
-                {village && <Info label="Desa / Kelurahan" value={village} />}
-                <Info label="Nama Administrator" value={namaAdmin || "—"} />
-                <Info label="Jabatan" value={jabatan || "—"} />
-                <Info label="NIK" value={nik ? `${nik.slice(0, 4)}••••••••${nik.slice(-2)}` : "—"} />
-                <Info label="Nomor HP" value={hp || "—"} />
-                <Info label="Email" value={email || "—"} />
-                <Info label="Sumber Surat Tugas" value={surat.sumber === "DIGDAYA_PERSURATAN" ? "Digdaya Persuratan" : "Upload Manual"} />
-              </dl>
-            </section>
-          )}
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <Link to="/pc/daftarkan" className="inline-flex w-full items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground sm:w-auto">
