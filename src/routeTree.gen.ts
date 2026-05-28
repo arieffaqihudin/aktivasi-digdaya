@@ -49,7 +49,6 @@ import { Route as PwStatusPengajuanTicketIdRouteImport } from './routes/pw.statu
 import { Route as PwDaftarkanImportRouteImport } from './routes/pw.daftarkan_.import'
 import { Route as PcStatusPengajuanTicketIdRouteImport } from './routes/pc.status-pengajuan.$ticketId'
 import { Route as PcDaftarkanImportRouteImport } from './routes/pc.daftarkan_.import'
-import { Route as PwDaftarkanImportRouteImport } from './routes/pw.daftarkan_.import'
 import { Route as OpsPersuratanStamperRouteImport } from './routes/ops.persuratan.stamper'
 import { Route as OpsPersuratanPengajuanUbahEmailRouteImport } from './routes/ops.persuratan.pengajuan-ubah-email'
 import { Route as OpsPersuratanKopSuratRouteImport } from './routes/ops.persuratan.kop-surat'
@@ -267,6 +266,11 @@ const PcDaftarkanImportRoute = PcDaftarkanImportRouteImport.update({
   id: '/daftarkan_/import',
   path: '/daftarkan/import',
   getParentRoute: () => PcRoute,
+} as any)
+const PwDaftarkanImportRoute = PwDaftarkanImportRouteImport.update({
+  id: '/daftarkan_/import',
+  path: '/daftarkan/import',
+  getParentRoute: () => PwRoute,
 } as any)
 const OpsPersuratanStamperRoute = OpsPersuratanStamperRouteImport.update({
   id: '/persuratan/stamper',
