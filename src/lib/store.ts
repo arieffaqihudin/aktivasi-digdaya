@@ -1,4 +1,5 @@
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect } from "react";
+import { useSyncExternalStoreWithSelector } from "use-sync-external-store/with-selector";
 import { notifActions } from "./notifications";
 import {
   seedRegistrations,
