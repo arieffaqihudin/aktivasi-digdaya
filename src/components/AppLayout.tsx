@@ -45,6 +45,8 @@ export function AppLayout({
       const fallbackRole = allowedRoles[0];
       if (fallbackRole === "PW") actions.loginAs("pw@digdaya.nu.id");
       else if (fallbackRole === "PC") actions.loginAs("pc.kraksaan@digdaya.nu.id");
+      else if (fallbackRole === "Super Admin") actions.loginAs("admin@digdaya.nu.id");
+      else if (fallbackRole === "Reviewer") actions.loginAs("reviewer@digdaya.nu.id");
       return;
     }
     if (!allowedRoles.includes(user.role)) {
