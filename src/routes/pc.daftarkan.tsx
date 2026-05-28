@@ -141,11 +141,38 @@ function useLatestRegByName() {
   }, [regs]);
 }
 
+function PickerSkeleton({ count = 5 }: { count?: number }) {
+  return (
+    <div className="space-y-3">
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div className="min-w-0 space-y-2">
+            <div className="h-4 w-48 animate-pulse rounded bg-muted" />
+            <div className="h-3 w-24 animate-pulse rounded bg-muted" />
+            <div className="h-5 w-20 animate-pulse rounded-full bg-muted" />
+          </div>
+          <div className="h-11 w-full animate-pulse rounded-lg bg-muted sm:h-10 sm:w-28" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function PickerList({ type }: { type: "MWC" | "Lembaga PC" }) {
+  const [loading, setLoading] = useState(true);
   const targets = pcDemoTargets.filter((t) => t.type === type);
   const latest = useLatestRegByName();
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<"ALL" | "Belum Production" | "Pending" | "PerluPerbaikan" | "Production">("ALL");
+
+  useMemo(() => {
+    setLoading(true);
+    const t = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(t);
+  }, [type]);
 
   const enriched = targets.map((t) => {
     const reg = latest.get(t.name);
@@ -223,7 +250,15 @@ function PickerList({ type }: { type: "MWC" | "Lembaga PC" }) {
           </div>
         </div>
 
-        {filtered.length === 0 ? (
+        {loading ? (
+          <>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Memuat daftar {type === "MWC" ? "MWC" : "Lembaga PC"}…
+            </div>
+            <PickerSkeleton />
+          </>
+        ) : filtered.length === 0 ? (
           <div className="rounded-xl border border-border bg-card p-6 text-center text-sm text-muted-foreground">
             {enriched.every((e) => e.state === "Production")
               ? `Semua ${type === "MWC" ? "MWC" : "Lembaga PC"} sudah production.`
