@@ -480,6 +480,7 @@ export const actions = {
     selectedOrgId?: string;
     namaAdmin: string;
     jabatan: string;
+    administratorType?: AdministratorType;
     nik: string;
     hp: string;
     email: string;
@@ -520,6 +521,7 @@ export const actions = {
       selectedOrgId: code.kind === "Scoped" ? targetOrgId : undefined,
       namaAdmin: payload.namaAdmin,
       jabatan: payload.jabatan,
+      administratorType: payload.administratorType,
       nik: payload.nik,
       hp: payload.hp,
       email: payload.email,
