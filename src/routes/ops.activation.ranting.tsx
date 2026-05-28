@@ -413,7 +413,7 @@ function OpsRantingDataPage() {
             <>
               {/* Desktop table */}
               <div className="mt-4 hidden overflow-x-auto md:block">
-                <table className="w-full min-w-[1280px] text-[13px]">
+                <table className="w-full min-w-[1100px] text-[13px]">
                   <thead className="bg-secondary/40 text-left text-[11px] uppercase tracking-wider text-muted-foreground">
                     <tr>
                       <th className="px-3 py-2.5">Nama Ranting</th>
@@ -424,49 +424,34 @@ function OpsRantingDataPage() {
                       <th className="px-3 py-2.5">Tiket</th>
                       <th className="px-3 py-2.5">Status ID</th>
                       <th className="px-3 py-2.5">ID Manajemen</th>
-                      <th className="px-3 py-2.5">Tgl Generate</th>
                       <th className="px-3 py-2.5">Status Sistem</th>
-                      <th className="px-3 py-2.5 text-right pr-4">Aksi</th>
+                      <th className="px-3 py-2.5 text-right pr-4" style={{ width: 160, whiteSpace: "nowrap" }}>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filtered.map((r) => {
                       const st = effectiveStatus(r);
                       return (
-                        <tr key={r.ticketId} className="border-t border-border">
-                          <td className="px-3 py-2.5 font-medium text-foreground">{r.namaOrg}</td>
-                          <td className="px-3 py-2.5 text-muted-foreground">{r.sourcePcName ?? "—"}</td>
-                          <td className="px-3 py-2.5 text-muted-foreground">{r.parentMwcName ?? "—"}</td>
-                          <td className="px-3 py-2.5 text-muted-foreground">{r.village ?? "—"}</td>
-                          <td className="px-3 py-2.5">{r.namaAdmin}</td>
-                          <td className="px-3 py-2.5 font-mono text-[12px] text-primary-dark">{r.ticketId}</td>
-                          <td className="px-3 py-2.5">
+                        <tr key={r.ticketId} className="border-t border-border align-middle">
+                          <td className="px-3 py-3.5 font-medium text-foreground max-w-[220px]">
+                            <span className="line-clamp-2">{r.namaOrg}</span>
+                          </td>
+                          <td className="px-3 py-3.5 text-muted-foreground">{r.sourcePcName ?? "—"}</td>
+                          <td className="px-3 py-3.5 text-muted-foreground">{r.parentMwcName ?? "—"}</td>
+                          <td className="px-3 py-3.5 text-muted-foreground">{r.village ?? "—"}</td>
+                          <td className="px-3 py-3.5">{r.namaAdmin}</td>
+                          <td className="px-3 py-3.5 font-mono text-[12px] text-primary-dark whitespace-nowrap">{r.ticketId}</td>
+                          <td className="px-3 py-3.5">
                             <IdStatusPill status={st} />
                           </td>
-                          <td className="px-3 py-2.5 font-mono text-[12px]">
-                            {r.managementId ? (
-                              <span className="inline-flex items-center gap-1.5">
-                                {r.managementId}
-                                <button
-                                  type="button"
-                                  onClick={() => copyId(r.managementId!)}
-                                  className="text-muted-foreground hover:text-primary"
-                                  title="Salin ID"
-                                >
-                                  <Copy className="h-3.5 w-3.5" />
-                                </button>
-                              </span>
-                            ) : (
-                              <span className="text-muted-foreground">—</span>
-                            )}
+                          <td className="px-3 py-3.5 font-mono text-[12px] whitespace-nowrap">
+                            {r.managementId ? r.managementId : <span className="text-muted-foreground">-</span>}
                           </td>
-                          <td className="px-3 py-2.5 text-[12px]">
-                            {r.managementGeneratedAt ? formatDate(r.managementGeneratedAt) : "—"}
-                          </td>
-                          <td className="px-3 py-2.5 text-[12px]">
-                            {getSystemStatusLabel(r.activatedSystems)}
-                          </td>
-                          <td className="px-3 py-2.5 text-right pr-4">
+                          <td className="px-3 py-3.5 text-[12px]">{getSystemStatusLabel(r.activatedSystems)}</td>
+                          <td
+                            className="px-3 py-3.5 text-right pr-4"
+                            style={{ width: 160, whiteSpace: "nowrap" }}
+                          >
                             <RowActions
                               reg={r}
                               status={st}
@@ -512,7 +497,10 @@ function OpsRantingDataPage() {
                         <span className="text-muted-foreground">{getSystemStatusLabel(r.activatedSystems)}</span>
                       </div>
                       <div className="mt-2 grid grid-cols-2 gap-1.5">
-                        <RowActions
+                        <Button size="sm" variant="outline" className="h-9 w-full" onClick={() => setDetail(r)}>
+                          <Eye className="mr-1.5 h-3.5 w-3.5" /> Detail
+                        </Button>
+                        <RowActionsDropdown
                           reg={r}
                           status={st}
                           fullWidth
