@@ -160,7 +160,7 @@ function StatusDetail() {
                             ? "Menunggu perbaikan dari pendaftar"
                             : "Pengajuan ditolak final"
                     }
-                    sub={reg.reviewedAt ? formatDateTime(reg.reviewedAt) : "Maks. 3 hari kerja"}
+                    sub={reg.reviewedAt ? formatDateTime(reg.reviewedAt) : "Pengajuan akan direview oleh Tim Digdaya"}
                   />
                 </ol>
               </div>
