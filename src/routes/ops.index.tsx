@@ -53,7 +53,7 @@ function OpsOverview() {
           <Kpi label="Pending Aktivasi" value={pending} icon={Clock} tone="warning" />
           <Kpi label="Perlu Perbaikan" value={perluPerbaikan} icon={AlertTriangle} tone="warning" />
           <Kpi label="Sudah Production" value={production} icon={CheckCircle2} tone="success" />
-          <Kpi label="Melewati SLA" value={lewatSla} icon={ClipboardList} tone="destructive" />
+          
           <Kpi label="Kop Surat Aktif" value={"1.284"} icon={FileText} />
           <Kpi label="Stamper Aktif" value={386} icon={Stamp} />
         </div>
