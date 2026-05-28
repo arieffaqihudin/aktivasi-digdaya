@@ -33,7 +33,7 @@ export function NotificationsPage() {
     <div>
       <PageHeader
         title="Notifikasi"
-        subtitle="Aktivitas dan pembaruan terkait pengajuan, perbaikan, SLA, dan sistem."
+        subtitle="Aktivitas dan pembaruan terkait pengajuan, perbaikan, dan sistem."
         count={items.length}
         action={
           <button
