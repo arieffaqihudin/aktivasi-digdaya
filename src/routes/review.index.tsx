@@ -39,7 +39,7 @@ function ReviewSummary() {
           <KPI label="Pending Login Digdaya" value={pendingB} icon={Network} tone="info" />
           <KPI label="Approved Hari Ini" value={approvedToday} icon={CheckCircle2} tone="success" />
           <KPI label="Rejected Hari Ini" value={rejectedToday} icon={XCircle} tone="destructive" />
-          <KPI label="Melewati SLA" value={overSla} icon={Timer} tone="destructive" />
+          
           <KPI label="Masuk Batch Peruri" value={inBatch} icon={FileDown} />
           <Link to="/review/inbox" className="rounded-xl border border-primary/30 bg-primary/5 p-4 hover:bg-primary/10">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary-dark">Aksi</p>
