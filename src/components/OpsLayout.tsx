@@ -4,7 +4,7 @@ import {
   KeyRound,
   Inbox,
   FileDown,
-  
+  Sprout,
   ScrollText,
   Mail,
   Search,
@@ -29,6 +29,7 @@ const opsMenuAll: OpsMenuItem[] = [
 
   { to: "/ops/activation/access-codes", label: "Kode Akses", icon: KeyRound, section: "PORTAL AKTIVASI", permission: "activation.access_codes" },
   { to: "/ops/activation/submissions", label: "Pengajuan Aktivasi", icon: Inbox, section: "PORTAL AKTIVASI", permission: "activation.submissions" },
+  { to: "/ops/activation/ranting", label: "Data Ranting", icon: Sprout, section: "PORTAL AKTIVASI", permission: "activation.submissions" },
   { to: "/ops/activation/peruri-export", label: "Export Peruri", icon: FileDown, section: "PORTAL AKTIVASI", permission: "activation.peruri_export" },
   
   { to: "/ops/activation/audit-log", label: "Audit Log Aktivasi", icon: ScrollText, section: "PORTAL AKTIVASI", permission: "activation.audit_log" },

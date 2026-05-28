@@ -52,6 +52,7 @@ import { Route as OpsPersuratanPengajuanUbahEmailRouteImport } from './routes/op
 import { Route as OpsPersuratanKopSuratRouteImport } from './routes/ops.persuratan.kop-surat'
 import { Route as OpsPersuratanCekOrderIdRouteImport } from './routes/ops.persuratan.cek-order-id'
 import { Route as OpsActivationSubmissionsRouteImport } from './routes/ops.activation.submissions'
+import { Route as OpsActivationRantingRouteImport } from './routes/ops.activation.ranting'
 import { Route as OpsActivationPeruriExportRouteImport } from './routes/ops.activation.peruri-export'
 import { Route as OpsActivationNotificationsRouteImport } from './routes/ops.activation.notifications'
 import { Route as OpsActivationAuditLogRouteImport } from './routes/ops.activation.audit-log'
@@ -281,6 +282,11 @@ const OpsActivationSubmissionsRoute =
     path: '/activation/submissions',
     getParentRoute: () => OpsRoute,
   } as any)
+const OpsActivationRantingRoute = OpsActivationRantingRouteImport.update({
+  id: '/activation/ranting',
+  path: '/activation/ranting',
+  getParentRoute: () => OpsRoute,
+} as any)
 const OpsActivationPeruriExportRoute =
   OpsActivationPeruriExportRouteImport.update({
     id: '/activation/peruri-export',
@@ -371,6 +377,7 @@ export interface FileRoutesByFullPath {
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
   '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
+  '/ops/activation/ranting': typeof OpsActivationRantingRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRoute
   '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
@@ -420,6 +427,7 @@ export interface FileRoutesByTo {
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
   '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
+  '/ops/activation/ranting': typeof OpsActivationRantingRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRoute
   '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
@@ -475,6 +483,7 @@ export interface FileRoutesById {
   '/ops/activation/audit-log': typeof OpsActivationAuditLogRoute
   '/ops/activation/notifications': typeof OpsActivationNotificationsRoute
   '/ops/activation/peruri-export': typeof OpsActivationPeruriExportRoute
+  '/ops/activation/ranting': typeof OpsActivationRantingRoute
   '/ops/activation/submissions': typeof OpsActivationSubmissionsRoute
   '/ops/persuratan/cek-order-id': typeof OpsPersuratanCekOrderIdRoute
   '/ops/persuratan/kop-surat': typeof OpsPersuratanKopSuratRoute
@@ -531,6 +540,7 @@ export interface FileRouteTypes {
     | '/ops/activation/audit-log'
     | '/ops/activation/notifications'
     | '/ops/activation/peruri-export'
+    | '/ops/activation/ranting'
     | '/ops/activation/submissions'
     | '/ops/persuratan/cek-order-id'
     | '/ops/persuratan/kop-surat'
@@ -580,6 +590,7 @@ export interface FileRouteTypes {
     | '/ops/activation/audit-log'
     | '/ops/activation/notifications'
     | '/ops/activation/peruri-export'
+    | '/ops/activation/ranting'
     | '/ops/activation/submissions'
     | '/ops/persuratan/cek-order-id'
     | '/ops/persuratan/kop-surat'
@@ -634,6 +645,7 @@ export interface FileRouteTypes {
     | '/ops/activation/audit-log'
     | '/ops/activation/notifications'
     | '/ops/activation/peruri-export'
+    | '/ops/activation/ranting'
     | '/ops/activation/submissions'
     | '/ops/persuratan/cek-order-id'
     | '/ops/persuratan/kop-surat'
@@ -969,6 +981,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OpsActivationSubmissionsRouteImport
       parentRoute: typeof OpsRoute
     }
+    '/ops/activation/ranting': {
+      id: '/ops/activation/ranting'
+      path: '/activation/ranting'
+      fullPath: '/ops/activation/ranting'
+      preLoaderRoute: typeof OpsActivationRantingRouteImport
+      parentRoute: typeof OpsRoute
+    }
     '/ops/activation/peruri-export': {
       id: '/ops/activation/peruri-export'
       path: '/activation/peruri-export'
@@ -1074,6 +1093,7 @@ interface OpsRouteChildren {
   OpsActivationAuditLogRoute: typeof OpsActivationAuditLogRoute
   OpsActivationNotificationsRoute: typeof OpsActivationNotificationsRoute
   OpsActivationPeruriExportRoute: typeof OpsActivationPeruriExportRoute
+  OpsActivationRantingRoute: typeof OpsActivationRantingRoute
   OpsActivationSubmissionsRoute: typeof OpsActivationSubmissionsRoute
   OpsPersuratanCekOrderIdRoute: typeof OpsPersuratanCekOrderIdRoute
   OpsPersuratanKopSuratRoute: typeof OpsPersuratanKopSuratRoute
@@ -1093,6 +1113,7 @@ const OpsRouteChildren: OpsRouteChildren = {
   OpsActivationAuditLogRoute: OpsActivationAuditLogRoute,
   OpsActivationNotificationsRoute: OpsActivationNotificationsRoute,
   OpsActivationPeruriExportRoute: OpsActivationPeruriExportRoute,
+  OpsActivationRantingRoute: OpsActivationRantingRoute,
   OpsActivationSubmissionsRoute: OpsActivationSubmissionsRoute,
   OpsPersuratanCekOrderIdRoute: OpsPersuratanCekOrderIdRoute,
   OpsPersuratanKopSuratRoute: OpsPersuratanKopSuratRoute,
