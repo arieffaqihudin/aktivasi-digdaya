@@ -178,8 +178,8 @@ function PickerList({ type }: { type: "MWC" | "Lembaga PC" }) {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-5xl space-y-6">
+    <div className="p-4 pb-24 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-5xl space-y-5">
         <Breadcrumb
           trail={[
             { label: "Daftarkan Organisasi", to: "/pc/daftarkan" },
@@ -187,12 +187,12 @@ function PickerList({ type }: { type: "MWC" | "Lembaga PC" }) {
           ]}
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
+            <h1 className="text-xl font-semibold text-foreground sm:text-2xl">{title}</h1>
             <p className="text-sm text-muted-foreground">{subtitle}</p>
           </div>
-          <Link to="/pc/daftarkan" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/pc/daftarkan" className="inline-flex h-10 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:h-auto">
             <ArrowLeft className="h-4 w-4" /> Kembali ke Pilihan
           </Link>
         </div>
@@ -200,9 +200,9 @@ function PickerList({ type }: { type: "MWC" | "Lembaga PC" }) {
         <div className="space-y-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Cari ${type}...`} className="pl-9" />
+            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Cari ${type}...`} className="h-11 pl-9 text-base sm:h-10 sm:text-sm" />
           </div>
-          <div className="-mx-1 flex w-full overflow-x-auto">
+          <div className="-mx-1 flex w-full overflow-x-auto pb-1">
             <div className="inline-flex w-max gap-2 px-1">
               {filters.map((f) => (
                 <button
@@ -210,7 +210,7 @@ function PickerList({ type }: { type: "MWC" | "Lembaga PC" }) {
                   type="button"
                   onClick={() => setFilter(f)}
                   className={cn(
-                    "whitespace-nowrap rounded-full border px-3 py-1.5 text-sm",
+                    "whitespace-nowrap rounded-full border px-3 py-2 text-sm sm:py-1.5",
                     filter === f
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-border bg-card text-muted-foreground hover:text-foreground",
