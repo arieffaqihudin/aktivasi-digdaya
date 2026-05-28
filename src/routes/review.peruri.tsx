@@ -88,7 +88,7 @@ function PeruriPage() {
                       <div className="overflow-x-auto rounded-md border border-border bg-card">
                         <table className="w-full text-xs">
                           <thead className="bg-secondary/40 text-left uppercase text-muted-foreground">
-                            <tr><th className="px-3 py-2">Tiket</th><th className="px-3 py-2">Jalur</th><th className="px-3 py-2">Tipe</th><th className="px-3 py-2">Organisasi</th><th className="px-3 py-2">Admin</th><th className="px-3 py-2">Email</th></tr>
+                            <tr><th className="px-3 py-2">Tiket</th><th className="px-3 py-2">Sumber Pengajuan</th><th className="px-3 py-2">Tipe</th><th className="px-3 py-2">Organisasi</th><th className="px-3 py-2">Admin</th><th className="px-3 py-2">Email</th></tr>
                           </thead>
                           <tbody>
                             {regs.filter((r) => b.ticketIds.includes(r.ticketId)).map((r) => (
