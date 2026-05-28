@@ -18,6 +18,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import {
@@ -34,10 +41,13 @@ import {
   ShieldCheck,
   FileText,
   Layers,
+  MoreHorizontal,
+  MessageCircle,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { formatDate } from "@/utils/status";
 import { toast } from "sonner";
+import { buildWhatsAppUrl, waMessageForTicket } from "@/lib/whatsapp";
 import type { Registration } from "@/data/mockData";
 
 export const Route = createFileRoute("/ops/activation/ranting")({
@@ -403,7 +413,7 @@ function OpsRantingDataPage() {
             <>
               {/* Desktop table */}
               <div className="mt-4 hidden overflow-x-auto md:block">
-                <table className="w-full min-w-[1280px] text-[13px]">
+                <table className="w-full min-w-[1100px] text-[13px]">
                   <thead className="bg-secondary/40 text-left text-[11px] uppercase tracking-wider text-muted-foreground">
                     <tr>
                       <th className="px-3 py-2.5">Nama Ranting</th>
@@ -414,49 +424,34 @@ function OpsRantingDataPage() {
                       <th className="px-3 py-2.5">Tiket</th>
                       <th className="px-3 py-2.5">Status ID</th>
                       <th className="px-3 py-2.5">ID Manajemen</th>
-                      <th className="px-3 py-2.5">Tgl Generate</th>
                       <th className="px-3 py-2.5">Status Sistem</th>
-                      <th className="px-3 py-2.5 text-right pr-4">Aksi</th>
+                      <th className="px-3 py-2.5 text-right pr-4" style={{ width: 160, whiteSpace: "nowrap" }}>Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filtered.map((r) => {
                       const st = effectiveStatus(r);
                       return (
-                        <tr key={r.ticketId} className="border-t border-border">
-                          <td className="px-3 py-2.5 font-medium text-foreground">{r.namaOrg}</td>
-                          <td className="px-3 py-2.5 text-muted-foreground">{r.sourcePcName ?? "—"}</td>
-                          <td className="px-3 py-2.5 text-muted-foreground">{r.parentMwcName ?? "—"}</td>
-                          <td className="px-3 py-2.5 text-muted-foreground">{r.village ?? "—"}</td>
-                          <td className="px-3 py-2.5">{r.namaAdmin}</td>
-                          <td className="px-3 py-2.5 font-mono text-[12px] text-primary-dark">{r.ticketId}</td>
-                          <td className="px-3 py-2.5">
+                        <tr key={r.ticketId} className="border-t border-border align-middle">
+                          <td className="px-3 py-3.5 font-medium text-foreground max-w-[220px]">
+                            <span className="line-clamp-2">{r.namaOrg}</span>
+                          </td>
+                          <td className="px-3 py-3.5 text-muted-foreground">{r.sourcePcName ?? "—"}</td>
+                          <td className="px-3 py-3.5 text-muted-foreground">{r.parentMwcName ?? "—"}</td>
+                          <td className="px-3 py-3.5 text-muted-foreground">{r.village ?? "—"}</td>
+                          <td className="px-3 py-3.5">{r.namaAdmin}</td>
+                          <td className="px-3 py-3.5 font-mono text-[12px] text-primary-dark whitespace-nowrap">{r.ticketId}</td>
+                          <td className="px-3 py-3.5">
                             <IdStatusPill status={st} />
                           </td>
-                          <td className="px-3 py-2.5 font-mono text-[12px]">
-                            {r.managementId ? (
-                              <span className="inline-flex items-center gap-1.5">
-                                {r.managementId}
-                                <button
-                                  type="button"
-                                  onClick={() => copyId(r.managementId!)}
-                                  className="text-muted-foreground hover:text-primary"
-                                  title="Salin ID"
-                                >
-                                  <Copy className="h-3.5 w-3.5" />
-                                </button>
-                              </span>
-                            ) : (
-                              <span className="text-muted-foreground">—</span>
-                            )}
+                          <td className="px-3 py-3.5 font-mono text-[12px] whitespace-nowrap">
+                            {r.managementId ? r.managementId : <span className="text-muted-foreground">-</span>}
                           </td>
-                          <td className="px-3 py-2.5 text-[12px]">
-                            {r.managementGeneratedAt ? formatDate(r.managementGeneratedAt) : "—"}
-                          </td>
-                          <td className="px-3 py-2.5 text-[12px]">
-                            {getSystemStatusLabel(r.activatedSystems)}
-                          </td>
-                          <td className="px-3 py-2.5 text-right pr-4">
+                          <td className="px-3 py-3.5 text-[12px]">{getSystemStatusLabel(r.activatedSystems)}</td>
+                          <td
+                            className="px-3 py-3.5 text-right pr-4"
+                            style={{ width: 160, whiteSpace: "nowrap" }}
+                          >
                             <RowActions
                               reg={r}
                               status={st}
@@ -502,7 +497,10 @@ function OpsRantingDataPage() {
                         <span className="text-muted-foreground">{getSystemStatusLabel(r.activatedSystems)}</span>
                       </div>
                       <div className="mt-2 grid grid-cols-2 gap-1.5">
-                        <RowActions
+                        <Button size="sm" variant="outline" className="h-9 w-full" onClick={() => setDetail(r)}>
+                          <Eye className="mr-1.5 h-3.5 w-3.5" /> Detail
+                        </Button>
+                        <RowActionsDropdown
                           reg={r}
                           status={st}
                           fullWidth
@@ -743,7 +741,33 @@ function OpsRantingDataPage() {
   );
 }
 
-function RowActions({
+type RowStatus = "Belum Dibuat" | "ID Terbuat" | "Siap Aktivasi Sistem" | "Aktif di Digdaya" | "Perlu Cek Duplikasi";
+
+type RowActionProps = {
+  reg: Registration;
+  status: RowStatus;
+  fullWidth?: boolean;
+  onGenerate: () => void;
+  onActivate: (sys: "Digdaya Kepengurusan" | "Digdaya Persuratan") => void;
+  onCopy: () => void;
+  onDup: () => void;
+  onDetail: () => void;
+};
+
+/** Desktop row actions: [Detail] [⋯ dropdown] */
+function RowActions(props: RowActionProps) {
+  return (
+    <div className="inline-flex items-center justify-end gap-2 flex-nowrap whitespace-nowrap">
+      <Button size="sm" variant="outline" className="h-8 px-3" onClick={props.onDetail}>
+        <Eye className="mr-1.5 h-3.5 w-3.5" /> Detail
+      </Button>
+      <RowActionsDropdown {...props} />
+    </div>
+  );
+}
+
+/** Just the "more actions" dropdown — used both desktop & mobile. */
+function RowActionsDropdown({
   reg,
   status,
   fullWidth,
@@ -751,53 +775,74 @@ function RowActions({
   onActivate,
   onCopy,
   onDup,
-  onDetail,
-}: {
-  reg: Registration;
-  status: "Belum Dibuat" | "ID Terbuat" | "Siap Aktivasi Sistem" | "Aktif di Digdaya" | "Perlu Cek Duplikasi";
-  fullWidth?: boolean;
-  onGenerate: () => void;
-  onActivate: (sys: "Digdaya Kepengurusan" | "Digdaya Persuratan") => void;
-  onCopy: () => void;
-  onDup: () => void;
-  onDetail: () => void;
-}) {
-  const cls = "h-8 " + (fullWidth ? "w-full justify-center" : "");
+}: RowActionProps) {
   const sysActivated = reg.activatedSystems ?? [];
+  const waUrl = buildWhatsAppUrl(reg.hp, waMessageForTicket(reg.ticketId));
   return (
-    <div className={fullWidth ? "contents" : "flex flex-wrap items-center justify-end gap-1.5"}>
-      <Button size="sm" variant="outline" className={cls} onClick={onDetail}>
-        <Eye className="mr-1.5 h-3.5 w-3.5" /> Detail
-      </Button>
-      {status === "Belum Dibuat" && (
-        <Button size="sm" className={cls} onClick={onGenerate}>
-          <KeySquare className="mr-1.5 h-3.5 w-3.5" /> Buat ID
-        </Button>
-      )}
-      {status === "Perlu Cek Duplikasi" && (
-        <Button size="sm" variant="outline" className={cls} onClick={onDup}>
-          <AlertTriangle className="mr-1.5 h-3.5 w-3.5" /> Cek Duplikasi
-        </Button>
-      )}
-      {(status === "ID Terbuat" || status === "Siap Aktivasi Sistem" || status === "Aktif di Digdaya") && (
-        <>
-          <Button size="sm" variant="outline" className={cls} onClick={onCopy}>
-            <Copy className="mr-1.5 h-3.5 w-3.5" /> Salin ID
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        {fullWidth ? (
+          <Button size="sm" variant="outline" className="h-9 w-full justify-center">
+            <MoreHorizontal className="mr-1.5 h-4 w-4" /> Aksi Lainnya
           </Button>
-          {!sysActivated.includes("Digdaya Kepengurusan") && (
-            <Button size="sm" variant="outline" className={cls} onClick={() => onActivate("Digdaya Kepengurusan")}>
-              Aktifkan Kepengurusan
-            </Button>
-          )}
-          {!sysActivated.includes("Digdaya Persuratan") && (
-            <Button size="sm" variant="outline" className={cls} onClick={() => onActivate("Digdaya Persuratan")}>
-              Aktifkan Persuratan
-            </Button>
-          )}
-        </>
-      )}
-      <WhatsAppButton phone={reg.hp} ticketId={reg.ticketId} className={fullWidth ? "w-full justify-center" : ""} />
-    </div>
+        ) : (
+          <Button
+            size="icon"
+            variant="outline"
+            aria-label="Aksi lainnya"
+            className="h-8 w-8"
+          >
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        )}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-[220px]">
+        {status === "Belum Dibuat" && (
+          <DropdownMenuItem onSelect={onGenerate}>
+            <KeySquare className="mr-2 h-4 w-4" /> Buat ID Manajemen
+          </DropdownMenuItem>
+        )}
+        {status === "Perlu Cek Duplikasi" && (
+          <DropdownMenuItem onSelect={onDup}>
+            <AlertTriangle className="mr-2 h-4 w-4" /> Cek Duplikasi
+          </DropdownMenuItem>
+        )}
+        {(status === "ID Terbuat" || status === "Siap Aktivasi Sistem" || status === "Aktif di Digdaya") && (
+          <>
+            <DropdownMenuItem onSelect={onCopy}>
+              <Copy className="mr-2 h-4 w-4" /> Salin ID
+            </DropdownMenuItem>
+            {status !== "Aktif di Digdaya" && !sysActivated.includes("Digdaya Kepengurusan") && (
+              <DropdownMenuItem onSelect={() => onActivate("Digdaya Kepengurusan")}>
+                <ShieldCheck className="mr-2 h-4 w-4" /> Aktifkan Kepengurusan
+              </DropdownMenuItem>
+            )}
+            {status !== "Aktif di Digdaya" && !sysActivated.includes("Digdaya Persuratan") && (
+              <DropdownMenuItem onSelect={() => onActivate("Digdaya Persuratan")}>
+                <FileText className="mr-2 h-4 w-4" /> Aktifkan Persuratan
+              </DropdownMenuItem>
+            )}
+            {status === "Aktif di Digdaya" && (
+              <DropdownMenuItem disabled>
+                <Layers className="mr-2 h-4 w-4" /> Lihat Detail Sistem
+              </DropdownMenuItem>
+            )}
+          </>
+        )}
+        <DropdownMenuSeparator />
+        {waUrl ? (
+          <DropdownMenuItem asChild>
+            <a href={waUrl} target="_blank" rel="noopener noreferrer">
+              <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp Admin
+            </a>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem disabled>
+            <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp tidak tersedia
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
