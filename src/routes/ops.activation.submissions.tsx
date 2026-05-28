@@ -98,7 +98,7 @@ function Submissions() {
                 </TD>
               </TR>
             ))}
-            {filtered.length === 0 && <EmptyRow colSpan={9}>Tidak ada pengajuan sesuai filter.</EmptyRow>}
+            {filtered.length === 0 && <EmptyRow colSpan={8}>Tidak ada pengajuan sesuai filter.</EmptyRow>}
           </tbody>
         </DataTable>
       </OpsPageBody>
