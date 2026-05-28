@@ -73,7 +73,7 @@ function Submissions() {
               <TH>Administrator</TH>
               <TH>Surat Tugas</TH>
               <TH>Status</TH>
-              <TH>SLA</TH>
+              
               <TH className="text-right pr-6">Aksi</TH>
             </tr>
           </THead>
