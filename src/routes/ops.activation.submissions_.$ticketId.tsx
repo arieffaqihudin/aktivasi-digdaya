@@ -10,6 +10,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ArrowLeft, CheckCircle2, FileText, Clock, RefreshCw } from "lucide-react";
 import { formatDateTime } from "@/utils/status";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { normalizeWhatsAppNumber } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/ops/activation/submissions_/$ticketId")({
   component: SubmissionDetail,
@@ -89,7 +91,14 @@ function SubmissionDetail() {
               </dl>
             </OpsCard>
 
-            <OpsCard title="Data Administrator">
+            <OpsCard
+              title="Data Administrator"
+              action={
+                normalizeWhatsAppNumber(reg.hp)
+                  ? <WhatsAppButton phone={reg.hp} ticketId={reg.ticketId} label="Hubungi via WhatsApp" variant="solid" />
+                  : <span className="text-[11.5px] text-muted-foreground">Nomor WhatsApp belum tersedia.</span>
+              }
+            >
               <dl className="grid gap-3 text-sm sm:grid-cols-2">
                 <Info label="Nama" value={reg.namaAdmin} />
                 <Info label="Jabatan" value={reg.jabatan} />

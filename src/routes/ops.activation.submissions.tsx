@@ -11,6 +11,7 @@ import { formatDate } from "@/utils/status";
 import { useState, useMemo } from "react";
 import { Eye, Search, Download } from "lucide-react";
 import { toast } from "sonner";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export const Route = createFileRoute("/ops/activation/submissions")({
   component: Submissions,
@@ -108,19 +109,22 @@ function Submissions() {
                 <TD><StatusBadge status={r.status} /></TD>
 
                 <TD className="text-right pr-6">
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleViewDetail(r);
-                    }}
-                    aria-label={`Lihat detail ${getTicketId(r) ?? "submission"}`}
-                  >
-                    <Eye className="mr-1.5 h-4 w-4" /> Lihat Detail
-                  </Button>
+                  <div className="flex flex-col items-stretch justify-end gap-1.5 sm:flex-row sm:items-center">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleViewDetail(r);
+                      }}
+                      aria-label={`Lihat detail ${getTicketId(r) ?? "submission"}`}
+                    >
+                      <Eye className="mr-1.5 h-4 w-4" /> Lihat Detail
+                    </Button>
+                    <WhatsAppButton phone={r.hp} ticketId={r.ticketId} />
+                  </div>
                 </TD>
               </TR>
             ))}
