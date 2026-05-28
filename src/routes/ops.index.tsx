@@ -110,7 +110,7 @@ function OpsOverview() {
                     <div className="min-w-0">
                       <p className="truncate text-[13px] font-medium text-foreground">{r.namaOrg}</p>
                       <p className="font-mono text-[11px] text-muted-foreground">
-                        {r.ticketId} · {r.jenis} · {formatDate(r.submittedAt)}
+                        {r.ticketId} · {r.tipeOrg} · {formatDate(r.submittedAt)}
                       </p>
                     </div>
                     <StatusBadge status={r.status} />
