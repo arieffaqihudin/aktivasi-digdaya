@@ -267,11 +267,6 @@ const PcDaftarkanImportRoute = PcDaftarkanImportRouteImport.update({
   path: '/daftarkan/import',
   getParentRoute: () => PcRoute,
 } as any)
-const PwDaftarkanImportRoute = PwDaftarkanImportRouteImport.update({
-  id: '/daftarkan_/import',
-  path: '/daftarkan/import',
-  getParentRoute: () => PwRoute,
-} as any)
 const OpsPersuratanStamperRoute = OpsPersuratanStamperRouteImport.update({
   id: '/persuratan/stamper',
   path: '/persuratan/stamper',
@@ -401,6 +396,7 @@ export interface FileRoutesByFullPath {
   '/ops/persuratan/pengajuan-ubah-email': typeof OpsPersuratanPengajuanUbahEmailRoute
   '/ops/persuratan/stamper': typeof OpsPersuratanStamperRoute
   '/pc/daftarkan/import': typeof PcDaftarkanImportRoute
+  '/pw/daftarkan/import': typeof PwDaftarkanImportRoute
   '/pc/status-pengajuan/$ticketId': typeof PcStatusPengajuanTicketIdRouteWithChildren
   '/pw/daftarkan/import': typeof PwDaftarkanImportRoute
   '/pw/status-pengajuan/$ticketId': typeof PwStatusPengajuanTicketIdRouteWithChildren
