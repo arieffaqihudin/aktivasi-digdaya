@@ -337,7 +337,7 @@ export const seedAccessCodes: AccessCode[] = [
   { code: "DGD-X4Q1-77ZD", tingkat: "PC", ...pcMeta("pc-jbg"),    status: "Used",     generatedAt: daysAgo(15), expiredAt: daysFromNow(15), usedAt: daysAgo(6),  ticketId: "AKT-2026-000112" },
 
   // Aktif untuk PC belum production
-  { code: "DGD-MN8P-3KLR", tingkat: "PC", ...pcMeta("pc-bantul"), status: "Unused",   generatedAt: daysAgo(5),  expiredAt: daysFromNow(25) },
+  { code: "DGD-MN8P-3KLR", kind: "Scoped", batchName: "Onboarding PW Nasional Batch 1", tingkat: "PW", orgId: "", orgName: "Onboarding PW Nasional Batch 1", pw: "Nasional", scope: { wilayahPwId: "Nasional", mode: "auto" }, status: "Unused", generatedAt: daysAgo(0), expiredAt: daysFromNow(30) },
   { code: "DGD-2C7J-BVQK", tingkat: "PC", ...pcMeta("pc-kp"),     status: "Unused",   generatedAt: daysAgo(5),  expiredAt: daysFromNow(25) },
   { code: "DGD-T5Z9-MWPE", tingkat: "PC", ...pcMeta("pc-gk"),     status: "Unused",   generatedAt: daysAgo(7),  expiredAt: daysFromNow(23) },
   { code: "DGD-AB12-CDEF", tingkat: "PC", ...pcMeta("pc-klaten"), status: "Unused",   generatedAt: daysAgo(3),  expiredAt: daysFromNow(27) },
