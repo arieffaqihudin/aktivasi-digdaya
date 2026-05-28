@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { formatDate } from "@/utils/status";
 import { StatusBadge } from "@/components/StatusBadge";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export const Route = createFileRoute("/ops/")({
   component: OpsOverview,
@@ -96,11 +97,11 @@ function OpsOverview() {
                 <li className="py-4 text-center text-[13px] text-muted-foreground">Belum ada pengajuan.</li>
               )}
               {recent.map((r) => (
-                <li key={r.ticketId}>
+                <li key={r.ticketId} className="flex items-center justify-between gap-2 py-2.5 px-1 rounded-md hover:bg-muted/40">
                   <Link
                     to="/ops/activation/submissions/$ticketId"
                     params={{ ticketId: r.ticketId }}
-                    className="flex items-center justify-between gap-3 py-2.5 hover:bg-muted/40 rounded-md px-1"
+                    className="flex flex-1 min-w-0 items-center justify-between gap-3"
                   >
                     <div className="min-w-0">
                       <p className="truncate text-[13px] font-medium text-foreground">{r.namaOrg}</p>
@@ -110,6 +111,7 @@ function OpsOverview() {
                     </div>
                     <StatusBadge status={r.status} />
                   </Link>
+                  <WhatsAppButton phone={r.hp} ticketId={r.ticketId} iconOnly />
                 </li>
               ))}
             </ul>

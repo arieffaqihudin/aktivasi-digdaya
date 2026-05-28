@@ -8,6 +8,7 @@ import { ArrowLeft, Ban, Copy, Clock } from "lucide-react";
 import { formatDate } from "@/utils/status";
 import { toast } from "sonner";
 import { useMemo } from "react";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export const Route = createFileRoute("/ops/activation/access-codes_/$codeId")({
   component: AccessCodeDetail,
@@ -162,9 +163,12 @@ function AccessCodeDetail() {
                     <td className="px-3 py-2.5 text-[12px]">{r.reg ? formatDate(r.reg.submittedAt) : "—"}</td>
                     <td className="px-3 py-2.5 text-right pr-4">
                       {r.reg ? (
-                        <Link to="/ops/activation/submissions/$ticketId" params={{ ticketId: r.reg.ticketId }}>
-                          <Button size="sm" variant="outline" className="h-8">Lihat Pengajuan</Button>
-                        </Link>
+                        <div className="flex flex-wrap items-center justify-end gap-1.5">
+                          <Link to="/ops/activation/submissions/$ticketId" params={{ ticketId: r.reg.ticketId }}>
+                            <Button size="sm" variant="outline" className="h-8">Lihat Pengajuan</Button>
+                          </Link>
+                          <WhatsAppButton phone={r.reg.hp} ticketId={r.reg.ticketId} />
+                        </div>
                       ) : <span className="text-[11.5px] text-muted-foreground">—</span>}
                     </td>
                   </tr>
@@ -193,9 +197,12 @@ function AccessCodeDetail() {
                   </div>
                 )}
                 {r.reg && (
-                  <Link to="/ops/activation/submissions/$ticketId" params={{ ticketId: r.reg.ticketId }} className="mt-2 inline-block">
-                    <Button size="sm" variant="outline" className="h-8">Lihat Pengajuan</Button>
-                  </Link>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    <Link to="/ops/activation/submissions/$ticketId" params={{ ticketId: r.reg.ticketId }}>
+                      <Button size="sm" variant="outline" className="h-8">Lihat Pengajuan</Button>
+                    </Link>
+                    <WhatsAppButton phone={r.reg.hp} ticketId={r.reg.ticketId} />
+                  </div>
                 )}
               </div>
             ))}
