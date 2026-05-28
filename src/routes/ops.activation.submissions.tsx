@@ -28,7 +28,12 @@ function Submissions() {
   const pws = Array.from(new Set(regs.map((r) => r.pw)));
 
   const filtered = useMemo(() => regs
-    .filter((r) => sumber === "all" || r.sumberPengajuan === sumber)
+    .filter((r) => {
+      if (sumber === "all") return true;
+      if (sumber === "PUBLIC") return r.sumberPengajuan === "PUBLIC";
+      if (sumber === "LOGIN") return r.sumberPengajuan === "PW_DASHBOARD" || r.sumberPengajuan === "PC_DASHBOARD";
+      return true;
+    })
     .filter((r) => status === "all" || r.status === status)
     .filter((r) => pw === "all" || r.pw === pw)
     .filter((r) => slaFilter === "all" || slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === slaFilter)
