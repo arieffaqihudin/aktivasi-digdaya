@@ -147,7 +147,7 @@ function Inbox() {
               </TD>
             </TR>
           ))}
-          {paged.length === 0 && <EmptyRow colSpan={10}>Tidak ada pendaftaran sesuai filter.</EmptyRow>}
+          {paged.length === 0 && <EmptyRow colSpan={9}>Tidak ada pendaftaran sesuai filter.</EmptyRow>}
         </tbody>
       </DataTable>
 
