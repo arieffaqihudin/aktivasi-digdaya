@@ -4,7 +4,7 @@ import {
   KeyRound,
   Inbox,
   FileDown,
-  Settings,
+  
   ScrollText,
   Mail,
   Search,
