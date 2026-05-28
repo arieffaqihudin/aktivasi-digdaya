@@ -741,7 +741,33 @@ function OpsRantingDataPage() {
   );
 }
 
-function RowActions({
+type RowStatus = "Belum Dibuat" | "ID Terbuat" | "Siap Aktivasi Sistem" | "Aktif di Digdaya" | "Perlu Cek Duplikasi";
+
+type RowActionProps = {
+  reg: Registration;
+  status: RowStatus;
+  fullWidth?: boolean;
+  onGenerate: () => void;
+  onActivate: (sys: "Digdaya Kepengurusan" | "Digdaya Persuratan") => void;
+  onCopy: () => void;
+  onDup: () => void;
+  onDetail: () => void;
+};
+
+/** Desktop row actions: [Detail] [⋯ dropdown] */
+function RowActions(props: RowActionProps) {
+  return (
+    <div className="inline-flex items-center justify-end gap-2 flex-nowrap whitespace-nowrap">
+      <Button size="sm" variant="outline" className="h-8 px-3" onClick={props.onDetail}>
+        <Eye className="mr-1.5 h-3.5 w-3.5" /> Detail
+      </Button>
+      <RowActionsDropdown {...props} />
+    </div>
+  );
+}
+
+/** Just the "more actions" dropdown — used both desktop & mobile. */
+function RowActionsDropdown({
   reg,
   status,
   fullWidth,
@@ -749,53 +775,74 @@ function RowActions({
   onActivate,
   onCopy,
   onDup,
-  onDetail,
-}: {
-  reg: Registration;
-  status: "Belum Dibuat" | "ID Terbuat" | "Siap Aktivasi Sistem" | "Aktif di Digdaya" | "Perlu Cek Duplikasi";
-  fullWidth?: boolean;
-  onGenerate: () => void;
-  onActivate: (sys: "Digdaya Kepengurusan" | "Digdaya Persuratan") => void;
-  onCopy: () => void;
-  onDup: () => void;
-  onDetail: () => void;
-}) {
-  const cls = "h-8 " + (fullWidth ? "w-full justify-center" : "");
+}: RowActionProps) {
   const sysActivated = reg.activatedSystems ?? [];
+  const waUrl = buildWhatsAppUrl(reg.hp, waMessageForTicket(reg.ticketId));
   return (
-    <div className={fullWidth ? "contents" : "flex flex-wrap items-center justify-end gap-1.5"}>
-      <Button size="sm" variant="outline" className={cls} onClick={onDetail}>
-        <Eye className="mr-1.5 h-3.5 w-3.5" /> Detail
-      </Button>
-      {status === "Belum Dibuat" && (
-        <Button size="sm" className={cls} onClick={onGenerate}>
-          <KeySquare className="mr-1.5 h-3.5 w-3.5" /> Buat ID
-        </Button>
-      )}
-      {status === "Perlu Cek Duplikasi" && (
-        <Button size="sm" variant="outline" className={cls} onClick={onDup}>
-          <AlertTriangle className="mr-1.5 h-3.5 w-3.5" /> Cek Duplikasi
-        </Button>
-      )}
-      {(status === "ID Terbuat" || status === "Siap Aktivasi Sistem" || status === "Aktif di Digdaya") && (
-        <>
-          <Button size="sm" variant="outline" className={cls} onClick={onCopy}>
-            <Copy className="mr-1.5 h-3.5 w-3.5" /> Salin ID
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        {fullWidth ? (
+          <Button size="sm" variant="outline" className="h-9 w-full justify-center">
+            <MoreHorizontal className="mr-1.5 h-4 w-4" /> Aksi Lainnya
           </Button>
-          {!sysActivated.includes("Digdaya Kepengurusan") && (
-            <Button size="sm" variant="outline" className={cls} onClick={() => onActivate("Digdaya Kepengurusan")}>
-              Aktifkan Kepengurusan
-            </Button>
-          )}
-          {!sysActivated.includes("Digdaya Persuratan") && (
-            <Button size="sm" variant="outline" className={cls} onClick={() => onActivate("Digdaya Persuratan")}>
-              Aktifkan Persuratan
-            </Button>
-          )}
-        </>
-      )}
-      <WhatsAppButton phone={reg.hp} ticketId={reg.ticketId} className={fullWidth ? "w-full justify-center" : ""} />
-    </div>
+        ) : (
+          <Button
+            size="icon"
+            variant="outline"
+            aria-label="Aksi lainnya"
+            className="h-8 w-8"
+          >
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        )}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-[220px]">
+        {status === "Belum Dibuat" && (
+          <DropdownMenuItem onSelect={onGenerate}>
+            <KeySquare className="mr-2 h-4 w-4" /> Buat ID Manajemen
+          </DropdownMenuItem>
+        )}
+        {status === "Perlu Cek Duplikasi" && (
+          <DropdownMenuItem onSelect={onDup}>
+            <AlertTriangle className="mr-2 h-4 w-4" /> Cek Duplikasi
+          </DropdownMenuItem>
+        )}
+        {(status === "ID Terbuat" || status === "Siap Aktivasi Sistem" || status === "Aktif di Digdaya") && (
+          <>
+            <DropdownMenuItem onSelect={onCopy}>
+              <Copy className="mr-2 h-4 w-4" /> Salin ID
+            </DropdownMenuItem>
+            {status !== "Aktif di Digdaya" && !sysActivated.includes("Digdaya Kepengurusan") && (
+              <DropdownMenuItem onSelect={() => onActivate("Digdaya Kepengurusan")}>
+                <ShieldCheck className="mr-2 h-4 w-4" /> Aktifkan Kepengurusan
+              </DropdownMenuItem>
+            )}
+            {status !== "Aktif di Digdaya" && !sysActivated.includes("Digdaya Persuratan") && (
+              <DropdownMenuItem onSelect={() => onActivate("Digdaya Persuratan")}>
+                <FileText className="mr-2 h-4 w-4" /> Aktifkan Persuratan
+              </DropdownMenuItem>
+            )}
+            {status === "Aktif di Digdaya" && (
+              <DropdownMenuItem disabled>
+                <Layers className="mr-2 h-4 w-4" /> Lihat Detail Sistem
+              </DropdownMenuItem>
+            )}
+          </>
+        )}
+        <DropdownMenuSeparator />
+        {waUrl ? (
+          <DropdownMenuItem asChild>
+            <a href={waUrl} target="_blank" rel="noopener noreferrer">
+              <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp Admin
+            </a>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem disabled>
+            <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp tidak tersedia
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
