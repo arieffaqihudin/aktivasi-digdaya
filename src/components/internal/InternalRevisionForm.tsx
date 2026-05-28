@@ -199,7 +199,7 @@ export function InternalRevisionForm({ ticketId, scope }: { ticketId: string; sc
         breadcrumb={[
           { label: scope === "pw" ? "PWNU DI Yogyakarta" : "PCNU Kraksaan", to: scope === "pw" ? "/pw" : "/pc" },
           { label: "Status Pengajuan", to: backTo },
-          { label: reg.ticketId, to: detailTo, params: { ticketId: reg.ticketId } },
+          { label: reg.ticketId },
           { label: "Revisi" },
         ]}
       />
