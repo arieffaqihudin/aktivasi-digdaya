@@ -270,7 +270,7 @@ function PickerCard({
           <Link
             to="/pc/daftarkan"
             search={{ targetId: target.id }}
-            className="inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground sm:w-auto"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground active:bg-primary/90 sm:h-10 sm:w-auto sm:rounded-md"
           >
             Daftarkan
           </Link>
@@ -279,7 +279,7 @@ function PickerCard({
           <Link
             to="/pc/status-pengajuan/$ticketId"
             params={{ ticketId: reg.ticketId }}
-            className="inline-flex w-full items-center justify-center rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground sm:w-auto"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-border bg-background px-4 text-sm font-medium text-foreground active:bg-accent/40 sm:h-10 sm:w-auto sm:rounded-md"
           >
             Lihat Status
           </Link>
@@ -288,13 +288,13 @@ function PickerCard({
           <Link
             to="/pc/status-pengajuan/$ticketId/revisi"
             params={{ ticketId: reg.ticketId }}
-            className="inline-flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground sm:w-auto"
+            className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground active:bg-primary/90 sm:h-10 sm:w-auto sm:rounded-md"
           >
             Perbaiki
           </Link>
         )}
         {state === "Production" && (
-          <span className="inline-flex w-full items-center justify-center rounded-md bg-success/15 px-4 py-2 text-sm font-medium text-success sm:w-auto">
+          <span className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-success/15 px-4 text-sm font-medium text-success sm:h-10 sm:w-auto sm:rounded-md">
             Sudah Production
           </span>
         )}
