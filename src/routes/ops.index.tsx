@@ -8,7 +8,6 @@ import {
   FileDown,
   Inbox,
   ArrowRight,
-  ClipboardList,
   AlertTriangle,
   CheckCircle2,
   Clock,
@@ -16,7 +15,7 @@ import {
   FileText,
   Stamp,
 } from "lucide-react";
-import { formatDate, slaBucket } from "@/utils/status";
+import { formatDate } from "@/utils/status";
 import { StatusBadge } from "@/components/StatusBadge";
 
 export const Route = createFileRoute("/ops/")({
@@ -26,16 +25,12 @@ export const Route = createFileRoute("/ops/")({
 function OpsOverview() {
   const regs = useStore((s) => s.registrations);
   const codes = useStore((s) => s.accessCodes);
-  const sla = useStore((s) => s.sla);
 
   const allOrgs = [...masterPC, ...masterPW];
   const belumProduction = allOrgs.filter((o) => effectiveStatusOrg(o.id) !== "Production").length;
   const production = allOrgs.length - belumProduction;
   const pending = regs.filter((r) => r.status === "Pending").length;
   const perluPerbaikan = regs.filter((r) => r.status === "PerluPerbaikan").length;
-  const lewatSla = regs.filter(
-    (r) => r.status === "Pending" && slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === "Lewat"
-  ).length;
 
   const recent = [...regs]
     .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
@@ -58,7 +53,7 @@ function OpsOverview() {
           <Kpi label="Pending Aktivasi" value={pending} icon={Clock} tone="warning" />
           <Kpi label="Perlu Perbaikan" value={perluPerbaikan} icon={AlertTriangle} tone="warning" />
           <Kpi label="Sudah Production" value={production} icon={CheckCircle2} tone="success" />
-          <Kpi label="Melewati SLA" value={lewatSla} icon={ClipboardList} tone="destructive" />
+          
           <Kpi label="Kop Surat Aktif" value={"1.284"} icon={FileText} />
           <Kpi label="Stamper Aktif" value={386} icon={Stamp} />
         </div>

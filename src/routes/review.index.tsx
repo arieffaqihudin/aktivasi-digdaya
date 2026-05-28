@@ -2,8 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { KPI } from "@/components/dashboard/KPI";
 import { useStore } from "@/lib/store";
-import { Inbox, CheckCircle2, XCircle, Timer, FileDown, FileCheck, Network } from "lucide-react";
-import { slaBucket } from "@/utils/status";
+import { Inbox, CheckCircle2, XCircle, FileDown, FileCheck, Network } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, PieChart, Pie, Cell, Legend } from "recharts";
 
 export const Route = createFileRoute("/review/")({
@@ -12,7 +11,6 @@ export const Route = createFileRoute("/review/")({
 
 function ReviewSummary() {
   const regs = useStore((s) => s.registrations);
-  const sla = useStore((s) => s.sla);
 
   const today = new Date().toDateString();
   const pending = regs.filter((r) => r.status === "Pending");
@@ -20,7 +18,6 @@ function ReviewSummary() {
   const pendingB = pending.filter((r) => r.jalur === "B").length;
   const approvedToday = regs.filter((r) => r.status === "Approved" && r.reviewedAt && new Date(r.reviewedAt).toDateString() === today).length;
   const rejectedToday = regs.filter((r) => r.status === "PerluPerbaikan" || r.status === "RejectedFinal" && r.reviewedAt && new Date(r.reviewedAt).toDateString() === today).length;
-  const overSla = pending.filter((r) => slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === "Lewat").length;
   const inBatch = regs.filter((r) => r.peruriBatchId).length;
 
   const last7 = Array.from({ length: 7 }, (_, i) => {
@@ -42,7 +39,7 @@ function ReviewSummary() {
           <KPI label="Pending Login Digdaya" value={pendingB} icon={Network} tone="info" />
           <KPI label="Approved Hari Ini" value={approvedToday} icon={CheckCircle2} tone="success" />
           <KPI label="Rejected Hari Ini" value={rejectedToday} icon={XCircle} tone="destructive" />
-          <KPI label="Melewati SLA" value={overSla} icon={Timer} tone="destructive" />
+          
           <KPI label="Masuk Batch Peruri" value={inBatch} icon={FileDown} />
           <Link to="/review/inbox" className="rounded-xl border border-primary/30 bg-primary/5 p-4 hover:bg-primary/10">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary-dark">Aksi</p>

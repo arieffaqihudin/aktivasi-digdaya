@@ -6,9 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/StatusBadge";
-import { SLABadge } from "@/components/SLABadge";
 import { SumberPengajuanBadge, SumberSuratBadge } from "@/components/SumberBadge";
-import { formatDate, slaBucket } from "@/utils/status";
+import { formatDate } from "@/utils/status";
 import { useState, useMemo } from "react";
 import { Eye, Search, Download } from "lucide-react";
 
@@ -18,10 +17,8 @@ export const Route = createFileRoute("/ops/activation/submissions")({
 
 function Submissions() {
   const regs = useStore((s) => s.registrations);
-  const sla = useStore((s) => s.sla);
   const [sumber, setSumber] = useState("all");
   const [status, setStatus] = useState("all");
-  const [slaFilter, setSlaFilter] = useState("all");
   const [pw, setPw] = useState("all");
   const [q, setQ] = useState("");
 
@@ -36,10 +33,9 @@ function Submissions() {
     })
     .filter((r) => status === "all" || r.status === status)
     .filter((r) => pw === "all" || r.pw === pw)
-    .filter((r) => slaFilter === "all" || slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays) === slaFilter)
     .filter((r) => !q || r.ticketId.toLowerCase().includes(q.toLowerCase()) || r.namaOrg.toLowerCase().includes(q.toLowerCase()) || r.namaAdmin.toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()),
-    [regs, sumber, status, pw, slaFilter, q, sla]
+    [regs, sumber, status, pw, q]
   );
 
   return (
@@ -62,7 +58,7 @@ function Submissions() {
             </div>
             <SelectFilter value={sumber} onChange={setSumber} placeholder="Sumber Pengajuan" options={[["all","Semua Sumber"],["LOGIN","Login Digdaya"],["PUBLIC","Kode Akses"]]} />
             <SelectFilter value={status} onChange={setStatus} placeholder="Status" options={[["all","Semua Status"],["Pending","Pending Review"],["PerluPerbaikan","Perlu Perbaikan"],["Approved","Disetujui"],["RejectedFinal","Ditolak Final"]]} />
-            <SelectFilter value={slaFilter} onChange={setSlaFilter} placeholder="SLA" options={[["all","Semua SLA"],["Aman","Aman"],["Mendekati","Mendekati"],["Lewat","Lewat"]]} />
+            
             <SelectFilter value={pw} onChange={setPw} placeholder="Wilayah" options={[["all","Semua PW"], ...pws.map((p) => [p, p.replace("PWNU ","")] as [string,string])]} />
           </div>
         </OpsCard>
@@ -77,7 +73,7 @@ function Submissions() {
               <TH>Administrator</TH>
               <TH>Surat Tugas</TH>
               <TH>Status</TH>
-              <TH>SLA</TH>
+              
               <TH className="text-right pr-6">Aksi</TH>
             </tr>
           </THead>
@@ -94,7 +90,7 @@ function Submissions() {
                 <TD className="text-[12px]">{r.namaAdmin}</TD>
                 <TD><SumberSuratBadge sumber={r.sumberSuratTugas} /></TD>
                 <TD><StatusBadge status={r.status} /></TD>
-                <TD><SLABadge bucket={slaBucket(r, sla.greenMaxDays, sla.yellowMaxDays)} /></TD>
+                
                 <TD className="text-right pr-6">
                   <Link to="/ops/activation/submissions/$ticketId" params={{ ticketId: r.ticketId }}>
                     <RowAction title="Lihat detail" tone="primary"><Eye className="h-4 w-4" /></RowAction>
@@ -102,7 +98,7 @@ function Submissions() {
                 </TD>
               </TR>
             ))}
-            {filtered.length === 0 && <EmptyRow colSpan={9}>Tidak ada pengajuan sesuai filter.</EmptyRow>}
+            {filtered.length === 0 && <EmptyRow colSpan={8}>Tidak ada pengajuan sesuai filter.</EmptyRow>}
           </tbody>
         </DataTable>
       </OpsPageBody>
