@@ -140,12 +140,18 @@ export interface AccessCode {
 
 export interface DokumenSistem {
   documentId: string;
+  /** Optional UUID-style Letter ID dari Digdaya Persuratan. */
+  letterId?: string;
   nomorSurat: string;
   namaDokumen: string;
   tanggalSurat: string; // ISO date
   penandatangan: string;
   status: string; // e.g. "Tertandatangani"
+  /** Mock PDF preview URL. */
+  pdfUrl?: string;
 }
+
+export type AdministratorType = "Pengurus" | "Staf";
 
 export interface Registration {
   ticketId: string;
