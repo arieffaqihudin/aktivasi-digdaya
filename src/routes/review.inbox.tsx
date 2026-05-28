@@ -115,7 +115,7 @@ function Inbox() {
         <THead>
           <tr>
             <TH>Nomor Tiket</TH>
-            <TH>Sumber</TH>
+            <TH>Sumber Pengajuan</TH>
             <TH>Pendaftar</TH>
             <TH>Tipe / Organisasi</TH>
             <TH>Admin</TH>
