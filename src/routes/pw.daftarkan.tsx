@@ -161,7 +161,7 @@ function PickerList({ type }: { type: "PC" | "Lembaga PW" }) {
             <p className="text-sm text-muted-foreground">{subtitle}</p>
           </div>
           <Link to="/pw/daftarkan" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" /> Kembali ke Pilihan
+            <ArrowLeft className="h-4 w-4" /> Kembali ke Pilihan Jenis
           </Link>
         </div>
 
