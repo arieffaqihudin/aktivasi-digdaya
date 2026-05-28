@@ -161,7 +161,7 @@ function PickerList({ type }: { type: "PC" | "Lembaga PW" }) {
             <p className="text-sm text-muted-foreground">{subtitle}</p>
           </div>
           <Link to="/pw/daftarkan" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" /> Kembali ke Pilihan
+            <ArrowLeft className="h-4 w-4" /> Kembali ke Pilihan Jenis
           </Link>
         </div>
 
@@ -320,7 +320,7 @@ function StandardForm() {
             <p className="text-sm text-muted-foreground">Lengkapi data administrator dan surat tugas.</p>
           </div>
           <Link to="/pw/daftarkan" search={{ type: backType }} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> Kembali ke {target.type === "PC" ? "Pilih PC" : "Pilih Lembaga PW"}
           </Link>
         </div>
 
@@ -346,7 +346,7 @@ function StandardForm() {
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <Link to="/pw/daftarkan" search={{ type: backType }} className="inline-flex w-full items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground sm:w-auto">
-              Kembali ke Pilihan
+              Kembali ke {target.type === "PC" ? "Pilih PC" : "Pilih Lembaga PW"}
             </Link>
             <Button type="submit" disabled={busy} className="w-full sm:w-auto">
               {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
