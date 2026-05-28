@@ -44,12 +44,12 @@ function Breadcrumb({ trail }: { trail: { label: string; to?: string; search?: R
     <nav className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
       <Link to="/pc" className="hover:text-foreground">PCNU Kraksaan</Link>
       {trail.map((t, i) => (
-        <span key={i} className="flex items-center gap-1.5">
-          <ChevronRight className="h-3 w-3" />
+        <span key={i} className="flex min-w-0 items-center gap-1.5">
+          <ChevronRight className="h-3 w-3 shrink-0" />
           {t.to ? (
-            <Link to={t.to} search={t.search as never} className="hover:text-foreground">{t.label}</Link>
+            <Link to={t.to} search={t.search as never} className="truncate hover:text-foreground">{t.label}</Link>
           ) : (
-            <span className="text-foreground">{t.label}</span>
+            <span className="truncate text-foreground">{t.label}</span>
           )}
         </span>
       ))}
