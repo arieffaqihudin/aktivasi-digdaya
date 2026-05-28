@@ -27,12 +27,12 @@ function PcDashboard() {
 
   const now = new Date();
   const thisMonth = regs.filter((r) => {
-    const d = new Date(r.tanggal);
+    const d = new Date(r.submittedAt);
     return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
   }).length;
 
   const latest = [...regs]
-    .sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime())
+    .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
     .slice(0, 5);
 
   return (
@@ -84,7 +84,7 @@ function PcDashboard() {
                   <div className="min-w-0">
                     <p className="font-medium text-foreground truncate">{r.namaOrg}</p>
                     <p className="text-xs text-muted-foreground">
-                      {r.ticketId} · {r.tipeOrg} · {new Date(r.tanggal).toLocaleDateString("id-ID")}
+                      {r.ticketId} · {r.tipeOrg} · {new Date(r.submittedAt).toLocaleDateString("id-ID")}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
