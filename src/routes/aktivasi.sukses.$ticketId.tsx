@@ -41,7 +41,7 @@ function SuksesPage() {
 
           <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-secondary/60 px-3 py-1.5 text-[12px] text-muted-foreground">
             <Clock className="h-3.5 w-3.5" />
-            Proses review maksimal 3 hari kerja.
+            Pengajuan akan direview oleh Tim Digdaya
           </div>
 
           <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">

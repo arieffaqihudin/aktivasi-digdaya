@@ -213,7 +213,7 @@ export function AktivasiForm() {
             Simpan nomor tiket ini untuk mengecek status pendaftaran.
           </p>
           <p className="mt-1 text-[12px] text-muted-foreground">
-            Proses review maksimal 3 hari kerja.
+            Pengajuan akan direview oleh Tim Digdaya
           </p>
           <Button
             className="mt-5"
