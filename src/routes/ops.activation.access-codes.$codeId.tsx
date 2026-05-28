@@ -18,25 +18,12 @@ function AccessCodeDetail() {
   const code = useStore((s) => s.accessCodes.find((c) => c.code === codeId));
   const regs = useStore((s) => s.registrations);
 
-  if (!code) {
-    return (
-      <div>
-        <OpsPageHeader title="Kode Tidak Ditemukan" breadcrumb={[{ label: "Aktivasi Digdaya", to: "/ops/activation" }, { label: "Kode Akses", to: "/ops/activation/access-codes" }, { label: "Detail" }]} />
-        <OpsPageBody>
-          <OpsCard>
-            <p className="text-sm text-muted-foreground">Kode akses tidak ditemukan.</p>
-            <Link to="/ops/activation/access-codes" className="mt-3 inline-block text-sm text-primary hover:underline">← Kembali ke daftar kode akses</Link>
-          </OpsCard>
-        </OpsPageBody>
-      </div>
-    );
-  }
-
-  const eligibleList = useMemo(() => actions.getEligibleOrgsForCode(code), [code, regs]);
+  const eligibleList = useMemo(() => code ? actions.getEligibleOrgsForCode(code) : [], [code, regs]);
 
   // Map orgId → latest registration via this code
   const regsByOrg = useMemo(() => {
     const m = new Map<string, typeof regs[number]>();
+    if (!code) return m;
     for (const r of regs.filter((r) => r.accessCode === code.code)) {
       const orgId = r.selectedOrgId ?? code.orgId;
       if (!orgId) continue;
@@ -47,6 +34,7 @@ function AccessCodeDetail() {
   }, [regs, code]);
 
   const rows = useMemo(() => {
+    if (!code) return [];
     const base = code.kind === "Scoped" ? eligibleList : eligibleList.length ? eligibleList : (code.orgId ? [{
       id: code.orgId, nama: code.orgName, tingkat: code.tingkat,
       pwName: code.pw, statusOrg: effectiveStatusOrg(code.orgId), hasActiveSubmission: false,
@@ -66,6 +54,20 @@ function AccessCodeDetail() {
     });
   }, [eligibleList, regsByOrg, code]);
 
+  if (!code) {
+    return (
+      <div>
+        <OpsPageHeader title="Kode Tidak Ditemukan" breadcrumb={[{ label: "Aktivasi Digdaya", to: "/ops/activation" }, { label: "Kode Akses", to: "/ops/activation/access-codes" }, { label: "Detail" }]} />
+        <OpsPageBody>
+          <OpsCard>
+            <p className="text-sm text-muted-foreground">Kode akses tidak ditemukan.</p>
+            <Link to="/ops/activation/access-codes" className="mt-3 inline-block text-sm text-primary hover:underline">← Kembali ke daftar kode akses</Link>
+          </OpsCard>
+        </OpsPageBody>
+      </div>
+    );
+  }
+
   const counts = {
     eligible: rows.length,
     belum: rows.filter((r) => r.display === "Belum Submit").length,
@@ -80,6 +82,7 @@ function AccessCodeDetail() {
     : code.orgName;
 
   const codeStatus = displayStatus(code);
+
 
   return (
     <div>
